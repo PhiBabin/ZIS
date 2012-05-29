@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map version="1.0" orientation="orthogonal" width="100" height="100" tilewidth="10" tileheight="10">
+ <tileset firstgid="1" name="tiles2et" tilewidth="10" tileheight="10">
+  <image source="../../ProjectLazarus/img/tiles2et.png" width="200" height="200"/>
+  <tile id="0">
+   <properties>
+    <property name="solid" value="0"/>
+   </properties>
+  </tile>
+ </tileset>
+ <layer name="Calque 1" width="100" height="100">
+  <data encoding="base64" compression="gzip">
+   H4sIAAAAAAAAA+2bQW7bMBBFqU0L9Ba6RIEcIYfI1V3AR0gMr2uiJjplaUmkRwkf9RcPsSnKeR8e0bTgmUIIkxBCQHm58fOTeDmgby2vN043fhnO2fNnx9L46wF9W/K9Z2PXwrw49rFxXun/XB3fD5Lv6PlovqPno/mOno/mO3o+mu/o+Wi+Lfni/vFs/qZjdl95Ljy38/Lz07xT2Ge/S/Gt5e3Gt+lPPcS6+zH9PRbHv9+5Fp7beaXzp/tYnB/H3w7oK9jM4d/r+qt9RvOtxX4+2mv6ZB4v3Vewr/VoLU/nzwf09cqX72HienpZea1He5V0zHt/RfDdK1+kh3w03z3zLfnnx+3eJu1XPvv96MG3JV90iY/zvd8z+UrHvN4Pkm9LvlJt2VqxNVMat8fT+aV689jP03yfybdWTz1A823Jl2pj7frvAZpvS778+k978VR/H6G8l7f3eh7Ns3PmA/rWku4H2bVza/2V1uGlOR6fjzTfFi7Z4/f737X1ecs8O8crH823hjn8f/3b+ls69yvqjeZbS2k99qy3S/CtN5qvRz7PevO+/mm+Hvl6Xo9pvi35Hu1XtrL0PdjufTzvl1B8a6H9HpbmK4QQQgghhBBCbIH2fZfmWwutX5Xm25KP1N9C8x09H8139Hw039Hz0XxHz0fzHT0fzbclH6lfleZbC61fleYr2MyB1a9K862F1q9K8/XK12u/Ks13r3yRHvLRfPfMt+SfH1d/bXs+Ur8qzbclH6lfleb7TL61euoBmm9LPlK/Ks23JR+pX5XmWwutX5Xm2wKtX5XmW8McWP2qNN9aaP2qNF+PfD33q9J8PfL1vB7TfFvykfpVab610H4PS/MVQgghhBBCCCGEEEIIIYQQQgghhBBCCCGEEEIIIXrnNzpw+9BAnAAA
+  </data>
+ </layer>
+ <layer name="object" width="100" height="100">
+  <data encoding="base64" compression="gzip">
+   H4sIAAAAAAAAA+3WMQoAIAgFULtu9z9AtIY4BSW8t4m6fcEIAAAAoIs57s5BdzvrVd7PXlZn+24IAIAf+EsBAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA3lmMIxlMQJwAAA==
+  </data>
+ </layer>
+</map>
