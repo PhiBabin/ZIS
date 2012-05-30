@@ -21,10 +21,16 @@ import org.newdawn.slick.state.BasicGameState;
 import org.newdawn.slick.state.StateBasedGame;
 import org.newdawn.slick.SpriteSheet;
 import org.newdawn.slick.tiled.TiledMap;
+import org.newdawn.slick.util.pathfinding.AStarPathFinder;
+import org.newdawn.slick.util.pathfinding.Mover;
+import org.newdawn.slick.util.pathfinding.Path;
+import org.newdawn.slick.util.pathfinding.PathFindingContext;
+import org.newdawn.slick.util.pathfinding.TileBasedMap;
+
 
 public class PlayState extends BasicGameState {
 	
-	private TiledMap mainMap;
+	private BasicMap cityMap;
 	
 	private int turn = 0;
 	
@@ -39,7 +45,7 @@ public class PlayState extends BasicGameState {
 	
 	private enum STATES {
         START_GAME_STATE, NEW_PIECE_STATE, MOVING_PIECE_STATE, LINE_DESTRUCTION_STATE,
-        PAUSE_GAME_STATE, HIGHSCORE_STATE, GAME_OVER_STATE
+        PAUSE_GAME_STATE, HIGHSCORE_STATE, GAME_OVER_STATE, GO_WORK, WORK, GO_EAT, EAT, GO_WORK2, WORK2, GO_BED 
     }
 	
 	int stateID = -1;
@@ -55,20 +61,22 @@ public class PlayState extends BasicGameState {
 
     public void init(GameContainer gc, StateBasedGame sbg) throws SlickException {
     	imageMan = new ImgManager();
-    	 mainMap = new TiledMap("map/test_basic_design.tmx");
+    	 cityMap = new BasicMap( new TiledMap("map/test_basic_design.tmx"), "solid");
     	 
     	 population = new ArrayList<NPC>();
     	 population.clear();
     	 
-    	 population.add(new NPC( imageMan.player, 2.f, 5.f, mainMap) );
-    	 population.add(new NPC( imageMan.player, 2.f, 10.f, mainMap) );
-    	 population.add(new NPC( imageMan.player, 2.f, 20.f, mainMap) );
+    	 for(int e=0; e<100; e++){
+    		 population.add(new NPC( imageMan.player, (float)Math.random()*60, (float)Math.random()*50, cityMap));
+    	 }
+    	// population.add(new NPC( imageMan.player, 2.f, 10.f, cityMap) );
+    	// population.add(new NPC( imageMan.player, 2.f, 20.f, cityMap) );
     	 
 
     }
  
     public void render(GameContainer gc, StateBasedGame sbg, Graphics gr) throws SlickException {
-		mainMap.render( 0, 0);
+		cityMap.map.render( 0, 0);
 		//System.out.println(mainMap.getTileProperty(mainMap.getTileId( 2, 5, 0), "kill", "0"));
 		gr.drawString( "- Time (" + gameTime + ")x" + Math.round( gameSpeed * 100) + "% " +
 				"- Turn (" + turn + ")", 80, 10); 
@@ -84,10 +92,10 @@ public class PlayState extends BasicGameState {
     public void update(GameContainer gc, StateBasedGame sbg, int delta) throws SlickException {
     	Input input = gc.getInput();
     	
-    	if(input.isKeyDown(Input.KEY_MINUS)){
+    	if(input.isKeyDown(Input.KEY_MINUS) && gameSpeed>=0.1){
     		gameSpeed -= 0.1;
     	}
-    	if(input.isKeyDown(Input.KEY_EQUALS)){
+    	if(input.isKeyDown(Input.KEY_EQUALS) && gameSpeed<4.9){
     		gameSpeed += 0.1;
     	}
     	if(input.isKeyDown(Input.KEY_P)){
