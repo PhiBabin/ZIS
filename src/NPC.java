@@ -32,8 +32,10 @@ public class NPC extends Sprite {
 		
 		newPath.clear();
 		this.world = world;
-		
-		addNewPath( new Vector2f( 4, 38));
+
+		addNewPath( new Vector2f( 
+				(float)Math.floor( Math.random()*80), 
+				(float)Math.floor( Math.random()*60)));
 	}
 	
 	public NPC(Animation pSprite, float nX, float nY, BasicMap world) {
@@ -41,12 +43,18 @@ public class NPC extends Sprite {
 		
 		newPath.clear();
 		this.world = world;
-		
-		addNewPath( new Vector2f( 4, 38));
+
+		addNewPath( new Vector2f( 
+				(float)Math.floor( Math.random()*80), 
+				(float)Math.floor( Math.random()*60)));
 	}
 	
 	public void addNewPath( Vector2f nP){
-		newPath.add( world.getPath(p, nP));
+		Path testt = world.getPath( p, nP);
+		if(testt != null){
+			newPath.add(testt);
+		}
+		
 	}
 	
 	public boolean canIgo(int d){
@@ -54,46 +62,48 @@ public class NPC extends Sprite {
 		if(d>3) return false;
 
 		/*** Than we check for map collision */
-		if(d == CONST.NORTH && world.isSolid( (int) p.x, (int) p.y-1))
+		if(d == CONST.NORTH && 
+				world.isSolid( (int)p.x, (int)p.y-1))
 			return true;
 		if(d == CONST.EAST &&
 				world.isSolid( (int)p.x+1, (int)p.y))
 			return true;
 		if(d == CONST.SOUTH &&
-				"1" != world.map.getTileProperty( world.map.getTileId( (int)p.x, (int)p.y+1, 0), "solid", "1"))
+				world.isSolid( (int)p.x, (int)p.y+1))
 			return true;
 		if(d == CONST.WEST &&
-				"1" != world.map.getTileProperty( world.map.getTileId( (int)p.x-1, (int)p.y, 0), "solid", "1"))
+				world.isSolid( (int)p.x-1, (int)p.y))
 			return true;
 		else
 			return false;
 	}
 	
-	public void pathFinding( Vector2f g){
-		
-	}
 	
 	public void iALogic(){
-		
-		System.out.println( "Yes?");
-		if(newPath.size()>0){
-		//	if(newPath.get(0).GetLenth == p){
-		//		newPath.remove(0);
-		//	}
-		//	else{
-		//		System.out.println( "Let's go to ( " + newPath.get(0).x + ", "+ newPath.get(0).y + ")");
-		//	}
-			
-			if(canIgo(CONST.EAST)){
+		if(newPath.size()>0 && newPath.get(0).getLength() > idStepPath){
+			if(newPath.get(0).getX(idStepPath) > p.x){
 				move(CONST.EAST);
 			}
-			else{
-				if(canIgo(CONST.SOUTH)){
-					move(CONST.SOUTH);
-				}
-				System.out.println("It's solid man!");
+			if(newPath.get(0).getY(idStepPath) > p.y){
+				move(CONST.SOUTH);
 			}
+			if(newPath.get(0).getX(idStepPath) < p.x){
+				move(CONST.WEST);
+			}
+			if(newPath.get(0).getY(idStepPath) < p.y){
+				move(CONST.NORTH);
+			}
+				
+			idStepPath++;
 		}
+		else{
+			newPath.clear();
+			idStepPath = 0;
+			addNewPath( new Vector2f( 
+					(float)Math.floor( Math.random()*80), 
+					(float)Math.floor( Math.random()*60)));
+		}
+		
 	}
 	
 	/**

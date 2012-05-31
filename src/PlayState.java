@@ -13,6 +13,7 @@ import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Input;
 import org.newdawn.slick.SlickException;
+import org.newdawn.slick.geom.Vector2f;
 import org.newdawn.slick.particles.Particle;
 import org.newdawn.slick.particles.ParticleEmitter;
 import org.newdawn.slick.particles.ParticleSystem;
@@ -29,6 +30,11 @@ import org.newdawn.slick.util.pathfinding.TileBasedMap;
 
 
 public class PlayState extends BasicGameState {
+	
+	private boolean debugSquare = false;
+	private Vector2f pSquare = new Vector2f( 0, 0);
+	
+	
 	
 	private BasicMap cityMap;
 	
@@ -66,11 +72,19 @@ public class PlayState extends BasicGameState {
     	 population = new ArrayList<NPC>();
     	 population.clear();
     	 
-    	 for(int e=0; e<100; e++){
-    		 population.add(new NPC( imageMan.player, (float)Math.random()*60, (float)Math.random()*50, cityMap));
+    	 Vector2f pPop;
+    	 int e=2;
+    	 while(e<100){
+    		 pPop = new Vector2f(
+    				 (float)Math.floor( Math.random()*80),
+    				 (float)Math.floor( Math.random()*60));
+    		 
+    		 if( !cityMap.isSolid( (int)pPop.x, (int)pPop.y)){
+        		 System.out.println( "I'm number "+ e + ". Who's number 1?");
+    			 population.add(new NPC( imageMan.player, pPop.x, pPop.y, cityMap));
+    			 e++;
+    		 }
     	 }
-    	// population.add(new NPC( imageMan.player, 2.f, 10.f, cityMap) );
-    	// population.add(new NPC( imageMan.player, 2.f, 20.f, cityMap) );
     	 
 
     }
@@ -78,13 +92,20 @@ public class PlayState extends BasicGameState {
     public void render(GameContainer gc, StateBasedGame sbg, Graphics gr) throws SlickException {
 		cityMap.map.render( 0, 0);
 		//System.out.println(mainMap.getTileProperty(mainMap.getTileId( 2, 5, 0), "kill", "0"));
-		gr.drawString( "- Time (" + gameTime + ")x" + Math.round( gameSpeed * 100) + "% " +
-				"- Turn (" + turn + ")", 80, 10); 
 		
 		//gc1.scale( 0.5f, 0.5f);
 		
 		for(NPC popu : population){
 			popu.render(gc, sbg, gr);
+		}
+		
+		gr.drawString( "- Time (" + gameTime + "ms)x" + Math.round( gameSpeed * 100) + "% " +
+				"- Turn (" + turn + ")" +
+				"- Population (" + population.size() + ")", 80, 10); 
+		
+		if(debugSquare){
+			gr.drawRect( pSquare.x, pSquare.y, 10, 10);
+			gr.drawString( "( " + pSquare.x/10 + ", " + pSquare.y/10 + ")", 5, 580);
 		}
  
     }
@@ -95,7 +116,7 @@ public class PlayState extends BasicGameState {
     	if(input.isKeyDown(Input.KEY_MINUS) && gameSpeed>=0.1){
     		gameSpeed -= 0.1;
     	}
-    	if(input.isKeyDown(Input.KEY_EQUALS) && gameSpeed<4.9){
+    	if(input.isKeyDown(Input.KEY_EQUALS) && gameSpeed<20.0){
     		gameSpeed += 0.1;
     	}
     	if(input.isKeyDown(Input.KEY_P)){
@@ -105,6 +126,7 @@ public class PlayState extends BasicGameState {
     	gameTime += delta * gameSpeed;
 
     	int elapseTurn = (int) (gameTime * 0.001) - turn;
+    	
     	for(int i=1; i <= elapseTurn; i++){
     		System.out.println("==== TURN " + (turn+i) + " ====");
     		for(NPC popu : population){
@@ -112,7 +134,17 @@ public class PlayState extends BasicGameState {
     		}
     	}
     	turn += elapseTurn;
- //   	player.update(gc, sbg, delta);
+    	
+    	if(cityMap.isSolid( 
+    			(int)Math.floor( input.getMouseX() * 0.1),
+    			(int)Math.floor( input.getMouseY() * 0.1))){
+    		debugSquare = true;
+    		pSquare = new Vector2f(
+    				(float)(Math.floor( input.getMouseX() * 0.1)) * 10,
+    				(float)(Math.floor( input.getMouseY() * 0.1)) * 10);
+    	}
+    	else
+    		debugSquare = false;
     }
     
 	@Override

@@ -4,7 +4,6 @@ import java.util.HashSet;
 import org.newdawn.slick.geom.Vector2f;
 import org.newdawn.slick.tiled.TiledMap;
 import org.newdawn.slick.util.pathfinding.AStarPathFinder;
-import org.newdawn.slick.util.pathfinding.Mover;
 import org.newdawn.slick.util.pathfinding.Path;
 import org.newdawn.slick.util.pathfinding.PathFindingContext;
 import org.newdawn.slick.util.pathfinding.TileBasedMap;
@@ -29,22 +28,23 @@ public class BasicMap implements TileBasedMap {
     
     public void regenerateBlocker(){
     	boolean canBlock;
-    	
+
     	for(int x=0; x<map.getWidth(); x++){
         	for(int y=0; y<map.getHeight(); y++){
         		canBlock=map.getTileProperty(
-                		map.getTileId(x, y, 0), blockingPropertyName, "false").equals("true");
-        		blockers.add( x+"-"+y+canBlock);
-//        		if(blockers.contains( x+"-"+y+false)){
-//        			System.out.println( x+"-"+y+canBlock);
-//        		}
+                		map.getTileId(x, y, 0), blockingPropertyName, "true").equals("true");
+        		
+        		if(!canBlock)
+        			blockers.add( x+"-"+y);
         	}
     	}
     }
     
     public Path getPath( Vector2f p, Vector2f nP){
+		System.out.println("LLLLAAAAGGGG");
 		return pathFinder.findPath(null, (int)p.x, (int)p.y, (int)nP.x, (int)nP.y);
 	}
+    
     @Override
     public boolean blocked(PathFindingContext ctx, int x, int y) {
         // NOTE: Using getTileProperty like this is slow. You should instead cache the results. 
@@ -53,7 +53,7 @@ public class BasicMap implements TileBasedMap {
     }
     
     public boolean isSolid( int x, int y){
-    	return !(blockers.contains( x+"-"+y+false));
+    	return !blockers.contains( x+"-"+y);
     }
 
     @Override

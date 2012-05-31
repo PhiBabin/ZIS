@@ -54,7 +54,7 @@ public class ZIS  extends StateBasedGame {
 	
     public void initStatesList(GameContainer gameContainer) throws SlickException {
     	
-        this.getState(PLAYSTATE).init(gameContainer, this);
+        //this.getState(PLAYSTATE).init(gameContainer, this);
     }
 	 
 	public static void main(String[] args) {
