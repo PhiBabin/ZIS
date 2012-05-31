@@ -17,17 +17,14 @@ public class ZIS  extends StateBasedGame {
 	
 	/** Version of the game */
 	private String GAME_VERSION = "0.01";
-
-	/** Name of the game */
-	private String GAMENAME= "";
 	
-    public static final int PLAYSTATE          = 1;
+    public static final int PLAYSTATE = 1;
 	
 	/** position of quad */
-	private float x = 400, 		y = 300;
+	private float x = 400, y = 300;
 	
 	/** dimension of quad */
-	private float width = 200, 		height = 200;
+	private float width = 200, height = 200;
 	
 	/** angle of quad rotation */
 	private float rotation = 0;

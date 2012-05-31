@@ -48,6 +48,8 @@ public class PlayState extends BasicGameState {
 	
 	private ImgManager imageMan;
 	
+	private MapGenerator mapGen;
+	
 	
 	private enum STATES {
         START_GAME_STATE, NEW_PIECE_STATE, MOVING_PIECE_STATE, LINE_DESTRUCTION_STATE,
@@ -67,14 +69,20 @@ public class PlayState extends BasicGameState {
 
     public void init(GameContainer gc, StateBasedGame sbg) throws SlickException {
     	imageMan = new ImgManager();
-    	 cityMap = new BasicMap( new TiledMap("map/test_basic_design.tmx"), "solid");
+    	mapGen = new MapGenerator();
+    	
+    	mapGen.generateLabyrinth(0, 0, 80, 60);
+    	mapGen.tileCorrection();
+    	
+    	cityMap = new BasicMap( mapGen.getMap(), "solid");
+    	//cityMap = new BasicMap( new TiledMap("map/test_labyrinth.tmx"), "solid");
     	 
     	 population = new ArrayList<NPC>();
     	 population.clear();
     	 
     	 Vector2f pPop;
     	 int e=2;
-    	 while(e<100){
+    	 while(e<120){
     		 pPop = new Vector2f(
     				 (float)Math.floor( Math.random()*80),
     				 (float)Math.floor( Math.random()*60));
