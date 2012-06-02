@@ -98,6 +98,7 @@ public class NPC extends Sprite {
 		}
 		else{
 			newPath.clear();
+			
 			idStepPath = 0;
 			addNewPath( new Vector2f( 
 					(float)Math.floor( Math.random()*80), 
