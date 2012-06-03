@@ -18,6 +18,8 @@ public class MapGenerator {
 	
 	public ArrayList<Rectangle> buildRegion = new ArrayList<Rectangle>();
 	
+	public ArrayList<Rectangle> hallway = new ArrayList<Rectangle>();
+	
 	public MapGenerator() throws SlickException {
 		generateEmptyMap();
 	}
@@ -182,9 +184,28 @@ public class MapGenerator {
 	public void sliceRegion(int id, boolean ver){
 		Rectangle r = temRegion.get( id);
 		if( ver){
-			if( r.getHeight() > 16) {
-				int line = rand.nextInt( (int)r.getHeight()/2 - 7 ) + 5;
+			if( Math.random() > CONST.BISLICE && r.getHeight() > 16 /*&& r.getWidth() > 4*/){
+				int line = (int)r.getHeight()/2 + rand.nextInt(6) - 3;
 				
+				int newId = temRegion.size();
+				
+				temRegion.add(
+						new Rectangle( r.getX(),
+						r.getY(),
+						r.getWidth(),
+						line));
+				temRegion.add(
+						new Rectangle( r.getX(),
+						r.getY() + line - 1,
+						r.getWidth(),
+						r.getHeight() - line + 1));
+				sliceRegion( newId, line > r.getWidth());
+				sliceRegion( newId + 1, r.getHeight() - line + 1 < r.getWidth());
+			}
+			else if( r.getHeight() > 16 /*&& r.getWidth() > 4*/) {
+				int line = rand.nextInt( (int)r.getHeight()/2 - 7 ) + 5;
+
+				int newId = temRegion.size();
 				temRegion.add(
 						new Rectangle( r.getX(),
 						r.getY(),
@@ -200,19 +221,46 @@ public class MapGenerator {
 						r.getY() + line - 1,
 						r.getWidth(),
 						r.getHeight() -2 * line  + 2));
-				if( r.getHeight() -2 * line  + 2 > line)
-					sliceRegion( temRegion.size() - 1, false);
+				if( r.getHeight() -2 * line  + 2 > line){
+					sliceRegion( newId + 2, r.getHeight() -2 * line  + 2 > r.getWidth());
+
+					roomBuildingValidation(  newId);
+					roomBuildingValidation(  newId + 1);
+				}
 				else{
-					sliceRegion( id + 1, false);
-					sliceRegion( id + 2, false);
+					sliceRegion( newId, r.getWidth() < line);
+					sliceRegion( newId + 1, r.getWidth() < line);
+
+					roomBuildingValidation(  newId + 2);
 				}
 			}
 			else{
+				buildRegion.add( r);
 			}
 		}
 		else{
-			if( r.getWidth() > 16) {
-				int line = rand.nextInt( (int)r.getWidth()/2 - 7 ) + 5;
+			if( Math.random() > CONST.BISLICE && r.getWidth() > 16 /*&& r.getHeight() > 4*/){
+
+				int line = (int)r.getWidth()/2 + rand.nextInt(6) - 3;
+				
+				int newId = temRegion.size();
+				
+				temRegion.add(
+						new Rectangle( r.getX(),
+						r.getY(),
+						line,
+						r.getHeight()));
+				temRegion.add(
+						new Rectangle( r.getX() + line - 1,
+						r.getY(),
+						r.getWidth() - line + 1,
+						r.getHeight()));
+				sliceRegion( newId, line < r.getHeight());
+				sliceRegion( newId + 1, r.getWidth() - line + 1 > r.getHeight());
+			}
+			else if( r.getWidth() > 16 && r.getHeight() > 4) {
+				int line = rand.nextInt( (int)r.getWidth() / 2 - 7 ) + 5;
+				int newId = temRegion.size();
 				
 				temRegion.add(
 						new Rectangle(r.getX(),
@@ -230,41 +278,158 @@ public class MapGenerator {
 						r.getWidth() -2 * line  + 2,
 						r.getHeight()));
 				if( r.getWidth() -2 * line  + 2 > line){
-					sliceRegion( temRegion.size() - 1, true);
+					sliceRegion( newId + 2, r.getWidth() -2 * line  + 2 < r.getHeight());
+					
+					roomBuildingValidation(  newId);
+					roomBuildingValidation(  newId + 1);
 				}
 				else{
-					sliceRegion( id + 1, true);
-					sliceRegion( id + 2, true);
+					sliceRegion( newId, r.getHeight() > line);
+					sliceRegion( newId + 1, r.getHeight() > line);
+					
+					roomBuildingValidation(  newId + 2);
 				}
 			}
 			else{
-				
+				buildRegion.add( r);
 			}
 			
 		}
 	}
 
-	public void generateBuilding( int x, int y, int W, int H){
+	public void addHallway(int id, boolean ver){
+		
+		Rectangle r = temRegion.get( id);
+		int line;
+		
+		if( ver){
+			if( (float)5 / (float)r.getWidth() > 0.2)
+				line = (int)r.getWidth()/2 + rand.nextInt(6) - 3;
+			else
+				line = (int)r.getWidth()*( rand.nextInt(2) + 1)/4 + rand.nextInt(6) - 3;
+			
+			hallway.add(
+					new Rectangle( r.getX() + line - 1,
+							r.getY(),
+							5,
+							r.getHeight()));
+			
+			temRegion.add(
+					new Rectangle( r.getX(),
+					r.getY(),
+					line,
+					r.getHeight()));
+			temRegion.add(
+					new Rectangle( r.getX() + line + 3,
+					r.getY(),
+					r.getWidth() - line - 3,
+					r.getHeight()));
+		}
+		else{
+			if( 5/r.getHeight() > 0.2)
+				line = (int)r.getHeight()/2 + rand.nextInt(6) - 3;
+			else
+				line = (int)r.getHeight()*( rand.nextInt(2) + 1)/4 + rand.nextInt(6) - 3;
+			
+			hallway.add(
+					new Rectangle( r.getX(),
+							r.getY() + line - 1,
+							r.getWidth(),
+							5));
+			
+			temRegion.add(
+					new Rectangle( r.getX(),
+					r.getY(),
+					r.getWidth(),
+					line));
+			temRegion.add(
+					new Rectangle( r.getX(),
+					r.getY() + line + 3,
+					r.getWidth(),
+					r.getHeight() - line - 3));
+		}
+		
+		temRegion.remove(id);
+		
+	}
+	
+	public void roomBuildingValidation( int id){
+		 Rectangle r = temRegion.get( id);
+		 if( r.getHeight() < r.getWidth() && r.getHeight() * r.getWidth() > 100){
+			 sliceRegion( id, true);
+			 
+		 }
+		 else if( r.getHeight() >= r.getWidth() && r.getHeight() * r.getWidth() > 100){
+			 sliceRegion( id, false);
+		 }
+		 else{
+			 buildRegion.add( r);
+		 }
+	}
+
+	public void generateBuildingFloor( int x, int y, int W, int H){
 		temRegion.clear();
 		buildRegion.clear();
+		hallway.clear();
 		
-		drawOutline( x, y, W, H, 57);
+		//drawOutline( x, y, W, H, 57);
 		
-		temRegion.add( new Rectangle( x + 4, y + 4, W - 8, H - 8));
+		//	temRegion.add( new Rectangle( x + 4, y + 4, W - 8, H - 8));
+		temRegion.add( new Rectangle( x, y, W, H));
+		
+		if( (float)W / 5.f <= 2){
+			if( H == W)
+				addHallway( 0, rand.nextInt(2) == 1);
+			else
+				addHallway( 0, H > W);
+			
+			 sliceRegion( 0, true);
+			 sliceRegion( 1, true);
+		}
+		else if( (float)W / 5.f <= 10){
+			System.out.println(" Rapport: " + ((float)W / 5.f));
+			if( H == W){
+				addHallway( 0, rand.nextInt(2) == 1);
+				addHallway( 1, rand.nextInt(2) == 1);
+			}
+			else{
+				addHallway( 0, H > W);
+				addHallway( 1, H > W);
+			}
+			 sliceRegion( 0, true);
+			 sliceRegion( 1, true);
+			 sliceRegion( 2, true);
+		}
+		
+		//hallway.add( new Rectangle( x + W - 1, y, 5, H));
+		
+		//hallway.add( new Rectangle( x + W + 3, y + H / 2, 40, 5));
+		
+		
+		// addHallway( 1, false);
+		
+		///temRegion.add( new Rectangle( x + W + 3, y, 40, H / 2 + 1));
+		
+		///temRegion.add( new Rectangle( x + W + 3, y + H / 2 + 4, 40, H / 2 - 4));
 
-		drawOutline( temRegion.get(0), 57);
+		//drawOutline( temRegion.get(0), 57);
+		
 
-		sliceRegion( 0, false);
+		 //sliceRegion( 2, true);
 		
-		// sliceRegion( 1);
+		///sliceRegion( 1, W < H);
 		
-		for(Rectangle r : temRegion){
-			System.out.println(
+		///sliceRegion( 2, W < H);
+		int j = 1;
+		for(Rectangle r : buildRegion){
+			System.out.println( j +
 					" x: " + r.getX() +
 					" y: " + r.getY() + 
 					" W: " + r.getWidth() +
 					" H: " + r.getHeight());
 			drawOutline( r, 57);
+			
+			j++;
 		}
 		
 	}

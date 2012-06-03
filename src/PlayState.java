@@ -77,7 +77,7 @@ public class PlayState extends BasicGameState {
     	mapGen = new MapGenerator();
     	
     	//mapGen.generateLabyrinth( 0, 0, 80, 60);
-    	mapGen.generateBuilding( 2, 2, 90, 90);
+    	mapGen.generateBuildingFloor( 2, 2, 50, 50);
     	mapGen.tileCorrection();
     	
     	cityMap = new BasicMap( mapGen.getMap(), "solid");
@@ -89,7 +89,7 @@ public class PlayState extends BasicGameState {
     	 
     	 Vector2f pPop;
     	 int e=2;
-    	 while(e<5){
+    	 while(e<2){
     		 pPop = new Vector2f(
     				 (float)Math.floor( Math.random()*80),
     				 (float)Math.floor( Math.random()*60));
@@ -168,7 +168,7 @@ public class PlayState extends BasicGameState {
     	/** Regenerate the current map */
     	if(input.isKeyPressed(Input.KEY_SPACE)){
     		mapGen.generateEmptyMap();
-        	mapGen.generateBuilding( 2, 2, 90, 90);
+        	mapGen.generateBuildingFloor( 2, 2, 50, 50);
         	mapGen.tileCorrection();
         	cityMap.map = mapGen.getMap();
     	}
