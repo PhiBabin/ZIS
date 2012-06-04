@@ -133,7 +133,7 @@ public class PlayState extends BasicGameState {
 				else if(g == 4)gr.setColor( Color.magenta);
 				else gr.setColor( Color.orange);
 				
-				if(g <4) gr.setLineWidth(g);
+				if(g < 4) gr.setLineWidth(g);
 				else gr.setLineWidth(4);
 				
 				gr.drawRect( r.getX() * 10,

@@ -181,6 +181,67 @@ public class MapGenerator {
 		
 	}
 	
+
+	public void sliceInHalf(int id, int interator){
+		Rectangle r = temRegion.get( id);
+		if(  r.getHeight() > r.getWidth()){
+			if( r.getHeight() > 10 && 
+					( rand.nextInt( interator) <= 2 ||
+					r.getHeight() * r.getWidth() >= 196)){
+				
+				int line = (int)r.getHeight()/2 ;//- rand.nextInt(3) + 1;
+				
+				int newId = temRegion.size();
+				
+				temRegion.add(
+						new Rectangle( r.getX(),
+						r.getY(),
+						r.getWidth(),
+						line));
+				temRegion.add(
+						new Rectangle( r.getX(),
+						r.getY() + line - 1,
+						r.getWidth(),
+						r.getHeight() - line + 1));
+				System.out.println( id + " - " + (line > r.getWidth()) + "w: " + r.getWidth() + " h: " + line);
+				
+				sliceInHalf( newId, interator + 1);
+				sliceInHalf( newId + 1, interator + 1);
+			}
+			else{
+				buildRegion.add( r);
+			}
+		}
+		else{
+			if( r.getWidth() > 10 &&
+					(rand.nextInt( interator) <= 2 ||
+					r.getHeight() * r.getWidth() >= 196)){
+
+				int line = (int)r.getWidth()/2 ;//- rand.nextInt(3) + 1;
+				
+				int newId = temRegion.size();
+				
+				temRegion.add(
+						new Rectangle( r.getX(),
+						r.getY(),
+						line,
+						r.getHeight()));
+				temRegion.add(
+						new Rectangle( r.getX() + line - 1,
+						r.getY(),
+						r.getWidth() - line + 1,
+						r.getHeight()));
+				System.out.println( interator + " - " + (line < r.getHeight()) + "w: " + r.getWidth() + " h: " + line);
+						
+				sliceInHalf( newId, interator + 1);
+				sliceInHalf( newId + 1, interator + 1);
+			}
+			else{
+				buildRegion.add( r);
+			}
+		}
+	}
+	
 	public void sliceRegion(int id, boolean ver){
 		Rectangle r = temRegion.get( id);
 		if( ver){
@@ -200,7 +261,7 @@ public class MapGenerator {
 						r.getWidth(),
 						r.getHeight() - line + 1));
 				sliceRegion( newId, line > r.getWidth());
-				sliceRegion( newId + 1, r.getHeight() - line + 1 < r.getWidth());
+				sliceRegion( newId + 1, r.getHeight() - line + 1 > r.getWidth());
 			}
 			else if( r.getHeight() > 16 /*&& r.getWidth() > 4*/) {
 				int line = rand.nextInt( (int)r.getHeight()/2 - 7 ) + 5;
@@ -256,7 +317,7 @@ public class MapGenerator {
 						r.getWidth() - line + 1,
 						r.getHeight()));
 				sliceRegion( newId, line < r.getHeight());
-				sliceRegion( newId + 1, r.getWidth() - line + 1 > r.getHeight());
+				sliceRegion( newId + 1, r.getWidth() - line + 1 < r.getHeight());
 			}
 			else if( r.getWidth() > 16 && r.getHeight() > 4) {
 				int line = rand.nextInt( (int)r.getWidth() / 2 - 7 ) + 5;
@@ -297,6 +358,75 @@ public class MapGenerator {
 		}
 	}
 
+
+	public void addLoopHallway(int id){
+		Rectangle r = temRegion.get( id);
+		int c = rand.nextInt(3) + 6;
+		int p = (int) (r.getWidth() * 0.5 - 5 - c);
+
+		int cy = (int) (c * 1.618);
+		int py = (int) (r.getHeight()*0.5 - cy - 5);
+		
+		hallway.add(
+				new Rectangle( r.getX() + p,
+						r.getY() + py,
+						10 + 2 * c,
+						5));
+		hallway.add(
+				new Rectangle( r.getX() + p,
+						r.getY() + py + 2*cy + 5 ,
+						10 + 2 * c,
+						5));
+		hallway.add(
+				new Rectangle( r.getX() + p,
+						r.getY() + py,
+						5,
+						10 + 2 * cy));
+		hallway.add(
+				new Rectangle( r.getX() + p + 2*c + 5,
+						r.getY() + py,
+						5,
+						10 + 2 * cy));
+		System.out.println( " c" + c + " p" + p);
+
+		/*** North and South side*/
+		temRegion.add(
+				new Rectangle( r.getX(),
+				r.getY(),
+				r.getWidth(),
+				py + 1));
+		temRegion.add(
+				new Rectangle( r.getX(),
+				r.getY() + r.getHeight() - py - 1,
+				r.getWidth(),
+				py + 1));
+
+		/*** Center region*/
+		temRegion.add(
+				new Rectangle( r.getX() + p + 4,
+				r.getY() + py + 4,
+				2 * c + 2,
+				2 * cy + 2));
+		
+		/*** West and East side*/
+		temRegion.add(
+				new Rectangle( r.getX(),
+				r.getY() + py,
+				p + 1,
+				2 * cy + 10));
+		temRegion.add(
+				new Rectangle( r.getX() + p + 9 + 2 * c,
+				r.getY() + py,
+				p + 1,
+				2 * cy + 10));
+
+		
+		temRegion.remove(id);
+	}
+
+	public void addHallway(int id){
+		addHallway( id, temRegion.get( id).getHeight() < temRegion.get( id).getWidth());
+	}
 	public void addHallway(int id, boolean ver){
 		
 		Rectangle r = temRegion.get( id);
@@ -379,26 +509,36 @@ public class MapGenerator {
 		
 		if( (float)W / 5.f <= 2){
 			if( H == W)
-				addHallway( 0, rand.nextInt(2) == 1);
+				addHallway( 0, rand.nextBoolean());
 			else
-				addHallway( 0, H > W);
+				addHallway( 0, rand.nextBoolean());
 			
-			 sliceRegion( 0, true);
-			 sliceRegion( 1, true);
+			sliceInHalf( 0, 1);
+			sliceInHalf( 1, 1);
 		}
-		else if( (float)W / 5.f <= 10){
+		else if( (float)W / 5.f <= 10 && false){
 			System.out.println(" Rapport: " + ((float)W / 5.f));
 			if( H == W){
-				addHallway( 0, rand.nextInt(2) == 1);
-				addHallway( 1, rand.nextInt(2) == 1);
+				addHallway( 0, rand.nextBoolean());
+				addHallway( 0);
 			}
 			else{
-				addHallway( 0, H > W);
-				addHallway( 1, H > W);
+				addHallway( 0, rand.nextBoolean());
+				addHallway( 0);
 			}
-			 sliceRegion( 0, true);
-			 sliceRegion( 1, true);
-			 sliceRegion( 2, true);
+			sliceInHalf( 0, 1);
+			sliceInHalf( 1, 1);
+			sliceInHalf( 2, 1);
+		}
+		else{
+			addLoopHallway( 0);
+			addHallway( temRegion.size() - 2, false);
+			sliceInHalf( 0, 1);
+			sliceInHalf( 1, 1);
+			sliceInHalf( 2, 1);
+			sliceInHalf( 3, 1);
+			sliceInHalf( 4, 1);
+			sliceInHalf( 5, 1);
 		}
 		
 		//hallway.add( new Rectangle( x + W - 1, y, 5, H));
