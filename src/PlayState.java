@@ -7,8 +7,6 @@
  */
 import java.util.ArrayList;
 
-import org.newdawn.slick.Animation;
-import org.newdawn.slick.AppGameContainer;
 import org.newdawn.slick.Color;
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
@@ -76,8 +74,9 @@ public class PlayState extends BasicGameState {
     	imageMan = new ImgManager();
     	mapGen = new MapGenerator();
     	
-    	//mapGen.generateLabyrinth( 0, 0, 80, 60);
-    	mapGen.generateBuildingFloor( 2, 2, 50, 50);
+    	//mapGen.generateLabyrinth( 0, 0, 80, 60);        	
+    	mapGen.generateBuildingFloor( 2, 2, 75, 55);
+
     	mapGen.tileCorrection();
     	
     	cityMap = new BasicMap( mapGen.getMap(), "solid");
@@ -114,7 +113,8 @@ public class PlayState extends BasicGameState {
 
 		gr.drawString( "- Time (" + gameTime + "ms)x" + Math.round( gameSpeed * 100) + "% " +
 				"- Turn (" + turn + ")" +
-				"- Population (" + population.size() + ")", 80, 10); 
+				"- Population (" + population.size() + ")" +
+				"- Symmetric (" + CONST.SYMMETRICROOM + ")", 80, 10); 
 		
 		if(debugSquare){
 			gr.drawRect( pSquare.x, pSquare.y, 10, 10);
@@ -168,7 +168,7 @@ public class PlayState extends BasicGameState {
     	/** Regenerate the current map */
     	if(input.isKeyPressed(Input.KEY_SPACE)){
     		mapGen.generateEmptyMap();
-        	mapGen.generateBuildingFloor( 2, 2, 50, 50);
+        	mapGen.generateBuildingFloor( 2, 2, 50, 40);
         	mapGen.tileCorrection();
         	cityMap.map = mapGen.getMap();
     	}
@@ -178,6 +178,12 @@ public class PlayState extends BasicGameState {
     		debugMod = true;
     	else if(debugMod && input.isKeyPressed(Input.KEY_D))
     		debugMod = false;
+    	
+    	/** Symmetric Room */
+    	if(!(CONST.SYMMETRICROOM) && input.isKeyPressed(Input.KEY_S))
+    		CONST.SYMMETRICROOM = true;
+    	else if(CONST.SYMMETRICROOM && input.isKeyPressed(Input.KEY_S))
+    		CONST.SYMMETRICROOM = false;
     	
     	/*** Control the speed of the game */
     	if(input.isKeyDown(Input.KEY_MINUS) && gameSpeed>=0.1){

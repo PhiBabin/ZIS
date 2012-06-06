@@ -10,7 +10,7 @@ public class CONST {
 	public static final int MAX_PATH_LENGTH = 200;
 	
 	/** Building generator parameter */
-	public static final float BISLICE = 0.3f;
+	public static boolean SYMMETRICROOM = false;
 	public static final int MINROOMX = 4;
 	public static final int MINROOMY = 4;
 }

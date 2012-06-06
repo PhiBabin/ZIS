@@ -32,12 +32,6 @@ public class ZIS  extends StateBasedGame {
 	/** time at last frame */
 	private long lastFrame;
 	
-	/** frames per second */
-	private int fps;
-	
-	/** last fps time */
-	private long lastFPS;
-	
 	/** the running flag */
 	private boolean gameRunning = true;
 	
