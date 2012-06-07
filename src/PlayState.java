@@ -107,7 +107,7 @@ public class PlayState extends BasicGameState {
     	//gr.translate( -(int)cam.x, -(int)cam.y);
 		cityMap.map.render( -(int)cam.x, -(int)cam.y);
 		
-		for(NPC popu : population){
+		for( NPC popu : population){
 			popu.render(gc, sbg, gr, cam);
 		}
 
@@ -116,7 +116,7 @@ public class PlayState extends BasicGameState {
 				"- Population (" + population.size() + ")" +
 				"- Symmetric (" + CONST.SYMMETRICROOM + ")", 80, 10); 
 		
-		if(debugSquare){
+		if( debugSquare){
 			gr.drawRect( pSquare.x, pSquare.y, 10, 10);
 			gr.drawString( "( " + Math.floor( ( pSquare.x + cam.x) / 10) + "," +
 							" " + Math.floor( ( pSquare.y + cam.y) / 10) + ")",
@@ -209,8 +209,8 @@ public class PlayState extends BasicGameState {
     	turn += elapseTurn;
     	
     	if(cityMap.isSolid( 
-    			(int)Math.floor( ( input.getMouseX() + cam.x) * 0.1),
-    			(int)Math.floor( ( input.getMouseY() + cam.y) * 0.1))){
+    			(int)Math.floor( ( input.getMouseX()) * 0.1),
+    			(int)Math.floor( ( input.getMouseY()) * 0.1))){
     		debugSquare = true;
     		pSquare = new Vector2f(
     				(float)(Math.floor( input.getMouseX() * 0.1)) * 10,

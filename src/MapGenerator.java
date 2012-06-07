@@ -125,10 +125,22 @@ public class MapGenerator {
 		for(int x=0; x < W; x++){
 			for(int y=0; y < H; y++){
 				if(map.getTileId( x, y, 0) == 57){
-					n = ((y - 1) < 0 || map.getTileId( x, y - 1, 0) == 1);
-					s = ((y + 1) > H || map.getTileId( x, y + 1, 0) == 1);
-					w = ((x - 1) < 0 || map.getTileId( x - 1, y, 0) == 1);
-					e = ((x + 1) > W || map.getTileId( x + 1, y, 0) == 1);
+					n = ((y - 1) < 0 
+							|| map.getTileId( x, y - 1, 0) == 1 
+							|| map.getTileId( x, y - 1, 0) == 157 
+							|| map.getTileId( x, y - 1, 0) == 158);
+					s = ((y + 1) > H 
+							|| map.getTileId( x, y + 1, 0) == 1 
+							|| map.getTileId( x, y + 1, 0) == 157 
+							|| map.getTileId( x, y + 1, 0) == 158);
+					w = ((x - 1) < 0 
+							|| map.getTileId( x - 1, y, 0) == 1 
+							|| map.getTileId( x - 1, y, 0) == 157 
+							|| map.getTileId( x - 1, y, 0) == 158);
+					e = ((x + 1) > W 
+							|| map.getTileId( x + 1, y, 0) == 1 
+							|| map.getTileId( x + 1, y, 0) == 157 
+							|| map.getTileId( x + 1, y, 0) == 158);
 					if( n && s && e && w){
 					}
 					else if( !n && !s && e && w){
@@ -366,7 +378,158 @@ public class MapGenerator {
 		temRegion.remove(id);
 		
 	}
+	public void addDoor( Vector2f d, boolean ver){
+		if( map.getTileId( (int)d.x, (int)d.y - 1, 0) != 57 
+				&& map.getTileId( (int)d.x, (int)d.y + 1, 0) != 57 
+				&& ver){
+			map.setTileId( (int)d.x, (int)d.y, 0, 157);
+		}
+		if( map.getTileId( (int)d.x - 1, (int)d.y , 0) != 57 
+				&& map.getTileId( (int)d.x + 1, (int)d.y, 0) != 57 
+				&& !ver){
+			map.setTileId( (int)d.x, (int)d.y, 0, 158);
+		}
+		
+	}
 	
+	public void addInterRoomDoor(){
+		Vector2f portal = new Vector2f( 0, 0);
+		Vector2f newDoor = new Vector2f( 0, 0);
+		
+		for(Room room : rooms){
+			Rectangle r = room.getRect();
+				
+			for( Room childRoom : rooms){
+				/** Horizontal doors*/
+				if( childRoom.getRect() != r && childRoom.getRect().intersects( r) &&  r.getWidth() > 4){
+					Rectangle rc = childRoom.getRect();
+					if(rc.getWidth() > r.getWidth()){
+						portal.x = (int)(r.getX() + r.getWidth()/2);
+						portal.y = (int)(r.getY() + r.getHeight()) ;
+						
+						if( rc.contains( portal.x, portal.y)){
+							newDoor.x = (int)(r.getX() + rand.nextInt( (int) r.getWidth() - 2) + 1);
+							newDoor.y = (int)(r.getY() + r.getHeight()) - 1;
+							childRoom.setDoor( CONST.NORTH);
+							
+							addDoor( newDoor, true);
+						}
+					}
+					else{
+						portal.x = (int)(rc.getX() + rc.getWidth()/2);
+						portal.y = (int)(rc.getY());
+						
+						if( r.contains( portal.x, portal.y)){
+							newDoor.x = (int)(rc.getX() + rand.nextInt( (int) rc.getWidth() - 2) + 1);
+							newDoor.y = (int)rc.getY();
+							childRoom.setDoor( CONST.NORTH);
+							
+							addDoor( newDoor, true);
+						}
+						
+					}
+				}
+				/** Vertical doors*/
+				if( childRoom.getRect() != r && childRoom.getRect().intersects( r) &&  r.getHeight() > 4){
+					Rectangle rc = childRoom.getRect();
+					if(rc.getHeight() > r.getHeight()){
+						portal.x = (int)(r.getX() + r.getWidth());
+						portal.y = (int)(r.getY() + r.getHeight()/2) ;
+						
+						if( rc.contains( portal.x, portal.y)){
+							newDoor.x = (int)(r.getX() + r.getWidth()) - 1;
+							newDoor.y = (int)(r.getY() + rand.nextInt( (int) r.getHeight() - 2)) + 1;
+							childRoom.setDoor( CONST.WEST);
+							room.setDoor( CONST.EAST);
+							
+							addDoor( newDoor, false);
+						}
+					}
+					else{
+						portal.x = (int)(rc.getX());
+						portal.y = (int)(rc.getY() + rc.getHeight()/2);
+						
+						if( r.contains( portal.x, portal.y)){
+							newDoor.x = (int)rc.getX();
+							newDoor.y = (int)rc.getY() + rand.nextInt( (int) rc.getHeight() - 2) + 1;
+							childRoom.setDoor( CONST.WEST);
+							room.setDoor( CONST.EAST);
+							
+							addDoor( newDoor, false);
+						}
+						
+					}
+				}
+			}
+		}
+		
+	}
+	public void addHallwayDoor(){
+		Vector2f portal = new Vector2f( 0, 0);
+		Vector2f newDoor = new Vector2f( 0, 0);
+	
+		for(Rectangle r: hallway){
+				
+			for( Room publicRoom : rooms){
+				Rectangle rc = publicRoom.getRect();
+				/** Horizontal hallway doors*/
+				if( rc.intersects( r) &&  rc.getWidth() > 4){
+					/** South door */
+					portal.x = (int)(rc.getX() + rc.getWidth()  /2);
+					portal.y = (int)(rc.getY() + rc.getHeight()) ;
+					if( !publicRoom.getDoor( CONST.SOUTH) && r.contains( portal.x, portal.y)){
+						
+						publicRoom.setDoor( CONST.SOUTH);
+						
+						newDoor.x = (int)(rc.getX() + rand.nextInt( (int) rc.getWidth() - 2) + 1);
+						newDoor.y = (int)(rc.getY() + rc.getHeight()) - 1;
+						
+						addDoor( newDoor, true);
+					}
+					/** North door */
+					portal.x = (int)(rc.getX() + rc.getWidth() / 2);
+					portal.y = (int)(rc.getY()) ;
+					if( !publicRoom.getDoor( CONST.NORTH) && r.contains( portal.x, portal.y)){
+						
+						publicRoom.setDoor( CONST.NORTH);
+						
+						newDoor.x = (int)(rc.getX() + rand.nextInt( (int) rc.getWidth() - 2) + 1);
+						newDoor.y = (int)rc.getY();
+						
+						addDoor( newDoor, true);
+					}
+				}
+				/** Vertical hallway doors*/
+				if( rc.intersects( r) &&  rc.getHeight() > 4){
+					/** West door */
+					portal.x = (int)rc.getX();
+					portal.y = (int)(rc.getY() + rc.getHeight() / 2) ;
+					if( !publicRoom.getDoor( CONST.WEST) && r.contains( portal.x, portal.y)){
+						
+						publicRoom.setDoor( CONST.WEST);
+						
+						newDoor.x = (int)rc.getX();
+						newDoor.y = (int)rc.getY() + rand.nextInt( (int) rc.getHeight() - 2) + 1;
+						
+						addDoor( newDoor, false);
+					}
+					/** East door */
+					portal.x = (int)(rc.getX() + rc.getWidth());
+					portal.y = (int)(rc.getY() + rc.getHeight() / 2) ;
+					if( !publicRoom.getDoor( CONST.EAST) && r.contains( portal.x, portal.y)){
+						
+						publicRoom.setDoor( CONST.EAST);
+						
+						newDoor.x = (int)(rc.getX() + rc.getWidth()) - 1;
+						newDoor.y = (int)rc.getY() + rand.nextInt( (int) rc.getHeight() - 2) + 1;
+						
+						addDoor( newDoor, false);
+					}
+				}
+			}
+		}
+		
+	}
 
 	public void generateBuildingFloor( int x, int y, int W, int H){
 		temRegion.clear();
@@ -453,108 +616,20 @@ public class MapGenerator {
 		/** Add the outline of then room */
 		int j = 0;
 		for(Rectangle r : buildRegion){
-//			System.out.println( j +
-//					" x: " + r.getX() +
-//					" y: " + r.getY() + 
-//					" W: " + r.getWidth() +
-//					" H: " + r.getHeight());
+			System.out.println( j +
+					" x: " + r.getX() +
+					" y: " + r.getY() + 
+					" W: " + r.getWidth() +
+					" H: " + r.getHeight());
 			drawOutline( r, 57);
 			rooms.add( new Room( r));
 			
 			j++;
 		}
-
-		/** Add the doors */
-		Vector2f portal = new Vector2f( 0, 0);
 		
-		for(Room room : rooms){
-			Rectangle r = room.getRect();
-				
-			for( Room childRoom : rooms){
-				if( r.getWidth() > 4){
-					room.setDoor( CONST.SOUTH);
-					if( childRoom.getRect() != r && childRoom.getRect().intersects( r)){
-						Rectangle rc = childRoom.getRect();
-						if(rc.getWidth() > r.getWidth()){
-							portal.x = (int)(r.getX() + r.getWidth()/2);
-							portal.y = (int)(r.getY() + r.getHeight()) ;
-							
-							if( rc.contains( portal.x, portal.y)){
-								int newDoorX = (int) (r.getX() + rand.nextInt( (int) r.getWidth() - 2) + 1);
-								int newDoorY = (int)(r.getY() + r.getHeight()) - 1;
-								System.out.println( " r < rc");
-								childRoom.setDoor( CONST.NORTH);
-								if( map.getTileId( newDoorX, newDoorY - 1, 0) != 57 
-										&& map.getTileId( newDoorX, newDoorY + 1, 0) != 57){
-									map.setTileId( newDoorX, newDoorY, 0, 1);
-								}
-							}
-						}
-						else{
-							portal.x = (int)(rc.getX() + rc.getWidth()/2);
-							portal.y = (int)(rc.getY());
-							
-							if( r.contains( portal.x, portal.y)){
-								int newDoorX = (int) (rc.getX() + rand.nextInt( (int) rc.getWidth() - 2) + 1);
-								int newDoorY = (int)rc.getY();
-								childRoom.setDoor( CONST.NORTH);
-								if( map.getTileId( newDoorX, newDoorY - 1, 0) != 57 
-										&& map.getTileId( newDoorX, newDoorY + 1, 0) != 57){
-									map.setTileId( newDoorX, newDoorY, 0, 1);
-								}
-							}
-							
-						}
-					}
-				}
-				if( r.getHeight() > 4){
-					room.setDoor( CONST.EAST);
-					if( childRoom.getRect() != r && childRoom.getRect().intersects( r)){
-						Rectangle rc = childRoom.getRect();
-						if(rc.getHeight() > r.getHeight()){
-							portal.x = (int)(r.getX() + r.getWidth());
-							portal.y = (int)(r.getY() + r.getHeight()/2) ;
-							
-							if( rc.contains( portal.x, portal.y)){
-								int newDoorX = (int)(r.getX() + r.getWidth()) - 1;
-								int newDoorY = (int)(r.getY() + rand.nextInt( (int) r.getHeight() - 2)) + 1;
-								System.out.println( " r < rc");
-								childRoom.setDoor( CONST.WEST);
-								if( map.getTileId( newDoorX - 1, newDoorY, 0) != 57 
-										&& map.getTileId( newDoorX + 1, newDoorY, 0) != 57){
-									map.setTileId( newDoorX, newDoorY, 0, 1);
-								}
-							}
-						}
-						else{
-							portal.x = (int)(rc.getX());
-							portal.y = (int)(rc.getY() + rc.getHeight()/2);
-							
-							if( r.contains( portal.x, portal.y)){
-								int newDoorX = (int)rc.getX();
-								int newDoorY = (int)rc.getY() + rand.nextInt( (int) rc.getHeight() - 2) + 1;
-								childRoom.setDoor( CONST.WEST);
-								if( map.getTileId( newDoorX - 1, newDoorY, 0) != 57 
-										&& map.getTileId( newDoorX + 1, newDoorY, 0) != 57){
-									map.setTileId( newDoorX, newDoorY, 0, 1);
-								}
-							}
-							
-						}
-					}
-				}
-			}
-//			map.setTileId( 
-//					(int)(r.getX() + rand.nextInt( (int) r.getWidth() - 2) + 1),
-//					(int)(r.getY() + r.getHeight()) - 1,
-//					0,
-//					1);
-//			map.setTileId( 
-//					(int)(r.getX() + r.getWidth()) - 1,
-//					(int)(r.getY() + rand.nextInt( (int) r.getHeight() - 2)) + 1,
-//					0,
-//					1);
-		}
+		addInterRoomDoor();
+
+		addHallwayDoor();
 		
 		drawOutline( new Rectangle( x, y, W, H), 57);
 	}

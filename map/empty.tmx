@@ -4,7 +4,7 @@
   <image source="../img/tiles2et.png" width="200" height="200"/>
   <tile id="0">
    <properties>
-    <property name="solid" value="0"/>
+    <property name="solid" value="false"/>
    </properties>
   </tile>
  </tileset>
