@@ -126,7 +126,7 @@ public class PlayState extends BasicGameState {
 		int g = 1;
 		
 		if( debugMod){
-			for( Rectangle r : mapGen.temRegion){
+			for( Rectangle r : mapGen.buildRegion){
 				if(g == 1)gr.setColor( Color.green);
 				else if(g == 2)gr.setColor( Color.black);
 				else if(g == 3)gr.setColor( Color.yellow);
@@ -141,8 +141,8 @@ public class PlayState extends BasicGameState {
 							r.getWidth() * 10,
 							r.getHeight() * 10);
 				gr.drawString( "" + g,
-						r.getX() * 10 + r.getWidth() * 5 - g * 10,
-						r.getY() * 10 + r.getHeight() * 5);
+						r.getX() * 10 + r.getWidth() * 5 - 5,
+						r.getY() * 10 + r.getHeight() * 5 - 5);
 				g++;
 			}
 		}
@@ -168,7 +168,7 @@ public class PlayState extends BasicGameState {
     	/** Regenerate the current map */
     	if(input.isKeyPressed(Input.KEY_SPACE)){
     		mapGen.generateEmptyMap();
-        	mapGen.generateBuildingFloor( 2, 2, 50, 40);
+        	mapGen.generateBuildingFloor( 2, 2, 75, 55);
         	mapGen.tileCorrection();
         	cityMap.map = mapGen.getMap();
     	}

@@ -19,6 +19,8 @@ public class MapGenerator {
 	
 	public ArrayList<Rectangle> hallway = new ArrayList<Rectangle>();
 	
+	public ArrayList<Room> rooms = new ArrayList<Room>();
+	
 	public MapGenerator() throws SlickException {
 		generateEmptyMap();
 	}
@@ -276,7 +278,6 @@ public class MapGenerator {
 						r.getY() + py,
 						5,
 						10 + 2 * cy));
-		System.out.println( " c" + c + " p" + p);
 
 		/*** North and South side*/
 		temRegion.add(
@@ -371,6 +372,7 @@ public class MapGenerator {
 		temRegion.clear();
 		buildRegion.clear();
 		hallway.clear();
+		rooms.clear();
 		
 		//drawOutline( x, y, W, H, 57);
 		
@@ -447,19 +449,114 @@ public class MapGenerator {
 		for(int l = 0; l < nbrRegion; l++){
 			sliceInHalf( l, 1);
 		}
-		
+
+		/** Add the outline of then room */
 		int j = 0;
 		for(Rectangle r : buildRegion){
-			System.out.println( j +
-					" x: " + r.getX() +
-					" y: " + r.getY() + 
-					" W: " + r.getWidth() +
-					" H: " + r.getHeight());
+//			System.out.println( j +
+//					" x: " + r.getX() +
+//					" y: " + r.getY() + 
+//					" W: " + r.getWidth() +
+//					" H: " + r.getHeight());
 			drawOutline( r, 57);
+			rooms.add( new Room( r));
 			
 			j++;
 		}
+
+		/** Add the doors */
+		Vector2f portal = new Vector2f( 0, 0);
 		
+		for(Room room : rooms){
+			Rectangle r = room.getRect();
+				
+			for( Room childRoom : rooms){
+				if( r.getWidth() > 4){
+					room.setDoor( CONST.SOUTH);
+					if( childRoom.getRect() != r && childRoom.getRect().intersects( r)){
+						Rectangle rc = childRoom.getRect();
+						if(rc.getWidth() > r.getWidth()){
+							portal.x = (int)(r.getX() + r.getWidth()/2);
+							portal.y = (int)(r.getY() + r.getHeight()) ;
+							
+							if( rc.contains( portal.x, portal.y)){
+								int newDoorX = (int) (r.getX() + rand.nextInt( (int) r.getWidth() - 2) + 1);
+								int newDoorY = (int)(r.getY() + r.getHeight()) - 1;
+								System.out.println( " r < rc");
+								childRoom.setDoor( CONST.NORTH);
+								if( map.getTileId( newDoorX, newDoorY - 1, 0) != 57 
+										&& map.getTileId( newDoorX, newDoorY + 1, 0) != 57){
+									map.setTileId( newDoorX, newDoorY, 0, 1);
+								}
+							}
+						}
+						else{
+							portal.x = (int)(rc.getX() + rc.getWidth()/2);
+							portal.y = (int)(rc.getY());
+							
+							if( r.contains( portal.x, portal.y)){
+								int newDoorX = (int) (rc.getX() + rand.nextInt( (int) rc.getWidth() - 2) + 1);
+								int newDoorY = (int)rc.getY();
+								childRoom.setDoor( CONST.NORTH);
+								if( map.getTileId( newDoorX, newDoorY - 1, 0) != 57 
+										&& map.getTileId( newDoorX, newDoorY + 1, 0) != 57){
+									map.setTileId( newDoorX, newDoorY, 0, 1);
+								}
+							}
+							
+						}
+					}
+				}
+				if( r.getHeight() > 4){
+					room.setDoor( CONST.EAST);
+					if( childRoom.getRect() != r && childRoom.getRect().intersects( r)){
+						Rectangle rc = childRoom.getRect();
+						if(rc.getHeight() > r.getHeight()){
+							portal.x = (int)(r.getX() + r.getWidth());
+							portal.y = (int)(r.getY() + r.getHeight()/2) ;
+							
+							if( rc.contains( portal.x, portal.y)){
+								int newDoorX = (int)(r.getX() + r.getWidth()) - 1;
+								int newDoorY = (int)(r.getY() + rand.nextInt( (int) r.getHeight() - 2)) + 1;
+								System.out.println( " r < rc");
+								childRoom.setDoor( CONST.WEST);
+								if( map.getTileId( newDoorX - 1, newDoorY, 0) != 57 
+										&& map.getTileId( newDoorX + 1, newDoorY, 0) != 57){
+									map.setTileId( newDoorX, newDoorY, 0, 1);
+								}
+							}
+						}
+						else{
+							portal.x = (int)(rc.getX());
+							portal.y = (int)(rc.getY() + rc.getHeight()/2);
+							
+							if( r.contains( portal.x, portal.y)){
+								int newDoorX = (int)rc.getX();
+								int newDoorY = (int)rc.getY() + rand.nextInt( (int) rc.getHeight() - 2) + 1;
+								childRoom.setDoor( CONST.WEST);
+								if( map.getTileId( newDoorX - 1, newDoorY, 0) != 57 
+										&& map.getTileId( newDoorX + 1, newDoorY, 0) != 57){
+									map.setTileId( newDoorX, newDoorY, 0, 1);
+								}
+							}
+							
+						}
+					}
+				}
+			}
+//			map.setTileId( 
+//					(int)(r.getX() + rand.nextInt( (int) r.getWidth() - 2) + 1),
+//					(int)(r.getY() + r.getHeight()) - 1,
+//					0,
+//					1);
+//			map.setTileId( 
+//					(int)(r.getX() + r.getWidth()) - 1,
+//					(int)(r.getY() + rand.nextInt( (int) r.getHeight() - 2)) + 1,
+//					0,
+//					1);
+		}
+		
+		drawOutline( new Rectangle( x, y, W, H), 57);
 	}
 	
 	public TiledMap getMap(){
