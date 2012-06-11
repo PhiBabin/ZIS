@@ -1,5 +1,9 @@
+package zis;
 
 public class CONST {
+	/** Applet Constant */
+	public static boolean APPLET = true;
+	
 	/** Direction Constant */
 	public static final int NORTH = 0;
 	public static final int EAST = 1;

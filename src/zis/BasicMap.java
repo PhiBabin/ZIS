@@ -1,5 +1,7 @@
+package zis;
 
 import java.util.HashSet;
+import java.util.Set;
 
 import org.newdawn.slick.geom.Vector2f;
 import org.newdawn.slick.tiled.TiledMap;
@@ -15,7 +17,7 @@ public class BasicMap implements TileBasedMap {
 	
 	private AStarPathFinder pathFinder;
 	
-	private HashSet blockers = new HashSet();
+	private Set<String> blockers = new HashSet<String>();
 
     public BasicMap(TiledMap map, String blockingPropertyName) {
         this.map = map;
@@ -35,13 +37,13 @@ public class BasicMap implements TileBasedMap {
                 		map.getTileId(x, y, 0), blockingPropertyName, "true").equals("true");
         		
         		if(!canBlock)
-        			blockers.add( x+"-"+y);
+        			blockers.add(new String( x+"-"+y));
         	}
     	}
     }
     
     public Path getPath( Vector2f p, Vector2f nP){
-		System.out.println("LLLLAAAAGGGG");
+		//System.out.println("LLLLAAAAGGGG");
 		return pathFinder.findPath(null, (int)p.x, (int)p.y, (int)nP.x, (int)nP.y);
 	}
     
@@ -53,7 +55,7 @@ public class BasicMap implements TileBasedMap {
     }
     
     public boolean isSolid( int x, int y){
-    	return !blockers.contains( x+"-"+y);
+    	return !blockers.contains( new String( x+"-"+y));
     }
 
     @Override

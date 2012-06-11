@@ -1,3 +1,4 @@
+package zis;
 
 import java.util.ArrayList;
 import java.util.Random;
@@ -26,7 +27,11 @@ public class MapGenerator {
 	}
 	
 	public void generateEmptyMap() throws SlickException {
-		map = new TiledMap( "map/empty.tmx");
+
+		if( !CONST.APPLET)
+			map = new TiledMap( "map/empty.tmx", true);
+		else
+			map = new TiledMap(  Thread.currentThread().getContextClassLoader().getResourceAsStream("map/empty.tmx"), "img/");
 	}
 
 	public void drawOutline( Rectangle r, int tileId){
@@ -616,11 +621,11 @@ public class MapGenerator {
 		/** Add the outline of then room */
 		int j = 0;
 		for(Rectangle r : buildRegion){
-			System.out.println( j +
-					" x: " + r.getX() +
-					" y: " + r.getY() + 
-					" W: " + r.getWidth() +
-					" H: " + r.getHeight());
+//			System.out.println( j +
+//					" x: " + r.getX() +
+//					" y: " + r.getY() + 
+//					" W: " + r.getWidth() +
+//					" H: " + r.getHeight());
 			drawOutline( r, 57);
 			rooms.add( new Room( r));
 			
@@ -631,7 +636,7 @@ public class MapGenerator {
 
 		addHallwayDoor();
 		
-		drawOutline( new Rectangle( x, y, W, H), 57);
+		//drawOutline( new Rectangle( x, y, W, H), 57);
 	}
 	
 	public TiledMap getMap(){

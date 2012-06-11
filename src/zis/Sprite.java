@@ -1,3 +1,4 @@
+package zis;
 
 import org.newdawn.slick.Animation;
 import org.newdawn.slick.GameContainer;

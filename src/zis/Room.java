@@ -1,3 +1,5 @@
+package zis;
+
 import org.newdawn.slick.geom.Rectangle;
 
 
