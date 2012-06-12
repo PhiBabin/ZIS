@@ -4,7 +4,6 @@ import java.util.ArrayList;
 
 import org.newdawn.slick.Animation;
 import org.newdawn.slick.GameContainer;
-import org.newdawn.slick.geom.Vector2f;
 import org.newdawn.slick.state.StateBasedGame;
 import org.newdawn.slick.util.pathfinding.Path;
 
@@ -30,23 +29,23 @@ public class NPC extends Sprite {
 		newPath.clear();
 		this.world = world;
 
-		addNewPath( new Vector2f( 
-				(float)Math.floor( Math.random()*80), 
-				(float)Math.floor( Math.random()*60)));
+		addNewPath( new Vector2i( 
+				(int)Math.floor( Math.random()*80), 
+				(int)Math.floor( Math.random()*60)));
 	}
 	
-	public NPC(Animation pSprite, float nX, float nY, BasicMap world) {
+	public NPC(Animation pSprite, int nX, int nY, BasicMap world) {
 		super(pSprite, nX, nY);
 		
 		newPath.clear();
 		this.world = world;
 
-		addNewPath( new Vector2f( 
-				(float)Math.floor( Math.random()*80), 
-				(float)Math.floor( Math.random()*60)));
+		addNewPath( new Vector2i( 
+				(int)Math.floor( Math.random()*80), 
+				(int)Math.floor( Math.random()*60)));
 	}
 	
-	public void addNewPath( Vector2f nP){
+	public void addNewPath( Vector2i nP){
 		Path testt = world.getPath( p, nP);
 		if(testt != null){
 			newPath.add(testt);
@@ -97,9 +96,9 @@ public class NPC extends Sprite {
 			newPath.clear();
 			
 			idStepPath = 0;
-			addNewPath( new Vector2f( 
-					(float)Math.floor( Math.random()*80), 
-					(float)Math.floor( Math.random()*60)));
+			addNewPath( new Vector2i( 
+					(int)Math.floor( Math.random()*80), 
+					(int)Math.floor( Math.random()*60)));
 		}
 		
 	}

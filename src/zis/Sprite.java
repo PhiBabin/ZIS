@@ -17,7 +17,7 @@ public class Sprite {
 	protected Animation aniSprite;
 	
 	/** Position of the sprite  */
-	protected Vector2f p;
+	protected Vector2i p;
 	
 	/** Scale of the sprite  */
 	protected float scale;
@@ -34,19 +34,19 @@ public class Sprite {
 		h = aniSprite.getHeight();
 		w = aniSprite.getWidth();
 		
-		p = new Vector2f(0,0);
+		p = new Vector2i(0,0);
 	}
 	
 	/**
 	 * Constructor of a simple Sprite
 	 * @param pSprite , nX, nY
 	 */
-	public Sprite(Animation pSprite, float nX, float nY){
+	public Sprite(Animation pSprite, int nX, int nY){
 		aniSprite=pSprite;
 		h = aniSprite.getHeight();
 		w = aniSprite.getWidth();
 		
-		p= new Vector2f(nX,nY);
+		p= new Vector2i(nX,nY);
 	}
 	/**
 	 * Simple Sprite render function
@@ -70,19 +70,19 @@ public class Sprite {
 
     /**
      * Move simple Sprite to new position
-     * @param pX float
-     * @param pY float
+     * @param pX int
+     * @param pY int
      */
-	public void move(float pX, float pY){
-		p = new Vector2f( p.x+pX,  p.y+pY);
+	public void move(int pX, int pY){
+		p = new Vector2i( p.x+pX,  p.y+pY);
 	}
 	
     /**
      * Move simple Sprite to new position
-     * @param pM Vector2f 
+     * @param pM Vector2i 
      */
-	public void move(Vector2f pM){
-		p = new Vector2f( p.x+pM.x,  p.y+pM.y);
+	public void move(Vector2i pM){
+		p = new Vector2i( p.x+pM.x,  p.y+pM.y);
 	}
 	
     /**
@@ -98,9 +98,9 @@ public class Sprite {
 	
 	/**
 	 * Return Sprite position
-	 * @return position Vector2f
+	 * @return position Vector2i
 	 */
-	public Vector2f getPosition() {
+	public Vector2i getPosition() {
 		return p;
 	}
 
@@ -116,7 +116,7 @@ public class Sprite {
 	 * Return Sprite x position
 	 * @return X position  float
 	 */
-	public void setX(float x) {
+	public void setX(int x) {
 		p.x = x;
 	}
 
@@ -124,7 +124,7 @@ public class Sprite {
 	 * Return Sprite y position
 	 * @return Y position  float
 	 */
-	public void setY(float y) {
+	public void setY(int y) {
 		p.y = y;
 	}
 	

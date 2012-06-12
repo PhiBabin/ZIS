@@ -3,7 +3,6 @@ package zis;
 import java.util.HashSet;
 import java.util.Set;
 
-import org.newdawn.slick.geom.Vector2f;
 import org.newdawn.slick.tiled.TiledMap;
 import org.newdawn.slick.util.pathfinding.AStarPathFinder;
 import org.newdawn.slick.util.pathfinding.Path;
@@ -30,6 +29,7 @@ public class BasicMap implements TileBasedMap {
     
     public void regenerateBlocker(){
     	boolean canBlock;
+    	blockers.clear();
 
     	for(int x=0; x<map.getWidth(); x++){
         	for(int y=0; y<map.getHeight(); y++){
@@ -42,20 +42,23 @@ public class BasicMap implements TileBasedMap {
     	}
     }
     
-    public Path getPath( Vector2f p, Vector2f nP){
+    public Path getPath( Vector2i p, Vector2i nP){
 		//System.out.println("LLLLAAAAGGGG");
-		return pathFinder.findPath(null, (int)p.x, (int)p.y, (int)nP.x, (int)nP.y);
+		return pathFinder.findPath(null, p.x, p.y, nP.x, nP.y);
 	}
     
     @Override
     public boolean blocked(PathFindingContext ctx, int x, int y) {
-        // NOTE: Using getTileProperty like this is slow. You should instead cache the results. 
-        // For example, set up a HashSet<Integer> that contains all of the blocking tile ids. 
         return isSolid( x, y);
     }
     
     public boolean isSolid( int x, int y){
     	return !blockers.contains( new String( x+"-"+y));
+    }
+    
+    public void setMap( TiledMap map){
+        this.map = map;
+		regenerateBlocker();
     }
 
     @Override

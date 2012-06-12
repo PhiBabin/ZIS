@@ -23,7 +23,10 @@ import org.newdawn.slick.state.StateBasedGame;
 public class PlayState extends BasicGameState {
 	
 	private boolean debugSquare = false;
+	
 	private Vector2f pSquare = new Vector2f( 0, 0);
+	private Vector2i pCursor = new Vector2i( 0, 0);
+	
 	private boolean debugMod = false;
 	
 	
@@ -87,14 +90,14 @@ public class PlayState extends BasicGameState {
     	 population = new ArrayList<NPC>();
     	 population.clear();
     	 
-    	 Vector2f pPop;
+    	 Vector2i pPop;
     	 int e=2;
     	 while(e<130){
-    		 pPop = new Vector2f(
-    				 (float)Math.floor( Math.random()*80),
-    				 (float)Math.floor( Math.random()*60));
+    		 pPop = new Vector2i(
+    				(int)Math.floor( Math.random()*80),
+    				(int)Math.floor( Math.random()*60));
     		 
-    		 if( !cityMap.isSolid( (int)pPop.x, (int)pPop.y)){
+    		 if( !cityMap.isSolid( pPop.x, pPop.y)){
         		// System.out.println( "I'm number "+ e + ". Who's number 1?");
     			 population.add(new NPC( imageMan.player, pPop.x, pPop.y, cityMap));
     			 e++;
@@ -119,8 +122,8 @@ public class PlayState extends BasicGameState {
 		
 		if( debugSquare){
 			gr.drawRect( pSquare.x, pSquare.y, 10, 10);
-			gr.drawString( "( " + Math.floor( ( pSquare.x + cam.x) / 10) + "," +
-							" " + Math.floor( ( pSquare.y + cam.y) / 10) + ")",
+			gr.drawString( "( " + Math.floor( ( pCursor.x) ) + "," +
+							" " + Math.floor( ( pCursor.y) ) + ")",
 							5, 580);
 		}
 		
@@ -171,7 +174,7 @@ public class PlayState extends BasicGameState {
     		mapGen.generateEmptyMap();
         	mapGen.generateBuildingFloor( 2, 2, 75, 55);
         	mapGen.tileCorrection();
-        	cityMap.map = mapGen.getMap();
+        	cityMap.setMap(mapGen.getMap());
     	}
 
     	/** Debug GUI */
@@ -209,13 +212,12 @@ public class PlayState extends BasicGameState {
     	}
     	turn += elapseTurn;
     	
-    	if(cityMap.isSolid( 
-    			(int)Math.floor( ( input.getMouseX()) * 0.1),
-    			(int)Math.floor( ( input.getMouseY()) * 0.1))){
+    	pCursor.x = (int)Math.floor( ( input.getMouseX() + cam.x) * 0.1);
+    	pCursor.y = (int)Math.floor( ( input.getMouseY() + cam.y) * 0.1);
+
+    	if(cityMap.isSolid( (int)pCursor.x, (int)pCursor.y)){
     		debugSquare = true;
-    		pSquare = new Vector2f(
-    				(float)(Math.floor( input.getMouseX() * 0.1)) * 10,
-    				(float)(Math.floor( input.getMouseY() * 0.1)) * 10);
+    		pSquare = new Vector2f( pCursor.x * 10 - cam.x, pCursor.y * 10 - cam.y);
     	}
     	else
     		debugSquare = false;

@@ -2,7 +2,7 @@ package zis;
 
 public class CONST {
 	/** Applet Constant */
-	public static boolean APPLET = true;
+	public static boolean APPLET = false;
 	
 	/** Direction Constant */
 	public static final int NORTH = 0;
@@ -11,7 +11,7 @@ public class CONST {
 	public static final int WEST = 3;
 
 	/** Pathfinder parameter */
-	public static final int MAX_PATH_LENGTH = 200;
+	public static final int MAX_PATH_LENGTH = 1000;
 	
 	/** Building generator parameter */
 	public static boolean SYMMETRICROOM = true;

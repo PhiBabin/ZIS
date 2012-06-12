@@ -5,7 +5,6 @@ import java.util.Random;
 
 import org.newdawn.slick.SlickException;
 import org.newdawn.slick.geom.Rectangle;
-import org.newdawn.slick.geom.Vector2f;
 import org.newdawn.slick.tiled.TiledMap;
 
 public class MapGenerator {
@@ -56,11 +55,11 @@ public class MapGenerator {
 	}
 	
 	public void generateLabyrinth( int x, int y, int W, int H){
-		ArrayList<Vector2f> C = new ArrayList<Vector2f>();
+		ArrayList<Vector2i> C = new ArrayList<Vector2i>();
 		
 		fillRect( x, y, W, H, 57);
 		
-		C.add(new Vector2f( 
+		C.add(new Vector2i( 
 			1 + x + (float)Math.floor( Math.random() * ( W /2)) * 2 , 
 			1 + y + (float)Math.floor( Math.random() * ( H /2)) * 2 ));
 		map.setTileId( (int)C.get(0).x, (int)C.get(0).y, 0, 1);
@@ -93,25 +92,25 @@ public class MapGenerator {
 					
 					if(d == 0 && n){
 						end = true;
-						C.add(new Vector2f( cX, cY - 2));
+						C.add(new Vector2i( cX, cY - 2));
 						map.setTileId( cX, cY - 2, 0, 1);
 						map.setTileId( cX, cY - 1, 0, 1);
 					}
 					else if(d == 2 && w){
 						end = true;
-						C.add(new Vector2f( cX - 2, cY));
+						C.add(new Vector2i( cX - 2, cY));
 						map.setTileId(  cX - 2, cY, 0, 1);
 						map.setTileId(  cX - 1, cY, 0, 1);
 					}
 					else if(d == 1 && s){
 						end = true;
-						C.add(new Vector2f( cX, cY + 2));
+						C.add(new Vector2i( cX, cY + 2));
 						map.setTileId( cX, cY + 2, 0, 1);
 						map.setTileId( cX, cY + 1, 0, 1);
 					}
 					else if(d == 3 && e){
 						end = true;
-						C.add(new Vector2f( cX + 2, cY));
+						C.add(new Vector2i( cX + 2, cY));
 						map.setTileId( cX + 2, cY, 0, 1);
 						map.setTileId( cX + 1, cY, 0, 1);
 					}
@@ -383,7 +382,7 @@ public class MapGenerator {
 		temRegion.remove(id);
 		
 	}
-	public void addDoor( Vector2f d, boolean ver){
+	public void addDoor( Vector2i d, boolean ver){
 		if( map.getTileId( (int)d.x, (int)d.y - 1, 0) != 57 
 				&& map.getTileId( (int)d.x, (int)d.y + 1, 0) != 57 
 				&& ver){
@@ -398,8 +397,8 @@ public class MapGenerator {
 	}
 	
 	public void addInterRoomDoor(){
-		Vector2f portal = new Vector2f( 0, 0);
-		Vector2f newDoor = new Vector2f( 0, 0);
+		Vector2i portal = new Vector2i( 0, 0);
+		Vector2i newDoor = new Vector2i( 0, 0);
 		
 		for(Room room : rooms){
 			Rectangle r = room.getRect();
@@ -470,8 +469,8 @@ public class MapGenerator {
 		
 	}
 	public void addHallwayDoor(){
-		Vector2f portal = new Vector2f( 0, 0);
-		Vector2f newDoor = new Vector2f( 0, 0);
+		Vector2i portal = new Vector2i( 0, 0);
+		Vector2i newDoor = new Vector2i( 0, 0);
 	
 		for(Rectangle r: hallway){
 				
