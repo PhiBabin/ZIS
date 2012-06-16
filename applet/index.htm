@@ -1,0 +1,40 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+                      "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+  <head>
+    <style type="text/css">
+      body { text-align:center; 
+             margin:0 auto; 
+             margin-left:0px; 
+             margin-right:0px; 
+             margin-top:10px; 
+             margin-bottom:10px }
+    </style>
+  <title>ZIS - test applet</title>
+  </head>
+  <body text="#FFFFFF"
+        bgcolor="#000000"
+        link="#FF0000"
+        alink="#FF0000"
+        vlink="#FF0000">
+
+    <applet code="org.lwjgl.util.applet.AppletLoader" 
+        archive="lwjgl_util_applet.jar, lzma.jar" 
+        codebase="." 
+        width="800" height="600">
+ 
+  <param name="al_title" value="ZIS"> 
+  <param name="al_main" value="org.newdawn.slick.AppletGameContainer"> 
+  <param name="game" value="zis.ZIS">
+ 
+  <param name="al_jars" value=" ZIS.jar, slick.jar,lwjgl.jar.pack.lzma, jinput.jar.pack.lzma, lwjgl_util.jar.pack.lzma"> 
+ 
+  <param name="al_windows" value="windows_natives.jar"> 
+  <param name="al_linux" value="linux_natives.jar"> 
+  <param name="al_mac" value="macosx_natives.jar"> 
+
+  <param name="al_debug" value="true">
+  <param name="separate_jvm" value="true"> 
+</applet> 
+  </body>
+</html>

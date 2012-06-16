@@ -13,42 +13,33 @@ public class NPC extends Sprite {
 	/**
 	 * TiledSet of the mainMap
 	 */
-	private BasicMap world;
+	private WorldMap world;
 	
 	/**
 	 * New position of the Player
 	 */
-	private ArrayList<Path> newPath = new ArrayList<Path>(); 
+	private ArrayList< Path> newPath = new ArrayList< Path>(); 
 	
 	 
 	private int idStepPath = 0;
 	
-	public NPC(Animation pSprite, BasicMap world) {
-		super(pSprite);
-		
-		newPath.clear();
-		this.world = world;
-
-		addNewPath( new Vector2i( 
-				(int)Math.floor( Math.random()*80), 
-				(int)Math.floor( Math.random()*60)));
-	}
-	
-	public NPC(Animation pSprite, int nX, int nY, BasicMap world) {
+	public NPC(Animation pSprite, int nX, int nY, WorldMap world) {
 		super(pSprite, nX, nY);
 		
 		newPath.clear();
+
 		this.world = world;
+		
 
 		addNewPath( new Vector2i( 
 				(int)Math.floor( Math.random()*80), 
 				(int)Math.floor( Math.random()*60)));
-	}
+		}
 	
 	public void addNewPath( Vector2i nP){
-		Path testt = world.getPath( p, nP);
-		if(testt != null){
-			newPath.add(testt);
+		Path path = world.getPath( p, nP);
+		if( path != null){
+			newPath.add( path);
 		}
 		
 	}

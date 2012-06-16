@@ -31,7 +31,7 @@ public class PlayState extends BasicGameState {
 	
 	
 	
-	private BasicMap cityMap;
+//	private WorldMap cityMap;
 	
 	private int turn = 0;
 	
@@ -41,7 +41,7 @@ public class PlayState extends BasicGameState {
 
 	private ArrayList<NPC> population = null; 
 	
-	private ImgManager imageMan;
+	private RessourceManager resMan;
 	
 	private MapGenerator mapGen;
 	
@@ -69,38 +69,50 @@ public class PlayState extends BasicGameState {
 		this.stateID = stateID;
 	}
 	
-
-    public void init(GameContainer gc, StateBasedGame sbg) throws SlickException {
-    	imageMan = new ImgManager();
-    	mapGen = new MapGenerator();
-    	
-    	//mapGen.generateLabyrinth( 0, 0, 80, 60);      
+	public void newRandomMap() throws SlickException{
+		mapGen.generateEmptyMap();
+		
     	long generationTime = System.currentTimeMillis();
     	
-    	mapGen.generateBuildingFloor( 2, 2, 20, 20);
+    	mapGen.generateBuildingFloor( 2, 2, (int)(Math.random() * 70) + 5, (int)(Math.random() * 50) + 5);
     	mapGen.tileCorrection();
     	
     	System.out.println("Map generate in " + (int)(System.currentTimeMillis() - generationTime) + "ms.");
+		
+	}
 
+    public void init(GameContainer gc, StateBasedGame sbg) throws SlickException {
+ 	long generationTime = System.currentTimeMillis();
+    	resMan = new RessourceManager();
+        
+    	mapGen = new MapGenerator( new WorldMap( resMan.tilesetImg));
+    	mapGen.generateBuildingFloor( 2, 2, (int)(Math.random() * 70) + 5, (int)(Math.random() * 50) + 5);
+    	mapGen.tileCorrection();
+    	//mapGen.generateLabyrinth( 0, 0, 80, 60);      
     	
-    	cityMap = new BasicMap( mapGen.getMap(), "solid");
+    	/*** newRandomMap(); */
+    	
     	
     	////cityMap = new BasicMap( new TiledMap("map/test_labyrinth.tmx"), "solid");
-    	 
+
+   	 System.out.println( "B" + System.currentTimeMillis());
     	 population = new ArrayList<NPC>();
     	 population.clear();
     	 
     	 Vector2i pPop;
     	 int e=2;
-    	 while(e<130){
+    	 System.out.println( "C" + System.currentTimeMillis());
+    	 while(e<10){
     		 pPop = new Vector2i(
     				(int)Math.floor( Math.random()*80),
     				(int)Math.floor( Math.random()*60));
     		 
-    		 if( !cityMap.isSolid( pPop.x, pPop.y)){
+    		 if( !mapGen.map.isSolid( pPop.x, pPop.y)){
+    			 generationTime = System.currentTimeMillis();
         		// System.out.println( "I'm number "+ e + ". Who's number 1?");
-    			 population.add(new NPC( imageMan.player, pPop.x, pPop.y, cityMap));
+    			 population.add(new NPC( resMan.player, pPop.x, pPop.y, mapGen.map));
     			 e++;
+    		    	System.out.println("Habitant generate in " + (int)(System.currentTimeMillis() - generationTime) + "ms.");
     		 }
     	 }
     	 
@@ -109,7 +121,7 @@ public class PlayState extends BasicGameState {
  
     public void render(GameContainer gc, StateBasedGame sbg, Graphics gr) throws SlickException {
     	//gr.translate( -(int)cam.x, -(int)cam.y);
-		cityMap.map.render( -(int)cam.x, -(int)cam.y);
+    	mapGen.map.render(gc, sbg, gr, cam);
 		
 		for( NPC popu : population){
 			popu.render(gc, sbg, gr, cam);
@@ -170,11 +182,8 @@ public class PlayState extends BasicGameState {
     		cam.y -= delta * 0.1;
     	
     	/** Regenerate the current map */
-    	if(input.isKeyPressed(Input.KEY_SPACE)){
-    		mapGen.generateEmptyMap();
-        	mapGen.generateBuildingFloor( 2, 2, 75, 55);
-        	mapGen.tileCorrection();
-        	cityMap.setMap(mapGen.getMap());
+    	if(input.isKeyPressed(Input.KEY_SPACE)){ 
+        	newRandomMap();
     	}
 
     	/** Debug GUI */
@@ -215,7 +224,7 @@ public class PlayState extends BasicGameState {
     	pCursor.x = (int)Math.floor( ( input.getMouseX() + cam.x) * 0.1);
     	pCursor.y = (int)Math.floor( ( input.getMouseY() + cam.y) * 0.1);
 
-    	if(cityMap.isSolid( (int)pCursor.x, (int)pCursor.y)){
+    	if( mapGen.map.isSolid( (int)pCursor.x, (int)pCursor.y)){
     		debugSquare = true;
     		pSquare = new Vector2f( pCursor.x * 10 - cam.x, pCursor.y * 10 - cam.y);
     	}

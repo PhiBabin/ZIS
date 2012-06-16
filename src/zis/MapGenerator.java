@@ -5,11 +5,10 @@ import java.util.Random;
 
 import org.newdawn.slick.SlickException;
 import org.newdawn.slick.geom.Rectangle;
-import org.newdawn.slick.tiled.TiledMap;
 
 public class MapGenerator {
 	
-	private TiledMap map;
+	public WorldMap map;
 	
 	private Random rand = new Random();
 	
@@ -21,16 +20,18 @@ public class MapGenerator {
 	
 	public ArrayList<Room> rooms = new ArrayList<Room>();
 	
-	public MapGenerator() throws SlickException {
+	public MapGenerator( WorldMap map) throws SlickException {
+		this.map = map;
 		generateEmptyMap();
 	}
 	
 	public void generateEmptyMap() throws SlickException {
 
-		if( !CONST.APPLET)
-			map = new TiledMap( "map/empty.tmx", true);
-		else
-			map = new TiledMap(  Thread.currentThread().getContextClassLoader().getResourceAsStream("map/empty.tmx"), "img/");
+//		if( CONST.APPLET)
+//			map = new TiledMap(  Thread.currentThread().getContextClassLoader().getResourceAsStream("map/empty.tmx"));
+//		else
+//			map = new TiledMap( "/map/empty.tmx", true);
+		map.clear();
 	}
 
 	public void drawOutline( Rectangle r, int tileId){
@@ -125,7 +126,7 @@ public class MapGenerator {
 	
 	public void tileCorrection(){
 		boolean n, s, w, e;
-		int H = map.getHeight(), W = map.getWidth();
+		int H = map.getHeightInTiles(), W = map.getWidthInTiles();
 		for(int x=0; x < W; x++){
 			for(int y=0; y < H; y++){
 				if(map.getTileId( x, y, 0) == 57){
@@ -319,12 +320,12 @@ public class MapGenerator {
 				new Rectangle( r.getX(),
 				r.getY() + py,
 				p + 1,
-				2 * cy + 11));
+				r.getHeight() - 2 * py));
 		temRegion.add(
 				new Rectangle( r.getX() + p + 9 + 2 * c,
 				r.getY() + py,
 				r.getWidth() - p - 2*c - 9,
-				2 * cy + 11));
+				r.getHeight() - 2 * py));
 
 		
 		temRegion.remove(id);
@@ -551,14 +552,14 @@ public class MapGenerator {
 		
 		if( rand.nextBoolean()){
 			
-			if( W >= 60){
+			if( W >= 50 && H >=30){
 				addHallway( 0, position, true);
 				if( position >= 50){
 					addLoopHallway( 0);
 					addHallway( temRegion.size() - 1, 33, false);
 					addHallway( temRegion.size() - 1, 50, false);
 				}
-				if( position == 50){
+				if( position == 50 && H >= 40){
 					addLoopHallway( 0);
 					addHallway( temRegion.size() - 2, 33, false);
 					addHallway( temRegion.size() - 1, 50, false);
@@ -569,7 +570,7 @@ public class MapGenerator {
 					addHallway( temRegion.size() - 1, 50, false);
 				}
 			}
-			else{
+			else if(W >= 25 && H >=25){
 				addHallway( 0, 25, true);
 				addHallway( 1, 50, true);
 				if( H >=50){
@@ -580,16 +581,18 @@ public class MapGenerator {
 					addHallway( 1, 48, false);
 				}
 			}
+			else{
+				addHallway( 0, 50, H < W);
+			}
 		}
 		else{
-			
-			if( H >= 60){
+			if( H >= 50 && W >=30){
 				addHallway( 0, position, false);
 				if( position >= 50){
 					addLoopHallway( 0);
 					addHallway( temRegion.size() - 4, 50, true);
 				}
-				if( position == 50){
+				if( position == 50 && W >= 40){
 					addLoopHallway( 0);
 					addHallway( temRegion.size() - 5, 50, true);
 				}
@@ -598,7 +601,7 @@ public class MapGenerator {
 					addHallway( temRegion.size() - 5, 50, true);
 				}
 			}
-			else{
+			else if(H >= 25  && W >=25){
 				addHallway( 0, 30, false);
 				addHallway( 1, 50, false);
 				if( W >=50){
@@ -608,6 +611,9 @@ public class MapGenerator {
 				else{
 					addHallway( 1, 48, true);
 				}
+			}
+			else{
+				addHallway( 0, 50, H < W);
 			}
 			
 		}
@@ -638,7 +644,7 @@ public class MapGenerator {
 		//drawOutline( new Rectangle( x, y, W, H), 57);
 	}
 	
-	public TiledMap getMap(){
+	public WorldMap getMap(){
 		return map;
 	}
 }

@@ -36,6 +36,9 @@ public class ZIS  extends StateBasedGame {
 	 
 	public static void main( String[] args) {
 		try {
+			
+			CONST.APPLET = false;
+			
 			AppGameContainer app = new AppGameContainer( new ZIS());
 			app.setDisplayMode( SCREEN_WIDTH, SCREEN_HEIGHT, false); 
 			app.setVSync(true); 

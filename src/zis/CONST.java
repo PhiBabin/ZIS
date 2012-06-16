@@ -2,13 +2,19 @@ package zis;
 
 public class CONST {
 	/** Applet Constant */
-	public static boolean APPLET = false;
+	public static boolean APPLET = true;
 	
 	/** Direction Constant */
 	public static final int NORTH = 0;
 	public static final int EAST = 1;
 	public static final int SOUTH = 2;
 	public static final int WEST = 3;
+	
+	/** Map parameter */
+	public static final int MAP_WIDTH = 100;
+	public static final int MAP_HEIGHT = 100;
+	public static final int TILE_WIDTH = 10;
+	public static final int TILE_HEIGHT = 10;
 
 	/** Pathfinder parameter */
 	public static final int MAX_PATH_LENGTH = 1000;
