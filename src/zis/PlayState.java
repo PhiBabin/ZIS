@@ -74,7 +74,7 @@ public class PlayState extends BasicGameState {
 		
     	long generationTime = System.currentTimeMillis();
     	
-    	mapGen.generateBuildingFloor( 2, 2, (int)(Math.random() * 70) + 5, (int)(Math.random() * 50) + 5);
+    	mapGen.generateBuildingFloor( 2, 2, (int)(Math.random() * 900) + 5, (int)(Math.random() * 900) + 5);
     	mapGen.tileCorrection();
     	
     	System.out.println("Map generate in " + (int)(System.currentTimeMillis() - generationTime) + "ms.");
@@ -82,27 +82,21 @@ public class PlayState extends BasicGameState {
 	}
 
     public void init(GameContainer gc, StateBasedGame sbg) throws SlickException {
- 	long generationTime = System.currentTimeMillis();
+    	
     	resMan = new RessourceManager();
         
     	mapGen = new MapGenerator( new WorldMap( resMan.tilesetImg));
-    	mapGen.generateBuildingFloor( 2, 2, (int)(Math.random() * 70) + 5, (int)(Math.random() * 50) + 5);
-    	mapGen.tileCorrection();
-    	//mapGen.generateLabyrinth( 0, 0, 80, 60);      
+    	newRandomMap(); 
     	
-    	/*** newRandomMap(); */
-    	
-    	
-    	////cityMap = new BasicMap( new TiledMap("map/test_labyrinth.tmx"), "solid");
+    	//mapGen.generateLabyrinth( 0, 0, 80, 60)
 
-   	 System.out.println( "B" + System.currentTimeMillis());
     	 population = new ArrayList<NPC>();
     	 population.clear();
     	 
     	 Vector2i pPop;
     	 int e=2;
-    	 System.out.println( "C" + System.currentTimeMillis());
-    	 while(e<10){
+     	 long generationTime;
+    	 while(e < 4){
     		 pPop = new Vector2i(
     				(int)Math.floor( Math.random()*80),
     				(int)Math.floor( Math.random()*60));
@@ -120,7 +114,7 @@ public class PlayState extends BasicGameState {
     }
  
     public void render(GameContainer gc, StateBasedGame sbg, Graphics gr) throws SlickException {
-    	//gr.translate( -(int)cam.x, -(int)cam.y);
+    	gr.setBackground( new Color( 13, 37, 47));
     	mapGen.map.render(gc, sbg, gr, cam);
 		
 		for( NPC popu : population){
@@ -130,7 +124,10 @@ public class PlayState extends BasicGameState {
 		gr.drawString( "- Time (" + gameTime + "ms)x" + Math.round( gameSpeed * 100) + "% " +
 				"- Turn (" + turn + ")" +
 				"- Population (" + population.size() + ")" +
-				"- Symmetric (" + CONST.SYMMETRICROOM + ")", 80, 10); 
+				"- Symmetric (" + CONST.SYMMETRICROOM + ")", 80, 10);
+		gr.drawString( "( " + Math.floor( ( cam.x) ) + "," +
+				" " + Math.floor( ( cam.y) ) + ")",
+				690, 580); 
 		
 		if( debugSquare){
 			gr.drawRect( pSquare.x, pSquare.y, 10, 10);
@@ -172,14 +169,30 @@ public class PlayState extends BasicGameState {
     	Input input = gc.getInput();
     	
     	/*** Move the camera */
-    	if(input.isKeyDown(Input.KEY_RIGHT) && !input.isKeyDown(Input.KEY_LEFT))
-    		cam.x += delta * 0.1;
-    	if(!input.isKeyDown(Input.KEY_RIGHT) && input.isKeyDown(Input.KEY_LEFT))
-    		cam.x -= delta * 0.1;
-    	if(input.isKeyDown(Input.KEY_DOWN) && !input.isKeyDown(Input.KEY_UP))
-    		cam.y += delta * 0.1;
-    	if(!input.isKeyDown(Input.KEY_DOWN) && input.isKeyDown(Input.KEY_UP))
-    		cam.y -= delta * 0.1;
+    	if(input.isKeyDown(Input.KEY_RIGHT) && !input.isKeyDown(Input.KEY_LEFT)){
+    		if( input.isKeyDown(Input.KEY_LSHIFT)) 
+    			cam.x += delta * 0.5;
+    		else
+    			cam.x += delta * 0.1;    		
+    	}
+    	if(!input.isKeyDown(Input.KEY_RIGHT) && input.isKeyDown(Input.KEY_LEFT)){
+    		if( input.isKeyDown(Input.KEY_LSHIFT)) 
+    			cam.x -= delta * 0.5;
+    		else
+    			cam.x -= delta * 0.1;    		
+    	}
+    	if(input.isKeyDown(Input.KEY_DOWN) && !input.isKeyDown(Input.KEY_UP)){
+    		if( input.isKeyDown(Input.KEY_LSHIFT)) 
+    			cam.y += delta * 0.5;
+    		else
+    			cam.y += delta * 0.1;    		
+    	}
+    	if(!input.isKeyDown(Input.KEY_DOWN) && input.isKeyDown(Input.KEY_UP)){
+    		if( input.isKeyDown(Input.KEY_LSHIFT)) 
+    			cam.y -= delta * 0.5;
+    		else
+    			cam.y -= delta * 0.1;    		
+    	}
     	
     	/** Regenerate the current map */
     	if(input.isKeyPressed(Input.KEY_SPACE)){ 

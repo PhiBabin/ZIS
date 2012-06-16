@@ -6,6 +6,7 @@ import java.util.ArrayList;
 
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
+import org.newdawn.slick.Image;
 import org.newdawn.slick.SpriteSheet;
 import org.newdawn.slick.geom.Vector2f;
 import org.newdawn.slick.state.StateBasedGame;
@@ -19,18 +20,19 @@ public class WorldMap implements TileBasedMap {
 	
 	private ArrayList< short[][]> map = new ArrayList< short[][]>();
 	
+	private ArrayList< Image> tiles = new ArrayList< Image>();
+	
 	private Set<String> blockers = new HashSet<String>();
 	
 	private AStarPathFinder pathFinder;
 
     public WorldMap(SpriteSheet tilesetImg) {
     	map.add( new short[CONST.MAP_WIDTH][CONST.MAP_HEIGHT]);
-    	
-    	System.out.println( "New WorldMap");
 
         this.tilesetImg = tilesetImg;
 
 		regenerateBlocker();
+		loadTileset();
 		
 		pathFinder = new AStarPathFinder( this, CONST.MAX_PATH_LENGTH, false);
 		
@@ -51,6 +53,14 @@ public class WorldMap implements TileBasedMap {
 		for(int x = 0; x < CONST.MAP_WIDTH; x++){
 	    	for(int y = 0; y < CONST.MAP_HEIGHT; y++){
 	    		map.get( 0)[x][y] = 1;
+	    	}
+		}
+    }
+    
+    public void loadTileset(){
+	    for(int y = 0; y < tilesetImg.getVerticalCount(); y++){
+	    	for(int x = 0; x < tilesetImg.getHorizontalCount(); x++){
+	    		tiles.add( tilesetImg.getSubImage( x, y));
 	    	}
 		}
     }
@@ -85,22 +95,21 @@ public class WorldMap implements TileBasedMap {
     
     
     public void render( GameContainer gc, StateBasedGame sb, Graphics gr, Vector2f cam){
+    	int tileId;
+    	Vector2i pScreen = new Vector2i(
+    			(int)Math.floor( cam.x * 0.1),
+    			(int)Math.floor( cam.y * 0.1));
     	
-    	int tileId, tileInTilesetX = tilesetImg.getHorizontalCount();
-    	
-		for(int x = 0; x < CONST.MAP_WIDTH; x++){
-	    	for(int y = 0; y < CONST.MAP_HEIGHT; y++){
-	    		tileId = map.get( 0)[x][y];
+		for(int x = pScreen.x; x <= pScreen.x + CONST.SCREEN_WIDTH / CONST.TILE_WIDTH; x++){
+	    	for(int y = pScreen.y; y <= pScreen.y + CONST.SCREEN_HEIGHT / CONST.TILE_HEIGHT; y++){
+	    		if( x > 0 && y > 0 && y < getHeightInTiles() && x < getWidthInTiles()){
+	    			tileId = map.get( 0)[x][y];
 	    		
-	    		System.out.println( tileId % tileInTilesetX);
-	    		System.out.println( (tileId - tileId % tileInTilesetX) / tileInTilesetX);
-        		if ( tileId != 1)gr.drawImage( 
-        				tilesetImg.getSubImage( tileId % tileInTilesetX - 1, (tileId - tileId % tileInTilesetX) / tileInTilesetX),
-        				x * CONST.TILE_WIDTH - cam.x,
-        				y * CONST.TILE_HEIGHT -cam.y);
+	        		if ( tileId != 1)
+	        			gr.drawImage( tiles.get( tileId - 1), x * CONST.TILE_WIDTH - cam.x, y * CONST.TILE_HEIGHT -cam.y);
+	    		}
         	}
     	}
-	//	aniSprite.draw( p.x * 10 - cam.x, p.y * 10 - cam.y);
 	}
 
     @Override

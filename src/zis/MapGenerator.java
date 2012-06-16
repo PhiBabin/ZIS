@@ -26,11 +26,6 @@ public class MapGenerator {
 	}
 	
 	public void generateEmptyMap() throws SlickException {
-
-//		if( CONST.APPLET)
-//			map = new TiledMap(  Thread.currentThread().getContextClassLoader().getResourceAsStream("map/empty.tmx"));
-//		else
-//			map = new TiledMap( "/map/empty.tmx", true);
 		map.clear();
 	}
 

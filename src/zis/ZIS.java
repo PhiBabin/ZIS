@@ -8,11 +8,6 @@ import org.newdawn.slick.state.StateBasedGame;
 
 public class ZIS  extends StateBasedGame {
 	
-	/** Screen size */
-	private static int SCREEN_WIDTH = 800;
-
-	private static int SCREEN_HEIGHT = 600;
-	
 	/** Name of the game */
 	private static String GAME_NAME = "Zombie Infection Simulator";
 	
@@ -40,7 +35,7 @@ public class ZIS  extends StateBasedGame {
 			CONST.APPLET = false;
 			
 			AppGameContainer app = new AppGameContainer( new ZIS());
-			app.setDisplayMode( SCREEN_WIDTH, SCREEN_HEIGHT, false); 
+			app.setDisplayMode( CONST.SCREEN_WIDTH, CONST.SCREEN_HEIGHT, false); 
 			app.setVSync(true); 
 			app.setShowFPS(true);
 			app.setTitle( GAME_NAME + "" + GAME_VERSION);
