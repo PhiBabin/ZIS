@@ -94,7 +94,7 @@ public class WorldMap implements TileBasedMap {
     public boolean isSolid( int x, int y){
     	//return !blockers.contains( new String( x+"-"+y));
 
-		if( x > 0 && y > 0 && y < getHeightInTiles() && x < getWidthInTiles())
+		if( x >= 0 && y >= 0 && y < getHeightInTiles() && x < getWidthInTiles())
 			return map.get( 0)[x][y] != 1 && map.get( 0)[x][y] != 157 && map.get( 0)[x][y] != 158;
 		else 
 			return true;

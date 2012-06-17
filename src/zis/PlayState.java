@@ -45,6 +45,8 @@ public class PlayState extends BasicGameState {
 	
 	private MapGenerator mapGen;
 	
+	private MiniMap miniMap;
+	
 	private Vector2f cam;
 	
 	
@@ -77,6 +79,8 @@ public class PlayState extends BasicGameState {
     	mapGen.generateBuildingFloor( 2, 2, (int)(Math.random() * 290) + 5, (int)(Math.random() * 290) + 5);
     	mapGen.tileCorrection();
     	
+    	miniMap.updateMiniMap( mapGen.getMap());
+    	
     	System.out.println("Map generate in " + (int)(System.currentTimeMillis() - generationTime) + "ms.");
 		
 	}
@@ -86,6 +90,8 @@ public class PlayState extends BasicGameState {
     	resMan = new RessourceManager();
         
     	mapGen = new MapGenerator( new WorldMap( resMan.tilesetImg));
+    	miniMap = new MiniMap();
+    	
     	newRandomMap(); 
     	
     	//mapGen.generateLabyrinth( 0, 0, 80, 60)
@@ -114,6 +120,8 @@ public class PlayState extends BasicGameState {
     }
  
     public void render(GameContainer gc, StateBasedGame sbg, Graphics gr) throws SlickException {
+		gr.setColor( Color.white);
+		
     	gr.setBackground( new Color( 13, 37, 47));
     	mapGen.map.render(gc, sbg, gr, cam);
 		
@@ -161,7 +169,8 @@ public class PlayState extends BasicGameState {
 		
 		gr.setColor( Color.white);
 		gr.setLineWidth(1);
- 
+		
+		miniMap.render( gc, sbg, gr, new Vector2f( 5, 400), cam);
     }
  
     public void update(GameContainer gc, StateBasedGame sbg, int delta) throws SlickException {
