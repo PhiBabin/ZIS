@@ -13,8 +13,8 @@ public class CONST {
 	public static final int WEST = 3;
 	
 	/** Map parameter */
-	public static final int MAP_WIDTH = 1000;
-	public static final int MAP_HEIGHT = 1000;
+	public static final int MAP_WIDTH = 300;
+	public static final int MAP_HEIGHT = 300;
 	public static final int TILE_WIDTH = 10;
 	public static final int TILE_HEIGHT = 10;
 

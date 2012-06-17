@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Image;
+import org.newdawn.slick.SlickException;
 import org.newdawn.slick.SpriteSheet;
 import org.newdawn.slick.geom.Vector2f;
 import org.newdawn.slick.state.StateBasedGame;
@@ -26,7 +27,7 @@ public class WorldMap implements TileBasedMap {
 	
 	private AStarPathFinder pathFinder;
 
-    public WorldMap(SpriteSheet tilesetImg) {
+    public WorldMap(SpriteSheet tilesetImg) throws SlickException {
     	map.add( new short[CONST.MAP_WIDTH][CONST.MAP_HEIGHT]);
 
         this.tilesetImg = tilesetImg;
@@ -57,10 +58,11 @@ public class WorldMap implements TileBasedMap {
 		}
     }
     
-    public void loadTileset(){
+    public void loadTileset() throws SlickException{
 	    for(int y = 0; y < tilesetImg.getVerticalCount(); y++){
 	    	for(int x = 0; x < tilesetImg.getHorizontalCount(); x++){
 	    		tiles.add( tilesetImg.getSubImage( x, y));
+	    		tiles.get( tiles.size()-1).setFilter( Image.FILTER_NEAREST );
 	    	}
 		}
     }
@@ -90,7 +92,12 @@ public class WorldMap implements TileBasedMap {
     }
     
     public boolean isSolid( int x, int y){
-    	return !blockers.contains( new String( x+"-"+y));
+    	//return !blockers.contains( new String( x+"-"+y));
+
+		if( x > 0 && y > 0 && y < getHeightInTiles() && x < getWidthInTiles())
+			return map.get( 0)[x][y] != 1 && map.get( 0)[x][y] != 157 && map.get( 0)[x][y] != 158;
+		else 
+			return true;
     }
     
     
@@ -106,7 +113,7 @@ public class WorldMap implements TileBasedMap {
 	    			tileId = map.get( 0)[x][y];
 	    		
 	        		if ( tileId != 1)
-	        			gr.drawImage( tiles.get( tileId - 1), x * CONST.TILE_WIDTH - cam.x, y * CONST.TILE_HEIGHT -cam.y);
+	        			gr.drawImage( tiles.get( tileId - 1), x * CONST.TILE_WIDTH - cam.x, y * CONST.TILE_HEIGHT - cam.y);
 	    		}
         	}
     	}

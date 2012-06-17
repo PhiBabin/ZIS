@@ -74,7 +74,7 @@ public class PlayState extends BasicGameState {
 		
     	long generationTime = System.currentTimeMillis();
     	
-    	mapGen.generateBuildingFloor( 2, 2, (int)(Math.random() * 900) + 5, (int)(Math.random() * 900) + 5);
+    	mapGen.generateBuildingFloor( 2, 2, (int)(Math.random() * 290) + 5, (int)(Math.random() * 290) + 5);
     	mapGen.tileCorrection();
     	
     	System.out.println("Map generate in " + (int)(System.currentTimeMillis() - generationTime) + "ms.");
@@ -96,10 +96,10 @@ public class PlayState extends BasicGameState {
     	 Vector2i pPop;
     	 int e=2;
      	 long generationTime;
-    	 while(e < 4){
+    	 while(e < 30){
     		 pPop = new Vector2i(
-    				(int)Math.floor( Math.random()*80),
-    				(int)Math.floor( Math.random()*60));
+    				(int)Math.floor( Math.random()*80) + 3,
+    				(int)Math.floor( Math.random()*60) + 3);
     		 
     		 if( !mapGen.map.isSolid( pPop.x, pPop.y)){
     			 generationTime = System.currentTimeMillis();
@@ -125,9 +125,8 @@ public class PlayState extends BasicGameState {
 				"- Turn (" + turn + ")" +
 				"- Population (" + population.size() + ")" +
 				"- Symmetric (" + CONST.SYMMETRICROOM + ")", 80, 10);
-		gr.drawString( "( " + Math.floor( ( cam.x) ) + "," +
-				" " + Math.floor( ( cam.y) ) + ")",
-				690, 580); 
+		
+		gr.drawString( "( " + cam.x + "," + " " + cam.y + ")", 620, 580); 
 		
 		if( debugSquare){
 			gr.drawRect( pSquare.x, pSquare.y, 10, 10);
@@ -169,25 +168,27 @@ public class PlayState extends BasicGameState {
     	Input input = gc.getInput();
     	
     	/*** Move the camera */
-    	if(input.isKeyDown(Input.KEY_RIGHT) && !input.isKeyDown(Input.KEY_LEFT)){
+    	if(input.isKeyDown(Input.KEY_RIGHT) && !input.isKeyDown(Input.KEY_LEFT) && 
+    			cam.x <= CONST.MAP_WIDTH * CONST.TILE_WIDTH - CONST.SCREEN_WIDTH){
     		if( input.isKeyDown(Input.KEY_LSHIFT)) 
     			cam.x += delta * 0.5;
     		else
     			cam.x += delta * 0.1;    		
     	}
-    	if(!input.isKeyDown(Input.KEY_RIGHT) && input.isKeyDown(Input.KEY_LEFT)){
+    	if(!input.isKeyDown(Input.KEY_RIGHT) && input.isKeyDown(Input.KEY_LEFT) && cam.x >= 0){
     		if( input.isKeyDown(Input.KEY_LSHIFT)) 
     			cam.x -= delta * 0.5;
     		else
     			cam.x -= delta * 0.1;    		
     	}
-    	if(input.isKeyDown(Input.KEY_DOWN) && !input.isKeyDown(Input.KEY_UP)){
+    	if(input.isKeyDown(Input.KEY_DOWN) && !input.isKeyDown(Input.KEY_UP) && 
+    			cam.y <= CONST.MAP_HEIGHT * CONST.TILE_HEIGHT - CONST.SCREEN_HEIGHT){
     		if( input.isKeyDown(Input.KEY_LSHIFT)) 
     			cam.y += delta * 0.5;
     		else
     			cam.y += delta * 0.1;    		
     	}
-    	if(!input.isKeyDown(Input.KEY_DOWN) && input.isKeyDown(Input.KEY_UP)){
+    	if(!input.isKeyDown(Input.KEY_DOWN) && input.isKeyDown(Input.KEY_UP) && cam.y >= 0){
     		if( input.isKeyDown(Input.KEY_LSHIFT)) 
     			cam.y -= delta * 0.5;
     		else

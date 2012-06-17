@@ -13,7 +13,7 @@ public class NPC extends Sprite {
 	/**
 	 * TiledSet of the mainMap
 	 */
-	private WorldMap world;
+	private final WorldMap world;
 	
 	/**
 	 * New position of the Player

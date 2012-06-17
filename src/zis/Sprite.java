@@ -7,7 +7,7 @@ import org.newdawn.slick.geom.Vector2f;
 import org.newdawn.slick.state.StateBasedGame;
 
 /**
- * Simplest drawable entity
+ * Movable and scalable image
  * 
  * @author Philippe Babin
  *
@@ -26,8 +26,8 @@ public class Sprite {
 	protected int h, w;
 	
 	/**
-	 * Constructor of a simple sprite
-	 * @param pSprite
+	 * Constructor of the Sprite
+	 * @param pSprite Image of the sprite
 	 */
 	public Sprite(Animation pSprite){
 		aniSprite=pSprite;
@@ -38,8 +38,10 @@ public class Sprite {
 	}
 	
 	/**
-	 * Constructor of a simple Sprite
-	 * @param pSprite , nX, nY
+	 * Constructor of the Sprite
+	 * @param pSprite Image of the sprite
+	 * @param nX Position X of the sprite
+	 * @param nY Position Y of the sprite
 	 */
 	public Sprite(Animation pSprite, int nX, int nY){
 		aniSprite=pSprite;
@@ -49,9 +51,9 @@ public class Sprite {
 		p= new Vector2i(nX,nY);
 	}
 	/**
-	 * Simple Sprite render function
-	 * @param gc GameContainer
-	 * @param sb StateBasedGame
+	 * Sprite render function
+	 * @param gc Game Container
+	 * @param sb State Based Game
 	 * @param gr Graphics
 	 */
 	public void render(GameContainer gc, StateBasedGame sb, Graphics gr, Vector2f cam){
@@ -59,9 +61,9 @@ public class Sprite {
 	}
 	
 	/**
-	 * Simple Sprite update function
-	 * @param gc GameContainer
-	 * @param sb StateBasedGame
+	 * Sprite update function
+	 * @param gc Game Container
+	 * @param sb State Based Game
 	 * @param delta Time between frame
 	 */
     public void update(GameContainer gc, StateBasedGame sbg, int delta){
@@ -69,36 +71,36 @@ public class Sprite {
     }
 
     /**
-     * Move simple Sprite to new position
-     * @param pX int
-     * @param pY int
+     * Move the Sprite to a new position
+     * @param pX 
+     * @param pY 
      */
-	public void move(int pX, int pY){
-		p = new Vector2i( p.x+pX,  p.y+pY);
+	public void move( int pX, int pY){
+		p = new Vector2i( p.x + pX,  p.y + pY);
 	}
 	
     /**
      * Move simple Sprite to new position
-     * @param pM Vector2i 
+     * @param pM Translation vector
      */
-	public void move(Vector2i pM){
-		p = new Vector2i( p.x+pM.x,  p.y+pM.y);
+	public void move( Vector2i pM){
+		p = new Vector2i( p.x + pM.x,  p.y + pM.y);
 	}
 	
     /**
      * Move simple Sprite in target direction
-     * @param d int 
+     * @param d Movement direction 
      */
-	public void move(int d){
-		if(d == CONST.NORTH) move( 0, -1);
-		if(d == CONST.EAST) move( 1, 0);
-		if(d == CONST.SOUTH) move( 0, 1);
-		if(d == CONST.WEST) move( -1, 0);
+	public void move( int d){
+		if( d == CONST.NORTH) move( 0, -1);
+		if( d == CONST.EAST) move( 1, 0);
+		if( d == CONST.SOUTH) move( 0, 1);
+		if( d == CONST.WEST) move( -1, 0);
 	}
 	
 	/**
 	 * Return Sprite position
-	 * @return position Vector2i
+	 * @return Position of the Sprite
 	 */
 	public Vector2i getPosition() {
 		return p;
@@ -106,15 +108,23 @@ public class Sprite {
 
 	/**
 	 * Return Sprite scale
-	 * @return scale float
+	 * @return Sprite's scale
 	 */
     public float getScale(){
     	return scale;
     }
+    
+	/**
+	 * Return Sprite's animation
+	 * @return Sprite's image
+	 */
+	public Animation getAnimation() {
+		return aniSprite;
+	}
 
 	/**
 	 * Return Sprite x position
-	 * @return X position  float
+	 * @return New position X
 	 */
 	public void setX(int x) {
 		p.x = x;
@@ -122,23 +132,15 @@ public class Sprite {
 
 	/**
 	 * Return Sprite y position
-	 * @return Y position  float
+	 * @return New position Y
 	 */
 	public void setY(int y) {
 		p.y = y;
 	}
 	
 	/**
-	 * Return Sprite's animation
-	 * @return Sprite's Animation
-	 */
-	public Animation getAnimation() {
-		return aniSprite;
-	}
-	
-	/**
 	 * Set Sprite scale
-	 * @param nScale new Scale float
+	 * @param nScale New Sprite's scale
 	 */
 	public void setScale(float nScale){
     	scale = nScale;

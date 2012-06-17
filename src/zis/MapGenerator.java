@@ -6,32 +6,65 @@ import java.util.Random;
 import org.newdawn.slick.SlickException;
 import org.newdawn.slick.geom.Rectangle;
 
+/***
+ * Generator of the interior and exterior of a city
+ * @author Philippe Babin
+ *
+ */
 public class MapGenerator {
 	
+	/*** Container of the generated map */
 	public WorldMap map;
-	
+
+	/*** Randomizer */
 	private Random rand = new Random();
-	
+
+	/*** Stack of possible rooms */
 	public ArrayList<Rectangle> temRegion = new ArrayList<Rectangle>();
-	
+
+	/*** Stack of generated rooms */
 	public ArrayList<Rectangle> buildRegion = new ArrayList<Rectangle>();
-	
+
+	/*** Stack of generated hallway */
 	public ArrayList<Rectangle> hallway = new ArrayList<Rectangle>();
-	
+
+	/*** Stack of generated rooms */
 	public ArrayList<Room> rooms = new ArrayList<Room>();
 	
+	/***
+	 * Procedurally generate a city
+	 * @param map Container of the generated map
+	 * @throws SlickException
+	 */
 	public MapGenerator( WorldMap map) throws SlickException {
 		this.map = map;
 		generateEmptyMap();
 	}
 	
+	/***
+	 * Clear the current map
+	 * @throws SlickException
+	 */
 	public void generateEmptyMap() throws SlickException {
 		map.clear();
 	}
-
+	
+	/***
+	 * Draw the outline of a rectangle on the map.
+	 * @param r Rectangle
+	 * @param tileId Id of the outline 
+	 */
 	public void drawOutline( Rectangle r, int tileId){
 		drawOutline( (int)r.getX(), (int)r.getY(), (int)r.getWidth(), (int)r.getHeight(), tileId);
 	}
+	/***
+	 * Draw the outline of a rectangle on the map.
+	 * @param x Position X of the rectangle
+	 * @param y Position Y of the rectangle
+	 * @param W Width of the rectangle
+	 * @param H Height of the rectangle
+	 * @param tileId Id of the outline 
+	 */
 	public void drawOutline( int x, int y, int W, int H, int tileId){
 		for(int v = x; v < x + W; v++){
 			for(int g = y; g < y + H; g++){
@@ -42,6 +75,14 @@ public class MapGenerator {
 		}
 	}
 	
+	/***
+	 * Draw a rectangle on the map.
+	 * @param x Position X of the rectangle
+	 * @param y Position Y of the rectangle
+	 * @param W Width of the rectangle
+	 * @param H Height of the rectangle
+	 * @param tileId Id of the fill rectangle 
+	 */
 	public void fillRect( int x, int y, int W, int H, int tileId){
 		for(int v = x; v < x + W - 1; v++){
 			for(int g = y; g < y + H - 1; g++){
@@ -50,6 +91,13 @@ public class MapGenerator {
 		}
 	}
 	
+	/***
+	 * Generate a maze with a Growing Tree algorithm.
+	 * @param x Position X of the maze
+	 * @param y Position Y of the maze
+	 * @param W Width of the maze
+	 * @param H Height of the maze
+	 */
 	public void generateLabyrinth( int x, int y, int W, int H){
 		ArrayList<Vector2i> C = new ArrayList<Vector2i>();
 		
@@ -119,6 +167,9 @@ public class MapGenerator {
 	
 	}
 	
+	/***
+	 * Do visual correction of the map
+	 */
 	public void tileCorrection(){
 		boolean n, s, w, e;
 		int H = map.getHeightInTiles(), W = map.getWidthInTiles();
@@ -194,7 +245,11 @@ public class MapGenerator {
 		
 	}
 	
-
+	/***
+	 * Slice in two temporary region a temporary rectangle
+	 * @param id Id of the temporary rectangle 
+	 * @param interator Interator of the recursion
+	 */
 	public void sliceInHalf(int id, int interator){
 		Rectangle r = temRegion.get( id);
 		int line;
@@ -260,7 +315,10 @@ public class MapGenerator {
 		}
 	}	
 
-
+	/***
+	 * Add a Loop hallway to a temporary region
+	 * @param id Id of the temporary region where the Loop is build
+	 */
 	public void addLoopHallway(int id){
 		Rectangle r = temRegion.get( id);
 		int c = (int) (r.getWidth() * 0.2 + rand.nextInt((int) Math.abs(r.getWidth() * 0.05))) ;
@@ -325,10 +383,22 @@ public class MapGenerator {
 		
 		temRegion.remove(id);
 	}
-
+	
+	/***
+	 * Add a hallway to a temporary region
+	 * @param id Id of the temporary region
+	 * @param position Percentage of the region where the hallway is added
+	 */
 	public void addHallway(int id, int position){
 		addHallway( id, position, temRegion.get( id).getHeight() < temRegion.get( id).getWidth());
 	}
+	
+	/***
+	 * Add a hallway to a temporary region
+	 * @param id Id of the temporary region
+	 * @param position Percentage of the region where the hallway is added
+	 * @param ver Direction of the hallway, true if vertical
+	 */
 	public void addHallway(int id, int position, boolean ver){
 		
 		Rectangle r = temRegion.get( id);
@@ -378,20 +448,29 @@ public class MapGenerator {
 		temRegion.remove(id);
 		
 	}
-	public void addDoor( Vector2i d, boolean ver){
-		if( map.getTileId( (int)d.x, (int)d.y - 1, 0) != 57 
-				&& map.getTileId( (int)d.x, (int)d.y + 1, 0) != 57 
+	
+	/***
+	 * Add a door
+	 * @param d Position of the door
+	 * @param ver Direction of the door
+	 */
+	public void addDoor( Vector2i p, boolean ver){
+		if( map.getTileId( (int)p.x, (int)p.y - 1, 0) != 57 
+				&& map.getTileId( (int)p.x, (int)p.y + 1, 0) != 57 
 				&& ver){
-			map.setTileId( (int)d.x, (int)d.y, 0, 157);
+			map.setTileId( (int)p.x, (int)p.y, 0, 157);
 		}
-		if( map.getTileId( (int)d.x - 1, (int)d.y , 0) != 57 
-				&& map.getTileId( (int)d.x + 1, (int)d.y, 0) != 57 
+		if( map.getTileId( (int)p.x - 1, (int)p.y , 0) != 57 
+				&& map.getTileId( (int)p.x + 1, (int)p.y, 0) != 57 
 				&& !ver){
-			map.setTileId( (int)d.x, (int)d.y, 0, 158);
+			map.setTileId( (int)p.x, (int)p.y, 0, 158);
 		}
 		
 	}
 	
+	/***
+	 * Add door between every room of a floor
+	 */
 	public void addInterRoomDoor(){
 		Vector2i portal = new Vector2i( 0, 0);
 		Vector2i newDoor = new Vector2i( 0, 0);
@@ -464,6 +543,10 @@ public class MapGenerator {
 		}
 		
 	}
+	
+	/***
+	 * Add a door between every room and hallway
+	 */
 	public void addHallwayDoor(){
 		Vector2i portal = new Vector2i( 0, 0);
 		Vector2i newDoor = new Vector2i( 0, 0);
@@ -530,7 +613,14 @@ public class MapGenerator {
 		}
 		
 	}
-
+	
+	/***
+	 * Procedurally generate a building in the target region
+	 * @param x Position X of the building
+	 * @param y Position Y of the building
+	 * @param W Width of the building
+	 * @param H Height of the building
+	 */
 	public void generateBuildingFloor( int x, int y, int W, int H){
 		temRegion.clear();
 		buildRegion.clear();
@@ -639,6 +729,10 @@ public class MapGenerator {
 		//drawOutline( new Rectangle( x, y, W, H), 57);
 	}
 	
+	/***
+	 * Return current map
+	 * @return Current map
+	 */
 	public WorldMap getMap(){
 		return map;
 	}
