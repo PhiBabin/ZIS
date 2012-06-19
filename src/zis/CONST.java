@@ -23,6 +23,9 @@ public class CONST {
 	
 	/** Building generator parameter */
 	public static boolean SYMMETRICROOM = true;
-	public static final int MINROOMX = 4;
-	public static final int MINROOMY = 4;
+	public static final boolean AVENUE = true;
+	public static final boolean STREET = false;
+	public static final int MIN_AVENUE = 30;
+	public static final int MAX_AVENUE = 30;
+	public static final int MAX_AVENUE_WIDTH = 12;
 }

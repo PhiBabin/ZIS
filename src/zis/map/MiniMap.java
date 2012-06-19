@@ -34,7 +34,7 @@ public class MiniMap {
     		for(int x = 0; x < CONST.MAP_WIDTH; x++){
 	    		if( bigMap.isSolid( x, y)){
 	    			//mapGraphics.drawRect( x, y, 0.1f, 0.1f);
-	    			mapGraphics.drawRect( x * 0.5f, y * 0.5f, 0.1f, 0.1f);
+	    			mapGraphics.drawRect( (float)Math.floor( x * 0.5f),  (float)Math.floor(y * 0.5f), 0.1f, 0.1f);
 	    		}
 	    	}
 		}

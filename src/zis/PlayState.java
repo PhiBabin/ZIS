@@ -15,12 +15,11 @@ import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Input;
 import org.newdawn.slick.SlickException;
-import org.newdawn.slick.geom.Rectangle;
 import org.newdawn.slick.geom.Vector2f;
 import org.newdawn.slick.state.BasicGameState;
 import org.newdawn.slick.state.StateBasedGame;
 
-import zis.map.MapGenerator;
+import zis.map.City;
 import zis.map.MiniMap;
 import zis.map.WorldMap;
 import zis.util.Vector2i;
@@ -48,7 +47,7 @@ public class PlayState extends BasicGameState {
 	
 	private RessourceManager resMan;
 	
-	private MapGenerator mapGen;
+	private City city;
 	
 	private MiniMap miniMap;
 	
@@ -77,14 +76,14 @@ public class PlayState extends BasicGameState {
 	}
 	
 	public void newRandomMap() throws SlickException{
-		mapGen.generateEmptyMap();
+		city.generateEmptyMap();
 		
     	long generationTime = System.currentTimeMillis();
     	
-    	mapGen.generateBuildingFloor( 2, 2, (int)(Math.random() * 290) + 5, (int)(Math.random() * 290) + 5);
-    	mapGen.tileCorrection();
+    	city.generateCity();
+    	city.tileCorrection();
     	
-    	miniMap.updateMiniMap( mapGen.getMap());
+    	miniMap.updateMiniMap( city.getMap());
     	
     	System.out.println("Map generate in " + (int)(System.currentTimeMillis() - generationTime) + "ms.");
 		
@@ -94,7 +93,7 @@ public class PlayState extends BasicGameState {
     	
     	resMan = new RessourceManager();
         
-    	mapGen = new MapGenerator( new WorldMap( resMan.tilesetImg));
+    	city = new City( new WorldMap( resMan.tilesetImg));
     	miniMap = new MiniMap( new Vector2f( 5, CONST.SCREEN_HEIGHT - 155));
     	
     	newRandomMap(); 
@@ -112,10 +111,10 @@ public class PlayState extends BasicGameState {
     				(int)Math.floor( Math.random()*80) + 3,
     				(int)Math.floor( Math.random()*60) + 3);
     		 
-    		 if( !mapGen.map.isSolid( pPop.x, pPop.y)){
+    		 if( !city.map.isSolid( pPop.x, pPop.y)){
     			 generationTime = System.currentTimeMillis();
         		// System.out.println( "I'm number "+ e + ". Who's number 1?");
-    			 population.add(new NPC( resMan.player, pPop.x, pPop.y, mapGen.map));
+    			 population.add(new NPC( resMan.player, pPop.x, pPop.y, city.map));
     			 e++;
     		    	System.out.println("Habitant generate in " + (int)(System.currentTimeMillis() - generationTime) + "ms.");
     		 }
@@ -128,7 +127,7 @@ public class PlayState extends BasicGameState {
 		gr.setColor( Color.white);
 		
     	gr.setBackground( new Color( 13, 37, 47));
-    	mapGen.map.render(gc, sbg, gr, cam);
+    	city.map.render(gc, sbg, gr, cam);
 		
 		for( NPC popu : population){
 			popu.render(gc, sbg, gr, cam);
@@ -146,30 +145,6 @@ public class PlayState extends BasicGameState {
 			gr.drawString( "( " + Math.floor( ( pCursor.x) ) + "," +
 							" " + Math.floor( ( pCursor.y) ) + ")",
 							5, 580);
-		}
-		
-		int g = 1;
-		
-		if( debugMod){
-			for( Rectangle r : mapGen.buildRegion){
-				if(g == 1)gr.setColor( Color.green);
-				else if(g == 2)gr.setColor( Color.black);
-				else if(g == 3)gr.setColor( Color.yellow);
-				else if(g == 4)gr.setColor( Color.magenta);
-				else gr.setColor( Color.orange);
-				
-				if(g < 4) gr.setLineWidth(g);
-				else gr.setLineWidth(4);
-				
-				gr.drawRect( r.getX() * 10,
-							r.getY() * 10,
-							r.getWidth() * 10,
-							r.getHeight() * 10);
-				gr.drawString( "" + g,
-						r.getX() * 10 + r.getWidth() * 5 - 5,
-						r.getY() * 10 + r.getHeight() * 5 - 5);
-				g++;
-			}
 		}
 		
 		gr.setColor( Color.white);
@@ -271,7 +246,7 @@ public class PlayState extends BasicGameState {
     	pCursor.x = (int)Math.floor( ( input.getMouseX() + cam.x) * 0.1);
     	pCursor.y = (int)Math.floor( ( input.getMouseY() + cam.y) * 0.1);
 
-    	if( mapGen.map.isSolid( (int)pCursor.x, (int)pCursor.y)){
+    	if( city.map.isSolid( (int)pCursor.x, (int)pCursor.y)){
     		debugSquare = true;
     		pSquare = new Vector2f( pCursor.x * 10 - cam.x, pCursor.y * 10 - cam.y);
     	}
