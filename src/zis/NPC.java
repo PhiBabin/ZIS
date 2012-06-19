@@ -7,6 +7,9 @@ import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.state.StateBasedGame;
 import org.newdawn.slick.util.pathfinding.Path;
 
+import zis.map.WorldMap;
+import zis.util.Vector2i;
+
 
 public class NPC extends Sprite {
 

@@ -19,7 +19,7 @@
         vlink="#FF0000">
 
     <applet code="org.lwjgl.util.applet.AppletLoader" 
-        archive="lwjgl_util_applet.jar, lzma.jar" 
+        archive="lib/lwjgl_util_applet.jar, lib/lzma.jar" 
         codebase="." 
         width="800" height="600">
  
@@ -27,13 +27,12 @@
   <param name="al_main" value="org.newdawn.slick.AppletGameContainer"> 
   <param name="game" value="zis.ZIS">
  
-  <param name="al_jars" value=" ZIS.jar, slick.jar,lwjgl.jar.pack.lzma, jinput.jar.pack.lzma, lwjgl_util.jar.pack.lzma"> 
+  <param name="al_jars" value=" ZIS.jar, lib/slick.jar,lib/lwjgl.jar.pack.lzma, lib/jinput.jar.pack.lzma, lib/lwjgl_util.jar.pack.lzma"> 
  
-  <param name="al_windows" value="windows_natives.jar"> 
-  <param name="al_linux" value="linux_natives.jar"> 
-  <param name="al_mac" value="macosx_natives.jar"> 
+  <param name="al_windows" value="lib/natives/windows_natives.jar"> 
+  <param name="al_linux" value="lib/natives/linux_natives.jar"> 
+  <param name="al_mac" value="lib/natives/macosx_natives.jar"> 
 
-  <param name="al_debug" value="true">
   <param name="separate_jvm" value="true"> 
 </applet> 
   </body>

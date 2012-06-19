@@ -1,6 +1,8 @@
-package zis;
+package zis.map;
 
 import org.newdawn.slick.geom.Rectangle;
+
+import zis.CONST;
 
 
 public class Room {

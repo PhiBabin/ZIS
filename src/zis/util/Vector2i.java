@@ -1,4 +1,4 @@
-package zis;
+package zis.util;
 
 public class Vector2i {
 	

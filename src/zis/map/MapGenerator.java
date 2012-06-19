@@ -1,10 +1,13 @@
-package zis;
+package zis.map;
 
 import java.util.ArrayList;
 import java.util.Random;
 
 import org.newdawn.slick.SlickException;
 import org.newdawn.slick.geom.Rectangle;
+
+import zis.*;
+import zis.util.Vector2i;
 
 /***
  * Generator of the interior and exterior of a city

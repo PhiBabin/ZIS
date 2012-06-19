@@ -1,4 +1,4 @@
-package zis;
+package zis.map;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -15,6 +15,9 @@ import org.newdawn.slick.util.pathfinding.AStarPathFinder;
 import org.newdawn.slick.util.pathfinding.Path;
 import org.newdawn.slick.util.pathfinding.PathFindingContext;
 import org.newdawn.slick.util.pathfinding.TileBasedMap;
+
+import zis.CONST;
+import zis.util.Vector2i;
 
 public class WorldMap implements TileBasedMap {
 	public SpriteSheet tilesetImg;

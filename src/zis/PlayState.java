@@ -20,6 +20,11 @@ import org.newdawn.slick.geom.Vector2f;
 import org.newdawn.slick.state.BasicGameState;
 import org.newdawn.slick.state.StateBasedGame;
 
+import zis.map.MapGenerator;
+import zis.map.MiniMap;
+import zis.map.WorldMap;
+import zis.util.Vector2i;
+
 public class PlayState extends BasicGameState {
 	
 	private boolean debugSquare = false;
@@ -90,7 +95,7 @@ public class PlayState extends BasicGameState {
     	resMan = new RessourceManager();
         
     	mapGen = new MapGenerator( new WorldMap( resMan.tilesetImg));
-    	miniMap = new MiniMap();
+    	miniMap = new MiniMap( new Vector2f( 5, CONST.SCREEN_HEIGHT - 155));
     	
     	newRandomMap(); 
     	
@@ -170,39 +175,56 @@ public class PlayState extends BasicGameState {
 		gr.setColor( Color.white);
 		gr.setLineWidth(1);
 		
-		miniMap.render( gc, sbg, gr, new Vector2f( 5, 400), cam);
+		miniMap.render( gc, sbg, gr, cam);
     }
  
     public void update(GameContainer gc, StateBasedGame sbg, int delta) throws SlickException {
     	Input input = gc.getInput();
     	
     	/*** Move the camera */
-    	if(input.isKeyDown(Input.KEY_RIGHT) && !input.isKeyDown(Input.KEY_LEFT) && 
-    			cam.x <= CONST.MAP_WIDTH * CONST.TILE_WIDTH - CONST.SCREEN_WIDTH){
+    	if(input.isKeyDown(Input.KEY_RIGHT) && !input.isKeyDown(Input.KEY_LEFT)){
     		if( input.isKeyDown(Input.KEY_LSHIFT)) 
     			cam.x += delta * 0.5;
     		else
     			cam.x += delta * 0.1;    		
     	}
-    	if(!input.isKeyDown(Input.KEY_RIGHT) && input.isKeyDown(Input.KEY_LEFT) && cam.x >= 0){
+    	if(!input.isKeyDown(Input.KEY_RIGHT) && input.isKeyDown(Input.KEY_LEFT)){
     		if( input.isKeyDown(Input.KEY_LSHIFT)) 
     			cam.x -= delta * 0.5;
     		else
     			cam.x -= delta * 0.1;    		
     	}
-    	if(input.isKeyDown(Input.KEY_DOWN) && !input.isKeyDown(Input.KEY_UP) && 
-    			cam.y <= CONST.MAP_HEIGHT * CONST.TILE_HEIGHT - CONST.SCREEN_HEIGHT){
+    	if(input.isKeyDown(Input.KEY_DOWN) && !input.isKeyDown(Input.KEY_UP)){
     		if( input.isKeyDown(Input.KEY_LSHIFT)) 
     			cam.y += delta * 0.5;
     		else
     			cam.y += delta * 0.1;    		
     	}
-    	if(!input.isKeyDown(Input.KEY_DOWN) && input.isKeyDown(Input.KEY_UP) && cam.y >= 0){
+    	if(!input.isKeyDown(Input.KEY_DOWN) && input.isKeyDown(Input.KEY_UP)){
     		if( input.isKeyDown(Input.KEY_LSHIFT)) 
     			cam.y -= delta * 0.5;
     		else
     			cam.y -= delta * 0.1;    		
     	}
+    	
+    	if( input.isMouseButtonDown( input.MOUSE_LEFT_BUTTON)){
+    		cam = miniMap.onClick( new Vector2f( input.getMouseX(), input.getMouseY()), cam);
+    	}
+    	
+    	
+    	cam.x = (float) Math.floor( cam.x);
+    	cam.y = (float) Math.floor( cam.y);
+    	
+    	/*** Make sure that the camera is in the map */
+    	if (cam.x < 0)
+    		cam.x = 0;
+    	if(cam.x > CONST.MAP_WIDTH * CONST.TILE_WIDTH - CONST.SCREEN_WIDTH)
+    		cam.x = CONST.MAP_WIDTH * CONST.TILE_WIDTH - CONST.SCREEN_WIDTH;
+    	if (cam.y < 0)
+    		cam.y = 0;
+    	if(cam.y > CONST.MAP_HEIGHT * CONST.TILE_HEIGHT - CONST.SCREEN_HEIGHT)
+    		cam.y = CONST.MAP_HEIGHT * CONST.TILE_HEIGHT - CONST.SCREEN_HEIGHT;
+    	
     	
     	/** Regenerate the current map */
     	if(input.isKeyPressed(Input.KEY_SPACE)){ 
@@ -233,7 +255,8 @@ public class PlayState extends BasicGameState {
     	}
     	
     	gameTime += delta * gameSpeed;
-
+    	
+    	/*** We pass to the next turn */
     	int elapseTurn = (int) (gameTime * 0.001) - turn;
     	
     	for(int i=1; i <= elapseTurn; i++){
@@ -243,6 +266,7 @@ public class PlayState extends BasicGameState {
     		}
     	}
     	turn += elapseTurn;
+    	
     	
     	pCursor.x = (int)Math.floor( ( input.getMouseX() + cam.x) * 0.1);
     	pCursor.y = (int)Math.floor( ( input.getMouseY() + cam.y) * 0.1);
