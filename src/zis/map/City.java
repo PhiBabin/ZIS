@@ -54,26 +54,57 @@ public class City {
 	 * Generate the city
 	 */
 	public void generateCity( int seed){
+		buildings.clear();
+		roads.clear();
+		
 		rand = new Rand( seed);
 		
-		buildings.add( new Building( this, seed * 5, 2, 2, rand.nextInt( 20, 290), rand.nextInt( 20, 290)));
+		//buildings.add( new Building( this, seed * 5, 2, 2, rand.nextInt( 20, 290), rand.nextInt( 20, 290)));
 		
 		/*** Avenue generation */
-		int avePosition = rand.nextInt( CONST.BLOCK_WIDTH_MIN, CONST.BLOCK_WIDTH_MAX);
-		int i = 1;
-		while( avePosition  <= CONST.MAP_WIDTH) {
-			roads.add( new Road( avePosition, 0, map.getHeightInTiles(), true, i));
+		int avePosition = 0;
+		int a = 1;
+		while( avePosition + CONST.AVENUE_WIDTH <= CONST.MAP_WIDTH) {
+			roads.add( new Road( avePosition, 0, map.getHeightInTiles(), CONST.AVENUE, a));
 			avePosition += CONST.AVENUE_WIDTH + rand.nextInt( CONST.BLOCK_WIDTH_MIN, CONST.BLOCK_WIDTH_MAX);
-			i++;
+			a++;
 		}
+		a--;
 
 		/*** Street generation */
-		int strPosition = rand.nextInt( CONST.BLOCK_HEIGHT_MIN, CONST.BLOCK_HEIGHT_MAX);
-		i = 1;
-		while( strPosition  <= CONST.MAP_HEIGHT) {
-			roads.add( new Road( 0, strPosition, map.getWidthInTiles(), false, i));
+		int strPosition = 0;
+		int s = 1;
+		while( strPosition + CONST.STREET_WIDTH <= CONST.MAP_HEIGHT) {
+			roads.add( new Road( 0, strPosition, map.getWidthInTiles(), CONST.STREET, s));
 			strPosition += CONST.STREET_WIDTH + rand.nextInt( CONST.BLOCK_HEIGHT_MIN, CONST.BLOCK_HEIGHT_MAX);
-			i++;
+			s++;
+		}
+		s--;
+		
+		/*** Generate buildings **/
+		Rectangle rBuilding = new Rectangle( 0, 0, 1, 1);
+		for(int h = 0; h < s - 1; h++){
+			for(int w = 0; w < a - 1; w++){
+				rBuilding.setX( roads.get( w).getRect().getX() + CONST.AVENUE_WIDTH);
+				rBuilding.setY( roads.get( a + h).getRect().getY() + CONST.STREET_WIDTH);
+				
+				if( w + 1 >= a) 
+					rBuilding.setWidth( CONST.MAP_WIDTH - rBuilding.getX() - 1);
+				else
+					rBuilding.setWidth( roads.get( w + 1).getRect().getX() - rBuilding.getX() );
+				
+				if( a + h + 1>= roads.size()) 
+					rBuilding.setHeight( CONST.MAP_HEIGHT - rBuilding.getY() - 1);
+				else
+					rBuilding.setHeight( ( roads.get( a + h + 1).getRect().getY()) - rBuilding.getY());
+				
+				buildings.add( new Building( this,
+						seed * w + h + w,
+						(int) rBuilding.getX(),
+						(int) rBuilding.getY(),
+						(int) rBuilding.getWidth(),
+						(int) rBuilding.getHeight()));
+			}
 		}
 		
 	}

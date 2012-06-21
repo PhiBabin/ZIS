@@ -82,8 +82,8 @@ public class PlayState extends BasicGameState {
 		
     	long generationTime = System.currentTimeMillis();
     	
-    	city.generateCity( 311312313);
-//    	city.generateCity( (int)System.currentTimeMillis());
+//    	city.generateCity( 311312313);
+    	city.generateCity( (int)System.currentTimeMillis());
     	city.tileCorrection();
     	
     	miniMap.updateMiniMap( city.getMap());
@@ -111,8 +111,8 @@ public class PlayState extends BasicGameState {
      	 long generationTime;
     	 while(e < 30){
     		 pPop = new Vector2i(
-    				(int)Math.floor( Math.random()*80) + 3,
-    				(int)Math.floor( Math.random()*60) + 3);
+    				(int)Math.floor( Math.random() * 80) + 3,
+    				(int)Math.floor( Math.random() * 60) + 3);
     		 
     		 if( !city.map.isSolid( pPop.x, pPop.y)){
     			 generationTime = System.currentTimeMillis();

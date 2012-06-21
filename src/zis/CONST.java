@@ -13,22 +13,22 @@ public class CONST {
 	public static final int WEST = 3;
 	
 	/** Map parameter */
-	public static final int MAP_WIDTH = 300;
+	public static final int MAP_WIDTH = 600;
 	public static final int MAP_HEIGHT = 300;
 	public static final int TILE_WIDTH = 10;
 	public static final int TILE_HEIGHT = 10;
 
 	/** Pathfinder parameter */
-	public static final int MAX_PATH_LENGTH = 1000;
+	public static final int MAX_PATH_LENGTH = 10000;
 	
 	/** Building generator parameter */
 	public static boolean SYMMETRICROOM = true;
 	public static final boolean AVENUE = true;
 	public static final boolean STREET = false;
-	public static final int BLOCK_WIDTH_MIN = 30;
-	public static final int BLOCK_WIDTH_MAX = 60;
 	public static final int AVENUE_WIDTH = 12;
-	public static final int BLOCK_HEIGHT_MIN = 30;
-	public static final int BLOCK_HEIGHT_MAX = 60;
 	public static final int STREET_WIDTH = 12;
+	public static final int BLOCK_WIDTH_MIN = AVENUE_WIDTH * 7;
+	public static final int BLOCK_WIDTH_MAX = AVENUE_WIDTH * 9;
+	public static final int BLOCK_HEIGHT_MIN = STREET_WIDTH * 3;
+	public static final int BLOCK_HEIGHT_MAX = STREET_WIDTH * 5;
 }
