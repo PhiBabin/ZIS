@@ -6,6 +6,8 @@ import java.util.Random;
 import org.newdawn.slick.SlickException;
 import org.newdawn.slick.geom.Rectangle;
 
+import zis.CONST;
+import zis.util.Rand;
 import zis.util.Vector2i;
 
 /***
@@ -19,14 +21,14 @@ public class City {
 	public WorldMap map;
 
 	/*** Randomizer */
-	private Random rand = new Random();
+	private Rand rand;
 	
 	/*** Stack of generated buildings */
 	public ArrayList<Building> buildings = new ArrayList<Building>();
 	
 	/*** Stack of Street and Avenue */
 	public ArrayList<Road> roads = new ArrayList<Road>();
-	
+
 	/*** Name of the city */
 	private String name = "Debug City";
 	
@@ -51,8 +53,29 @@ public class City {
 	/***
 	 * Generate the city
 	 */
-	public void generateCity(){
-		buildings.add( new Building( this, 2, 2, (int)(Math.random() * 290) + 5, (int)(Math.random() * 290) + 5));
+	public void generateCity( int seed){
+		rand = new Rand( seed);
+		
+		buildings.add( new Building( this, seed * 5, 2, 2, rand.nextInt( 20, 290), rand.nextInt( 20, 290)));
+		
+		/*** Avenue generation */
+		int avePosition = rand.nextInt( CONST.BLOCK_WIDTH_MIN, CONST.BLOCK_WIDTH_MAX);
+		int i = 1;
+		while( avePosition  <= CONST.MAP_WIDTH) {
+			roads.add( new Road( avePosition, 0, map.getHeightInTiles(), true, i));
+			avePosition += CONST.AVENUE_WIDTH + rand.nextInt( CONST.BLOCK_WIDTH_MIN, CONST.BLOCK_WIDTH_MAX);
+			i++;
+		}
+
+		/*** Street generation */
+		int strPosition = rand.nextInt( CONST.BLOCK_HEIGHT_MIN, CONST.BLOCK_HEIGHT_MAX);
+		i = 1;
+		while( strPosition  <= CONST.MAP_HEIGHT) {
+			roads.add( new Road( 0, strPosition, map.getWidthInTiles(), false, i));
+			strPosition += CONST.STREET_WIDTH + rand.nextInt( CONST.BLOCK_HEIGHT_MIN, CONST.BLOCK_HEIGHT_MAX);
+			i++;
+		}
+		
 	}
 	
 	/***
@@ -277,5 +300,29 @@ public class City {
 	 */
 	public WorldMap getMap(){
 		return map;
+	}
+	
+	/***
+	 * Return the Building list
+	 * @return Building list
+	 */
+	public ArrayList< Building> getBuildings() {
+		return buildings;
+	}
+	
+	/***
+	 * Return the Road list
+	 * @return Road list
+	 */
+	public ArrayList< Road> getRoads() {
+		return roads;
+	}
+	
+	/***
+	 * Return City's name
+	 * @return City's name
+	 */
+	public String getName() {
+		return name;
 	}
 }

@@ -15,12 +15,14 @@ import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Input;
 import org.newdawn.slick.SlickException;
+import org.newdawn.slick.geom.Rectangle;
 import org.newdawn.slick.geom.Vector2f;
 import org.newdawn.slick.state.BasicGameState;
 import org.newdawn.slick.state.StateBasedGame;
 
 import zis.map.City;
 import zis.map.MiniMap;
+import zis.map.Road;
 import zis.map.WorldMap;
 import zis.util.Vector2i;
 
@@ -80,7 +82,8 @@ public class PlayState extends BasicGameState {
 		
     	long generationTime = System.currentTimeMillis();
     	
-    	city.generateCity();
+    	city.generateCity( 311312313);
+//    	city.generateCity( (int)System.currentTimeMillis());
     	city.tileCorrection();
     	
     	miniMap.updateMiniMap( city.getMap());
@@ -146,9 +149,32 @@ public class PlayState extends BasicGameState {
 							" " + Math.floor( ( pCursor.y) ) + ")",
 							5, 580);
 		}
-		
-		gr.setColor( Color.white);
-		gr.setLineWidth(1);
+		if( debugMod){
+			gr.translate( -cam.x, -cam.y);
+			gr.setColor( Color.orange);
+			gr.setLineWidth(4);
+			for( Road road : city.getRoads()){
+				Rectangle r = road.getRect();
+				gr.drawRect( 
+						r.getX() * 10,
+						r.getY() * 10, r.getWidth() * 10,
+						r.getHeight() * 10);
+				if ( road.isAvenue())
+					gr.rotate( r.getX() * 10 + r.getWidth() * 5, 
+						r.getY() * 10 + r.getHeight() * 5,
+						-90);
+				gr.drawString( road.getName(),
+						r.getX() * 10 + r.getWidth() * 5,
+						r.getY() * 10 + r.getHeight() * 5 + r.getWidth() * 3);
+				if ( road.isAvenue())
+					gr.rotate( r.getX() * 10 + r.getWidth() * 5, 
+							r.getY() * 10 + r.getHeight() * 5,
+							90);
+			}
+			gr.setColor( Color.white);
+			gr.setLineWidth(1);
+			gr.translate( cam.x, cam.y);
+		}
 		
 		miniMap.render( gc, sbg, gr, cam);
     }

@@ -25,7 +25,10 @@ public class CONST {
 	public static boolean SYMMETRICROOM = true;
 	public static final boolean AVENUE = true;
 	public static final boolean STREET = false;
-	public static final int MIN_AVENUE = 30;
-	public static final int MAX_AVENUE = 30;
-	public static final int MAX_AVENUE_WIDTH = 12;
+	public static final int BLOCK_WIDTH_MIN = 30;
+	public static final int BLOCK_WIDTH_MAX = 60;
+	public static final int AVENUE_WIDTH = 12;
+	public static final int BLOCK_HEIGHT_MIN = 30;
+	public static final int BLOCK_HEIGHT_MAX = 60;
+	public static final int STREET_WIDTH = 12;
 }

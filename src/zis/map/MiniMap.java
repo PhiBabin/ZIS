@@ -55,7 +55,7 @@ public class MiniMap {
 	
 	public void render(GameContainer gc, StateBasedGame sb, Graphics gr, Vector2f cam){
 
-		Rectangle background =  new Rectangle ( p.x - 1, p.y - 1, CONST.MAP_WIDTH / 2, CONST.MAP_HEIGHT / 2);
+		Rectangle background =  new Rectangle ( p.x - 4, p.y - 4, CONST.MAP_WIDTH / 2 + 8, CONST.MAP_HEIGHT / 2 + 8);
 		Rectangle camRect =  new Rectangle ( p.x + cam.x / 20, p.y + cam.y / 20, CONST.SCREEN_WIDTH / 20, CONST.SCREEN_HEIGHT / 20);
 		
 		gr.setColor( new Color( 4, 23, 3, 200));

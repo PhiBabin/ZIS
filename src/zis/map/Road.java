@@ -1,5 +1,7 @@
 package zis.map;
 
+import org.newdawn.slick.geom.Rectangle;
+
 import zis.CONST;
 
 /***
@@ -8,14 +10,14 @@ import zis.CONST;
  * @author Philippe Babin
  */
 public class Road {
-
-	private int x, y, W, H;
-	
 	/*** Street or Avenue? */
 	private boolean isAvenue;
 	
 	/*** Road name */
 	private String name;
+	
+	/*** Rectangle of the Room */
+	private Rectangle r;
 	
 	/***
 	 * Constructor of a road
@@ -27,18 +29,12 @@ public class Road {
 	 * @param nbr Road number
 	 */
 	public Road( int x, int y, int l, boolean isAvenue, int nbr){
-		this.x = x;
-		this.y = y;
-		this.isAvenue = isAvenue;
+		if( isAvenue)
+			r = new Rectangle( x, y, CONST.AVENUE_WIDTH, l);
+		else
+			r = new Rectangle( x, y, l, CONST.AVENUE_WIDTH);
 		
-		if( isAvenue){
-			this.W = CONST.MAX_AVENUE_WIDTH;
-			this.H = l;
-		}
-		else{
-			this.W = l;
-			this.H = CONST.MAX_AVENUE_WIDTH;
-		}
+		this.isAvenue = isAvenue;
 		
 		if( nbr > 3)
 			this.name = new String( nbr + "th");
@@ -68,5 +64,9 @@ public class Road {
 		else
 			return name + " St";
 			
+	}
+
+	public Rectangle getRect() {
+		return r;
 	}
 }

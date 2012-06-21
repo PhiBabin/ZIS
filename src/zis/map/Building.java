@@ -6,6 +6,7 @@ import java.util.Random;
 import org.newdawn.slick.geom.Rectangle;
 
 import zis.CONST;
+import zis.util.Rand;
 import zis.util.Vector2i;
 
 /***
@@ -18,7 +19,7 @@ public class Building {
 	private int x, y, W, H;
 	
 	/*** Randomizer */
-	private Random rand = new Random();
+	private Rand rand;
 	
 	/*** City that contain the building */
 	private City city;
@@ -41,17 +42,19 @@ public class Building {
 	/***
 	 * Constructor of a office building
 	 * @param city Reference to the City
+	 * @param seed Seed of the building
 	 * @param x Position X of the Building
 	 * @param y Position Y of the Building
 	 * @param W Width of the Building
 	 * @param H Height of the Building
 	 */
-	public Building( City city, int x, int y, int W, int H){
+	public Building( City city, int seed, int x, int y, int W, int H){
 		this.city = city;
 		this.x = x;
 		this.y = y;
 		this.W = W;
 		this.H = H;
+		rand = new Rand( seed);
 		
 		generateBuilding();
 	}
@@ -179,7 +182,7 @@ public class Building {
 				if( CONST.SYMMETRICROOM)
 					line = (int)r.getHeight()/2;
 				else
-					line = (int)r.getHeight()/2 - rand.nextInt(3) + 1;
+					line = (int)r.getHeight()/2 - rand.nextInt( 2);
 				
 				int newId = temRegion.size();
 				
@@ -209,7 +212,7 @@ public class Building {
 				if( CONST.SYMMETRICROOM)
 					line = (int)r.getWidth()/2;
 				else
-					line = (int)r.getWidth()/2 - rand.nextInt(3) + 1;
+					line = (int)r.getWidth()/2 - rand.nextInt( 2);
 				
 				int newId = temRegion.size();
 				
