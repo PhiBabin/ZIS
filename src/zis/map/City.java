@@ -170,6 +170,10 @@ public class City {
 		
 	}
 	
+	public void drawRoads(){
+		
+	}
+	
 	/***
 	 * Generate a maze with a Growing Tree algorithm.
 	 * @param x Position X of the maze

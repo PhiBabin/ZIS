@@ -121,8 +121,8 @@ public class Building {
 					addLoopHallway( 0);
 					addHallway( temRegion.size() - 4, 50, true);
 				}
-				if( position == 50 && W >= 40){
-					addLoopHallway( 0);
+				if( position == 50 && W >= 40 && H >= 70){
+					addLoopHallway ( 0);
 					addHallway( temRegion.size() - 5, 50, true);
 				}
 				else if( position == 25){
@@ -182,7 +182,7 @@ public class Building {
 				if( CONST.SYMMETRICROOM)
 					line = (int)r.getHeight()/2;
 				else
-					line = (int)r.getHeight()/2 - rand.nextInt( 2);
+					line = (int)r.getHeight()/2 - rand.nextInt( -1, 2);
 				
 				int newId = temRegion.size();
 				
@@ -212,7 +212,7 @@ public class Building {
 				if( CONST.SYMMETRICROOM)
 					line = (int)r.getWidth()/2;
 				else
-					line = (int)r.getWidth()/2 - rand.nextInt( 2);
+					line = (int)r.getWidth()/2 - rand.nextInt( -1, 2);
 				
 				int newId = temRegion.size();
 				

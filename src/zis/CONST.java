@@ -27,8 +27,12 @@ public class CONST {
 	public static final boolean STREET = false;
 	public static final int AVENUE_WIDTH = 12;
 	public static final int STREET_WIDTH = 12;
-	public static final int BLOCK_WIDTH_MIN = AVENUE_WIDTH * 7;
-	public static final int BLOCK_WIDTH_MAX = AVENUE_WIDTH * 9;
+	public static final int BLOCK_WIDTH_MIN = AVENUE_WIDTH * 9;
+	public static final int BLOCK_WIDTH_MAX = AVENUE_WIDTH * 15;
 	public static final int BLOCK_HEIGHT_MIN = STREET_WIDTH * 3;
 	public static final int BLOCK_HEIGHT_MAX = STREET_WIDTH * 5;
+	
+	/** Population constant */
+	public static final boolean FEMALE = true;
+	public static final boolean MALE = false;
 }

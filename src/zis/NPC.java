@@ -13,18 +13,28 @@ import zis.util.Vector2i;
 
 public class NPC extends Sprite {
 
-	/**
-	 * TiledSet of the mainMap
-	 */
+	/** TiledSet of the mainMap */
 	private final WorldMap world;
 	
-	/**
-	 * New position of the Player
-	 */
+	/** New position of the Player */
 	private ArrayList< Path> newPath = new ArrayList< Path>(); 
 	
+	/** Name of the NPC */
+	private String name = new String();
 	 
 	private int idStepPath = 0;
+	
+	private boolean gender;
+	
+	private static String[] maleFirstName = new String[]{
+		"Michael", "Matthew", "Joseph", "Anthony", "Ryan", "Nicholas", "Daniel", "Christopher", "Joshua", "David", "Oliver", "Jack", "Harry", "Alfie", "Charlie", "Thomas", "William", "Nathan", "Ethan", "Alexander", "Daniel", "Lucas", "Logan", "Liam", "Ryan", "Jaiden", "Zach", "Philips", "Xavier", "Charles", "Aiden", "Jackson", "Davi"
+	};
+	private static String[] femaleFirstName = new String[]{
+		"Emma", "Olivia", "Mya", "Maya", "Emily", "Sarah", "Isabella", "Chloe", "Alexis", "Sophia", "Lily", "Léa", "Juliette", "Alice", "Madison", "Mia", "Gabrielle", "Kayla", "Fiona", "Ashley", "Mary", "Amelia", "Jessica"
+	};
+	private static String[] lastName = new String[]{
+		"Smith", "Johnson", "Williams", "Brown", "Davis", "Miller", "Wilson", "Moore", "Taylor", "Anderson", "Thomas", "Jackson", "White", "Harris", "Martin", "Thompson", "Garcia", "Martinez", "Jones", "Campbell", "Patel", "Wong", "Hall", "Lee", "Brown"
+	};
 	
 	public NPC(Animation pSprite, int nX, int nY, WorldMap world) {
 		super(pSprite, nX, nY);
@@ -33,11 +43,12 @@ public class NPC extends Sprite {
 
 		this.world = world;
 		
+		generateName();
 
 		addNewPath( new Vector2i( 
 				(int)Math.floor( Math.random()*80), 
 				(int)Math.floor( Math.random()*60)));
-		}
+	}
 	
 	public void addNewPath( Vector2i nP){
 		Path path = world.getPath( p, nP);
@@ -107,4 +118,20 @@ public class NPC extends Sprite {
     public void update(GameContainer gc, StateBasedGame sb, int delta){
     	iALogic();
     }
+
+	public void generateName() {
+		if( Math.random() > 0.5){
+			name += maleFirstName[(int) ( maleFirstName.length * Math.random())] + " ";
+			gender = CONST.MALE;
+		}
+		else{
+			name += femaleFirstName[(int) ( femaleFirstName.length * Math.random())] + " ";
+			gender = CONST.FEMALE;
+		}
+		name += lastName[(int) ( lastName.length * Math.random())];
+	}
+
+	public String getName() {
+		return name;
+	}
 }

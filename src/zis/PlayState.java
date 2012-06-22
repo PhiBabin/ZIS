@@ -119,7 +119,8 @@ public class PlayState extends BasicGameState {
         		// System.out.println( "I'm number "+ e + ". Who's number 1?");
     			 population.add(new NPC( resMan.player, pPop.x, pPop.y, city.map));
     			 e++;
-    		    	System.out.println("Habitant generate in " + (int)(System.currentTimeMillis() - generationTime) + "ms.");
+    		    System.out.println("Habitant generate in " + (int)(System.currentTimeMillis() - generationTime) + "ms. Name: " + 
+    		    		population.get( population.size() - 1).getName());
     		 }
     	 }
     	 
