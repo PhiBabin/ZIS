@@ -20,6 +20,7 @@ import org.newdawn.slick.geom.Vector2f;
 import org.newdawn.slick.state.BasicGameState;
 import org.newdawn.slick.state.StateBasedGame;
 
+import zis.NPC.State;
 import zis.map.City;
 import zis.map.MiniMap;
 import zis.map.Road;
@@ -55,6 +56,7 @@ public class PlayState extends BasicGameState {
 	
 	private Vector2f cam;
 	
+	private int selectedId = -1;
 	
 //	private enum STATES {
 //        START_GAME_STATE, NEW_PIECE_STATE, MOVING_PIECE_STATE, LINE_DESTRUCTION_STATE,
@@ -98,14 +100,36 @@ public class PlayState extends BasicGameState {
 		
 		population.add( new NPC( resMan.player, p.x, p.y, idRoom, idBuilding));
 		
-		if( Math.random() < 0.2){
-			population.get( population.size() - 1).setState( NPC.State.ZOMBIE);
-		}
-		else if( Math.random() < 0.2){
-			population.get( population.size() - 1).setState( NPC.State.INFECTED);
-		}
-		
 	    System.out.println( "Habitant generate in " + (int)(System.currentTimeMillis() - generationTime) + "ms.");
+	}
+	public void distributeInfection(){
+		int I = (int) ( population.size() * 0.1);
+		int Z = (int) ( population.size() * 0.1);
+		int Im = (int) ( population.size() * 0.05);
+		
+		int id;
+		
+		while( I != 0){
+			id =  (int) ( population.size() * Math.random());
+			if( population.get( id).getState() == State.NORMAL){
+				population.get( id).setState( State.INFECTED);
+				I--;
+			}
+		}
+		while( Z != 0){
+			id =  (int) ( population.size() * Math.random());
+			if( population.get( id).getState() == State.NORMAL){
+				population.get( id).setState( State.ZOMBIE);
+				Z--;
+			}
+		}
+		while( Im != 0){
+			id =  (int) ( population.size() * Math.random());
+			if( population.get( id).getState() == State.NORMAL){
+				population.get( id).setState( State.IMMUNE);
+				Im--;
+			}
+		}
 	}
 
     public void init(GameContainer gc, StateBasedGame sbg) throws SlickException {
@@ -135,7 +159,16 @@ public class PlayState extends BasicGameState {
 		
     	Rectangle camera = new Rectangle( cam.x - 10, cam.y - 10, CONST.SCREEN_WIDTH, CONST.SCREEN_HEIGHT);
     	
+    	int Z = 0;
+    	int I = 0;
+    	int Im = 0;
 		for( NPC popu : population){
+			if( popu.getState() == State.IMMUNE)
+				Im++;
+			if( popu.getState() == State.INFECTED)
+				I++;
+			if( popu.getState() == State.ZOMBIE)
+				Z++;
 			if( camera.contains( popu.getPosition().x * 10, popu.getPosition().y * 10)){
 				popu.render(gc, sbg, gr, cam);
 			}
@@ -148,18 +181,32 @@ public class PlayState extends BasicGameState {
 		 * ************************************************************
 		 */
 		
-		gr.drawString( "- Time (" + gameTime + "ms)x" + Math.round( gameSpeed * 100) + "% " +
-				"- Turn (" + turn + ")" +
-				"- Population (" + population.size() + ")" +
+		gr.drawString( "- Turn (" + turn + ")x" + Math.round( gameSpeed * 100) + "% " +
 				"- Symmetric (" + CONST.SYMMETRICROOM + ")", 80, 10);
 		
-		gr.drawString( "( " + cam.x + "," + " " + cam.y + ")", 620, 580); 
+		gr.drawString( "Pop(" + population.size() + ") " + "N:" + (population.size() - I - Z) + " I:" + I + " Z:" + Z + " Im:" + Im, 10, 25);
+		
+		gr.drawString( "X:" + cam.x + " Y:" + cam.y, 10, 41); 
+		
+		if( selectedId != -1){
+			gr.drawString( population.get( selectedId).toString(), 600, 10);
+			
+			gr.setLineWidth( 2);
+			gr.setColor( Color.yellow);
+			gr.drawRect( 
+					population.get( selectedId).getX() * 10 - 1 - cam.x,
+					population.get( selectedId).getY() * 10 - 2 - cam.y,
+					12, 12);
+			
+			gr.setLineWidth( 1);
+			gr.setColor( Color.white);
+		}
 		
 		if( debugSquare){
 			gr.drawRect( pSquare.x, pSquare.y, 10, 10);
 			gr.drawString( "( " + Math.floor( ( pCursor.x) ) + "," +
 							" " + Math.floor( ( pCursor.y) ) + ")",
-							5, 580);
+							5, 420);
 		}
 		if( debugMod){
 			gr.translate( -cam.x, -cam.y);
@@ -231,20 +278,12 @@ public class PlayState extends BasicGameState {
     	}
 
     	if( input.isMousePressed( input.MOUSE_LEFT_BUTTON)){
+    		int id = 0;
     		for( NPC popu : population){
-    			if( pCursor.x >= popu.getX() && pCursor.y >= popu.getY() && pCursor.x <= popu.getX() + 10 && pCursor.y <= popu.getY() + 10){
-    				String g = new String();
-    				if( popu.getGender() == CONST.FEMALE)
-    					g = "F";
-    				else
-    					g = "M";
-    				System.out.println( "");
-    				System.out.println( popu.getName() + " (" + g + ")");
-    				System.out.println( "Room: " + popu.getIdRoom());
-    				System.out.println( "Building: " + popu.getIdBuilding());
-    				System.out.println( "State: " + popu.getState());
-        			
+    			if( pCursor.x >= popu.getX() && pCursor.y >= popu.getY() && pCursor.x < popu.getX() + 1 && pCursor.y < popu.getY() + 1){
+    				selectedId = id;
     			}
+    			id++;
     		}
     	}
     	if( input.isMouseButtonDown( input.MOUSE_LEFT_BUTTON)){
@@ -298,16 +337,41 @@ public class PlayState extends BasicGameState {
     	
     	/*** We pass to the next turn */
     	int elapseTurn = (int) (gameTime * 0.001) - turn;
-    	
-    	for(int i=1; i <= elapseTurn; i++){
-    		System.out.println("==== TURN " + (turn+i) + " ====");
+
+    	/*** We move each NPC */
+    	for( int i = 1; i <= elapseTurn; i++){
+    		System.out.println("==== TURN " + (turn + i) + " ====");
     		for(NPC popu : population){
     			popu.update(gc, sbg, delta);
     		}
     	}
     	turn += elapseTurn;
     	
-    	
+    	/*** We infect the NPC */
+		for(NPC popu : population){
+			if( popu.getState() == State.INFECTED){
+				for(NPC aroundPop : population){
+					if( aroundPop.getState() == State.NORMAL){
+						if( popu.getX() == aroundPop.getX() &&  popu.getY() == aroundPop.getY()){
+							aroundPop.setState( State.INFECTED);
+						}
+						if( popu.getX() - 1 == aroundPop.getX() &&  popu.getY() == aroundPop.getY()){
+							aroundPop.setState( State.INFECTED);
+						}
+						if( popu.getX() + 1 == aroundPop.getX() &&  popu.getY() == aroundPop.getY()){
+							aroundPop.setState( State.INFECTED);
+						}
+						if( popu.getX() == aroundPop.getX() &&  popu.getY() == aroundPop.getY() + 1){
+							aroundPop.setState( State.INFECTED);
+						}
+						if( popu.getX() == aroundPop.getX() &&  popu.getY() == aroundPop.getY() - 1){
+							aroundPop.setState( State.INFECTED);
+						}
+					}
+				}
+			}
+		}
+
 
     	if( city.map.isSolid( (int)pCursor.x, (int)pCursor.y)){
     		debugSquare = true;

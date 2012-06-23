@@ -1,6 +1,7 @@
 package zis;
 
 import java.util.ArrayList;
+import java.util.Random;
 
 import org.newdawn.slick.Animation;
 import org.newdawn.slick.GameContainer;
@@ -10,6 +11,7 @@ import org.newdawn.slick.state.StateBasedGame;
 import org.newdawn.slick.util.pathfinding.Path;
 
 import zis.map.WorldMap;
+import zis.util.Rand;
 import zis.util.Vector2i;
 
 
@@ -32,13 +34,7 @@ public class NPC extends Sprite {
 	 
 	private int idStepPath = 0;
 	
-	public static enum State {
-		NORMAL, INFECTED, ZOMBIE
-	}
-	
-	public static enum Job {
-		SCIENTIST, OFFICE_MANAGER, SOLDIER, TECHNICIAN
-	}
+	private int infectionTime = 0;
 	
 	private Job job;
 
@@ -46,8 +42,16 @@ public class NPC extends Sprite {
 	
 	private boolean gender;
 	
+	public static enum State {
+		NORMAL, INFECTED, ZOMBIE, IMMUNE
+	}
+	
+	public static enum Job {
+		SCIENTIST, OFFICE_MANAGER, SOLDIER, TECHNICIAN
+	}
+	
 	private final static String[] maleFirstName = new String[]{
-		"Michael", "Matthew", "Joseph", "Anthony", "Ryan", "Nicholas", "Daniel", "Christopher", "Joshua", "David", "Oliver", "Jack", "Harry", "Alfie", "Charlie", "Thomas", "William", "Nathan", "Ethan", "Alexander", "Daniel", "Lucas", "Logan", "Liam", "Ryan", "Jaiden", "Zach", "Philips", "Xavier", "Charles", "Aiden", "Jackson", "Davi"
+		"Michael", "Matthew", "Joseph", "Anthony", "Ryan", "Nicholas", "Daniel", "Christopher", "Joshua", "David", "Oliver", "Jack", "Harry", "Alfie", "Charlie", "Thomas", "William", "Nathan", "Ethan", "Alexander", "Daniel", "Lucas", "Logan", "Liam", "Ryan", "Jaiden", "Zach", "Philips", "Xavier", "Charles", "Aiden", "Jackson", "Davi", "Will"
 	};
 	private final static String[] femaleFirstName = new String[]{
 		"Emma", "Olivia", "Mya", "Maya", "Emily", "Sarah", "Isabella", "Chloe", "Alexis", "Sophia", "Lily", "Léa", "Juliette", "Alice", "Madison", "Mia", "Gabrielle", "Kayla", "Fiona", "Ashley", "Mary", "Amelia", "Jessica"
@@ -61,7 +65,6 @@ public class NPC extends Sprite {
 		
 		newPath.clear();
 
-		//this.world = world;
 		this.idRoom = idRoom;
 		this.idBuilding = idBuilding;
 		this.state = State.NORMAL;
@@ -87,17 +90,13 @@ public class NPC extends Sprite {
 		if(d>3) return false;
 
 		/*** Than we check for map collision */
-		if(d == CONST.NORTH && 
-				world.isSolid( (int)p.x, (int)p.y-1))
+		if(d == CONST.NORTH && !world.isSolid( (int)p.x, (int)p.y-1))
 			return true;
-		if(d == CONST.EAST &&
-				world.isSolid( (int)p.x+1, (int)p.y))
+		if(d == CONST.EAST && !world.isSolid( (int)p.x+1, (int)p.y))
 			return true;
-		if(d == CONST.SOUTH &&
-				world.isSolid( (int)p.x, (int)p.y+1))
+		if(d == CONST.SOUTH && !world.isSolid( (int)p.x, (int)p.y+1))
 			return true;
-		if(d == CONST.WEST &&
-				world.isSolid( (int)p.x-1, (int)p.y))
+		if(d == CONST.WEST && !world.isSolid( (int)p.x-1, (int)p.y))
 			return true;
 		else
 			return false;
@@ -105,6 +104,10 @@ public class NPC extends Sprite {
 	
 	
 	public void iALogic(){
+		Rand rand = new Rand();
+		int d = rand.nextInt( CONST.NORTH, CONST.WEST);
+		if( canIgo( d)) 
+			move( d);
 		if(newPath.size()>0 && newPath.get(0).getLength() > idStepPath){
 			if(newPath.get(0).getX(idStepPath) > p.x){
 				move(CONST.EAST);
@@ -141,6 +144,11 @@ public class NPC extends Sprite {
 	 */
     public void update(GameContainer gc, StateBasedGame sb, int delta){
     	iALogic();
+    	if( getState() == State.INFECTED)
+    		infectionTime++;
+    	
+    	if( infectionTime >= 1000)
+    		setState( State.ZOMBIE);
     }
     
     /**
@@ -150,11 +158,11 @@ public class NPC extends Sprite {
 	 * @param gr Graphics
 	 */
 	public void render(GameContainer gc, StateBasedGame sb, Graphics gr, Vector2f cam){
-		if( state == State.NORMAL)
+		if( state == State.NORMAL || state == State.IMMUNE)
 			aniSprite.setCurrentFrame( 0);
-		else if( state == State.INFECTED)
+		if( state == State.INFECTED)
 			aniSprite.setCurrentFrame( 1);
-		else
+		if( state == State.ZOMBIE)
 			aniSprite.setCurrentFrame( 2);
 		
 		aniSprite.draw( p.x * 10 - cam.x, p.y * 10 - cam.y);
@@ -170,6 +178,19 @@ public class NPC extends Sprite {
 			setGender( CONST.FEMALE);
 		}
 		name += lastName[(int) ( lastName.length * Math.random())];
+	}
+	
+	public String toString(){
+		String out = new String();
+		
+		if( getGender() == CONST.FEMALE)
+			out = getName() + " (F)";
+		else
+			out = getName() + " (M)";
+		out += "\nRoom: " + getIdRoom();
+		out += "\nBuilding: " + getIdBuilding();
+		out += "\nState: " + getState();
+		return out;
 	}
 
 	public String getName() {

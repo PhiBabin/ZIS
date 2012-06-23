@@ -129,6 +129,8 @@ public class City {
 			}
 			idBuilding++;
 		}
+		
+		playState.distributeInfection();
 	}
 	
 	/***
