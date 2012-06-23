@@ -35,7 +35,7 @@ public class Building {
 
 	/*** List of the building's rooms */
 	private ArrayList<Room> rooms = new ArrayList<Room>();
-	
+
 	/*** Name of the building */
 	private String name = "Test&RD Inc.";
 	
@@ -515,5 +515,12 @@ public class Building {
 		}
 		
 	}
-	
+
+	/***
+	 * Return the Rooms of the building
+	 * @return building's Rooms
+	 */
+	public ArrayList< Room> getRooms() {
+		return rooms;
+	}
 }

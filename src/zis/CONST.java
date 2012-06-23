@@ -22,6 +22,7 @@ public class CONST {
 	public static final int MAX_PATH_LENGTH = 10000;
 	
 	/** Building generator parameter */
+	public static final int MAX_OFFICE_ROOM_DOMAIN = 100;
 	public static boolean SYMMETRICROOM = true;
 	public static final boolean AVENUE = true;
 	public static final boolean STREET = false;

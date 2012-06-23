@@ -31,7 +31,6 @@ public class ZIS  extends StateBasedGame {
 	 
 	public static void main( String[] args) {
 		try {
-			
 			CONST.APPLET = false;
 			
 			AppGameContainer app = new AppGameContainer( new ZIS());

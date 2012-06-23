@@ -79,6 +79,7 @@ public class PlayState extends BasicGameState {
 	
 	public void newRandomMap() throws SlickException{
 		city.generateEmptyMap();
+	   	population.clear();
 		
     	long generationTime = System.currentTimeMillis();
     	
@@ -91,40 +92,39 @@ public class PlayState extends BasicGameState {
     	System.out.println("Map generate in " + (int)(System.currentTimeMillis() - generationTime) + "ms.");
 		
 	}
+	
+	public void addHabitant( Vector2i p, int idRoom, int idBuilding){
+		long generationTime = System.currentTimeMillis();
+		
+		population.add( new NPC( resMan.player, p.x, p.y, idRoom, idBuilding));
+		
+		if( Math.random() < 0.2){
+			population.get( population.size() - 1).setState( NPC.State.ZOMBIE);
+		}
+		else if( Math.random() < 0.2){
+			population.get( population.size() - 1).setState( NPC.State.INFECTED);
+		}
+		
+	    System.out.println( "Habitant generate in " + (int)(System.currentTimeMillis() - generationTime) + "ms.");
+	}
 
     public void init(GameContainer gc, StateBasedGame sbg) throws SlickException {
     	
     	resMan = new RessourceManager();
         
-    	city = new City( new WorldMap( resMan.tilesetImg));
+    	city = new City( new WorldMap( resMan.tilesetImg), this);
     	miniMap = new MiniMap( new Vector2f( 5, CONST.SCREEN_HEIGHT - 155));
+
+	   	population = new ArrayList<NPC>();
+	   	population.clear();
     	
     	newRandomMap(); 
     	
+    	NPC.world = city.map;
+    	
     	//mapGen.generateLabyrinth( 0, 0, 80, 60)
-
-    	 population = new ArrayList<NPC>();
-    	 population.clear();
     	 
-    	 Vector2i pPop;
-    	 int e=2;
-     	 long generationTime;
-    	 while(e < 30){
-    		 pPop = new Vector2i(
-    				(int)Math.floor( Math.random() * 80) + 3,
-    				(int)Math.floor( Math.random() * 60) + 3);
-    		 
-    		 if( !city.map.isSolid( pPop.x, pPop.y)){
-    			 generationTime = System.currentTimeMillis();
-        		// System.out.println( "I'm number "+ e + ". Who's number 1?");
-    			 population.add(new NPC( resMan.player, pPop.x, pPop.y, city.map));
-    			 e++;
-    		    System.out.println("Habitant generate in " + (int)(System.currentTimeMillis() - generationTime) + "ms. Name: " + 
-    		    		population.get( population.size() - 1).getName());
-    		 }
-    	 }
-    	 
-    	 cam = new Vector2f( 0, 0);
+    	cam = new Vector2f( 0, 0);
     }
  
     public void render(GameContainer gc, StateBasedGame sbg, Graphics gr) throws SlickException {
@@ -133,10 +133,21 @@ public class PlayState extends BasicGameState {
     	gr.setBackground( new Color( 13, 37, 47));
     	city.map.render(gc, sbg, gr, cam);
 		
+    	Rectangle camera = new Rectangle( cam.x - 10, cam.y - 10, CONST.SCREEN_WIDTH, CONST.SCREEN_HEIGHT);
+    	
 		for( NPC popu : population){
-			popu.render(gc, sbg, gr, cam);
+			if( camera.contains( popu.getPosition().x * 10, popu.getPosition().y * 10)){
+				popu.render(gc, sbg, gr, cam);
+			}
 		}
-
+		
+		/***************************************************************
+		 * 
+		 * <DEBUGING>
+		 * 
+		 * ************************************************************
+		 */
+		
 		gr.drawString( "- Time (" + gameTime + "ms)x" + Math.round( gameSpeed * 100) + "% " +
 				"- Turn (" + turn + ")" +
 				"- Population (" + population.size() + ")" +
@@ -176,12 +187,22 @@ public class PlayState extends BasicGameState {
 			gr.setLineWidth(1);
 			gr.translate( cam.x, cam.y);
 		}
+
+		/***************************************************************
+		 * 
+		 * </DEBUGING>
+		 * 
+		 * ************************************************************
+		 */
 		
 		miniMap.render( gc, sbg, gr, cam);
     }
  
     public void update(GameContainer gc, StateBasedGame sbg, int delta) throws SlickException {
     	Input input = gc.getInput();
+    	
+    	pCursor.x = (int)Math.floor( ( input.getMouseX() + cam.x) * 0.1);
+    	pCursor.y = (int)Math.floor( ( input.getMouseY() + cam.y) * 0.1);
     	
     	/*** Move the camera */
     	if(input.isKeyDown(Input.KEY_RIGHT) && !input.isKeyDown(Input.KEY_LEFT)){
@@ -208,7 +229,24 @@ public class PlayState extends BasicGameState {
     		else
     			cam.y -= delta * 0.1;    		
     	}
-    	
+
+    	if( input.isMousePressed( input.MOUSE_LEFT_BUTTON)){
+    		for( NPC popu : population){
+    			if( pCursor.x >= popu.getX() && pCursor.y >= popu.getY() && pCursor.x <= popu.getX() + 10 && pCursor.y <= popu.getY() + 10){
+    				String g = new String();
+    				if( popu.getGender() == CONST.FEMALE)
+    					g = "F";
+    				else
+    					g = "M";
+    				System.out.println( "");
+    				System.out.println( popu.getName() + " (" + g + ")");
+    				System.out.println( "Room: " + popu.getIdRoom());
+    				System.out.println( "Building: " + popu.getIdBuilding());
+    				System.out.println( "State: " + popu.getState());
+        			
+    			}
+    		}
+    	}
     	if( input.isMouseButtonDown( input.MOUSE_LEFT_BUTTON)){
     		cam = miniMap.onClick( new Vector2f( input.getMouseX(), input.getMouseY()), cam);
     	}
@@ -270,8 +308,6 @@ public class PlayState extends BasicGameState {
     	turn += elapseTurn;
     	
     	
-    	pCursor.x = (int)Math.floor( ( input.getMouseX() + cam.x) * 0.1);
-    	pCursor.y = (int)Math.floor( ( input.getMouseY() + cam.y) * 0.1);
 
     	if( city.map.isSolid( (int)pCursor.x, (int)pCursor.y)){
     		debugSquare = true;

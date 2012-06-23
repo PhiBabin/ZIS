@@ -16,7 +16,7 @@ import zis.util.Vector2i;
  */
 public class Sprite {
 	/** Animation of the sprite  */
-	protected Animation aniSprite;
+	protected final Animation aniSprite;
 	
 	/** Position of the sprite  */
 	protected Vector2i p;
@@ -32,11 +32,11 @@ public class Sprite {
 	 * @param pSprite Image of the sprite
 	 */
 	public Sprite(Animation pSprite){
-		aniSprite=pSprite;
-		h = aniSprite.getHeight();
+		aniSprite = pSprite;
 		w = aniSprite.getWidth();
+		h = aniSprite.getHeight();
 		
-		p = new Vector2i(0,0);
+		p = new Vector2i( 0, 0);
 	}
 	
 	/**
@@ -107,7 +107,22 @@ public class Sprite {
 	public Vector2i getPosition() {
 		return p;
 	}
-
+	
+	/**
+	 * Return Sprite X position
+	 * @return X Position of the Sprite
+	 */
+	public int getX(){
+		return p.x;
+	}
+	
+	/**
+	 * Return Sprite Y position
+	 * @return Y Position of the Sprite
+	 */
+	public int getY(){
+		return p.y;
+	}
 	/**
 	 * Return Sprite scale
 	 * @return Sprite's scale

@@ -4,6 +4,8 @@ import java.util.ArrayList;
 
 import org.newdawn.slick.Animation;
 import org.newdawn.slick.GameContainer;
+import org.newdawn.slick.Graphics;
+import org.newdawn.slick.geom.Vector2f;
 import org.newdawn.slick.state.StateBasedGame;
 import org.newdawn.slick.util.pathfinding.Path;
 
@@ -14,40 +16,62 @@ import zis.util.Vector2i;
 public class NPC extends Sprite {
 
 	/** TiledSet of the mainMap */
-	private final WorldMap world;
+	public static WorldMap world;
 	
 	/** New position of the Player */
 	private ArrayList< Path> newPath = new ArrayList< Path>(); 
+
+	/** Id of the NPC's building */
+	private int idBuilding = -1;
+	
+	/** Id of the NPC's office */
+	private int idRoom = -1;
 	
 	/** Name of the NPC */
 	private String name = new String();
 	 
 	private int idStepPath = 0;
 	
+	public static enum State {
+		NORMAL, INFECTED, ZOMBIE
+	}
+	
+	public static enum Job {
+		SCIENTIST, OFFICE_MANAGER, SOLDIER, TECHNICIAN
+	}
+	
+	private Job job;
+
+	private State state;
+	
 	private boolean gender;
 	
-	private static String[] maleFirstName = new String[]{
+	private final static String[] maleFirstName = new String[]{
 		"Michael", "Matthew", "Joseph", "Anthony", "Ryan", "Nicholas", "Daniel", "Christopher", "Joshua", "David", "Oliver", "Jack", "Harry", "Alfie", "Charlie", "Thomas", "William", "Nathan", "Ethan", "Alexander", "Daniel", "Lucas", "Logan", "Liam", "Ryan", "Jaiden", "Zach", "Philips", "Xavier", "Charles", "Aiden", "Jackson", "Davi"
 	};
-	private static String[] femaleFirstName = new String[]{
+	private final static String[] femaleFirstName = new String[]{
 		"Emma", "Olivia", "Mya", "Maya", "Emily", "Sarah", "Isabella", "Chloe", "Alexis", "Sophia", "Lily", "Léa", "Juliette", "Alice", "Madison", "Mia", "Gabrielle", "Kayla", "Fiona", "Ashley", "Mary", "Amelia", "Jessica"
 	};
-	private static String[] lastName = new String[]{
+	private final static String[] lastName = new String[]{
 		"Smith", "Johnson", "Williams", "Brown", "Davis", "Miller", "Wilson", "Moore", "Taylor", "Anderson", "Thomas", "Jackson", "White", "Harris", "Martin", "Thompson", "Garcia", "Martinez", "Jones", "Campbell", "Patel", "Wong", "Hall", "Lee", "Brown"
 	};
 	
-	public NPC(Animation pSprite, int nX, int nY, WorldMap world) {
+	public NPC(Animation pSprite, int nX, int nY, int idRoom, int idBuilding) {
 		super(pSprite, nX, nY);
 		
 		newPath.clear();
 
-		this.world = world;
+		//this.world = world;
+		this.idRoom = idRoom;
+		this.idBuilding = idBuilding;
+		this.state = State.NORMAL;
+		this.job = Job.SCIENTIST;
 		
 		generateName();
-
-		addNewPath( new Vector2i( 
-				(int)Math.floor( Math.random()*80), 
-				(int)Math.floor( Math.random()*60)));
+//
+//		addNewPath( new Vector2i( 
+//				(int)Math.floor( Math.random()*80), 
+//				(int)Math.floor( Math.random()*60)));
 	}
 	
 	public void addNewPath( Vector2i nP){
@@ -98,12 +122,12 @@ public class NPC extends Sprite {
 			idStepPath++;
 		}
 		else{
-			newPath.clear();
-			
-			idStepPath = 0;
-			addNewPath( new Vector2i( 
-					(int)Math.floor( Math.random()*80), 
-					(int)Math.floor( Math.random()*60)));
+//			newPath.clear();
+//			
+//			idStepPath = 0;
+//			addNewPath( new Vector2i( 
+//					(int)Math.floor( Math.random()*80), 
+//					(int)Math.floor( Math.random()*60)));
 		}
 		
 	}
@@ -118,20 +142,69 @@ public class NPC extends Sprite {
     public void update(GameContainer gc, StateBasedGame sb, int delta){
     	iALogic();
     }
+    
+    /**
+	 * NPC render function
+	 * @param gc Game Container
+	 * @param sb State Based Game
+	 * @param gr Graphics
+	 */
+	public void render(GameContainer gc, StateBasedGame sb, Graphics gr, Vector2f cam){
+		if( state == State.NORMAL)
+			aniSprite.setCurrentFrame( 0);
+		else if( state == State.INFECTED)
+			aniSprite.setCurrentFrame( 1);
+		else
+			aniSprite.setCurrentFrame( 2);
+		
+		aniSprite.draw( p.x * 10 - cam.x, p.y * 10 - cam.y);
+	}
 
 	public void generateName() {
-		if( Math.random() > 0.5){
+		if( Math.random() >= 0.5){
 			name += maleFirstName[(int) ( maleFirstName.length * Math.random())] + " ";
-			gender = CONST.MALE;
+			setGender( CONST.MALE);
 		}
 		else{
 			name += femaleFirstName[(int) ( femaleFirstName.length * Math.random())] + " ";
-			gender = CONST.FEMALE;
+			setGender( CONST.FEMALE);
 		}
 		name += lastName[(int) ( lastName.length * Math.random())];
 	}
 
 	public String getName() {
 		return name;
+	}
+	
+	public Job getJob() {
+		return job;
+	}
+
+	public State getState() {
+		return state;
+	}
+
+	public boolean getGender() {
+		return gender;
+	}
+
+	public int getIdBuilding() {
+		return idBuilding;
+	}
+
+	public int getIdRoom() {
+		return idRoom;
+	}
+
+	public void setJob(Job job) {
+		this.job = job;
+	}
+
+	public void setState(State state) {
+		this.state = state;
+	}
+
+	public void setGender(boolean gender) {
+		this.gender = gender;
 	}
 }

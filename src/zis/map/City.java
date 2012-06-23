@@ -7,6 +7,7 @@ import org.newdawn.slick.SlickException;
 import org.newdawn.slick.geom.Rectangle;
 
 import zis.CONST;
+import zis.PlayState;
 import zis.util.Rand;
 import zis.util.Vector2i;
 
@@ -19,6 +20,9 @@ public class City {
 	
 	/*** Container of the generated map */
 	public WorldMap map;
+	
+	/*** Reference to the game play state */
+	public PlayState playState;
 
 	/*** Randomizer */
 	private Rand rand;
@@ -37,8 +41,9 @@ public class City {
 	 * @param map Container of the generated map
 	 * @throws SlickException
 	 */
-	public City( WorldMap map) throws SlickException {
+	public City( WorldMap map, PlayState playState) throws SlickException {
 		this.map = map;
+		this.playState = playState;
 		generateEmptyMap();
 	}
 	
@@ -107,6 +112,23 @@ public class City {
 			}
 		}
 		
+		/*** Add population */
+		Vector2i pHabitant = new Vector2i( 0, 0);
+		Rectangle r;
+		int idBuilding = 0;
+		for( Building b : buildings){
+			int idRoom = 0;
+			for( Room room : b.getRooms()){
+				r = room.getRect();
+				if( r.getWidth() * r.getHeight() <= CONST.MAX_OFFICE_ROOM_DOMAIN){
+					pHabitant.x = (int) ( r.getX() + rand.nextInt( 1, (int) ( r.getWidth() - 2)));
+					pHabitant.y = (int) ( r.getY() + rand.nextInt( 1, (int) ( r.getHeight() - 2)));
+					playState.addHabitant( pHabitant, idRoom, idBuilding);
+				}
+				idRoom++;
+			}
+			idBuilding++;
+		}
 	}
 	
 	/***
