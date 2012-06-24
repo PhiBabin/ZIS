@@ -30,6 +30,12 @@ public class City {
 	/*** Stack of generated buildings */
 	public ArrayList<Building> buildings = new ArrayList<Building>();
 	
+	/*** Stack of generated apartments */
+	public ArrayList<Apartment> apartments = new ArrayList<Apartment>();
+	
+	/*** Stack of spot that can turn into building or apartment */
+	public ArrayList<Rectangle> constructionSpot = new ArrayList<Rectangle>();
+	
 	/*** Stack of Street and Avenue */
 	public ArrayList<Road> roads = new ArrayList<Road>();
 
@@ -60,7 +66,10 @@ public class City {
 	 */
 	public void generateCity( int seed){
 		buildings.clear();
+		apartments.clear();
 		roads.clear();
+		ArrayList<Rectangle> spot = new ArrayList<Rectangle>();
+		spot.clear();
 		
 		rand = new Rand( seed);
 		
@@ -87,35 +96,54 @@ public class City {
 		s--;
 		
 		/*** Generate buildings **/
-		Rectangle rBuilding = new Rectangle( 0, 0, 1, 1);
 		for(int h = 0; h < s - 1; h++){
 			for(int w = 0; w < a - 1; w++){
-				rBuilding.setX( roads.get( w).getRect().getX() + CONST.AVENUE_WIDTH);
-				rBuilding.setY( roads.get( a + h).getRect().getY() + CONST.STREET_WIDTH);
+				Rectangle rSpot = new Rectangle( 0, 0, 1, 1);
+				
+				rSpot.setX( roads.get( w).getRect().getX() + CONST.AVENUE_WIDTH);
+				rSpot.setY( roads.get( a + h).getRect().getY() + CONST.STREET_WIDTH);
 				
 				if( w + 1 >= a) 
-					rBuilding.setWidth( CONST.MAP_WIDTH - rBuilding.getX() - 1);
+					rSpot.setWidth( CONST.MAP_WIDTH - rSpot.getX() - 1);
 				else
-					rBuilding.setWidth( roads.get( w + 1).getRect().getX() - rBuilding.getX() );
+					rSpot.setWidth( roads.get( w + 1).getRect().getX() - rSpot.getX() );
 				
 				if( a + h + 1>= roads.size()) 
-					rBuilding.setHeight( CONST.MAP_HEIGHT - rBuilding.getY() - 1);
+					rSpot.setHeight( CONST.MAP_HEIGHT - rSpot.getY() - 1);
 				else
-					rBuilding.setHeight( ( roads.get( a + h + 1).getRect().getY()) - rBuilding.getY());
+					rSpot.setHeight( ( roads.get( a + h + 1).getRect().getY()) - rSpot.getY());
 				
-				buildings.add( new Building( this,
-						seed * w + h + w,
-						(int) rBuilding.getX(),
-						(int) rBuilding.getY(),
-						(int) rBuilding.getWidth(),
-						(int) rBuilding.getHeight()));
+				spot.add( rSpot);
+				constructionSpot.add( rSpot);
 			}
+			
+		}
+		
+		
+		int nbrBuilding = (int) ( spot.size() * 0.6);
+		
+		for( int i = 0; i < nbrBuilding; i++){
+			int id = rand.nextInt( spot.size());
+			buildings.add( new Building( this, seed * i, spot.get( id)));
+
+			spot.remove( id);
+		}
+		
+		int nbrApartment = (int) ( spot.size() * 0.4);
+		
+		for( int i = 0; i < nbrApartment; i++){
+			int id = rand.nextInt( spot.size());
+			apartments.add( new Apartment( this, seed * i, spot.get( id)));
+
+			spot.remove( id);
 		}
 		
 		/*** Add population */
 		Vector2i pHabitant = new Vector2i( 0, 0);
 		Rectangle r;
 		int idBuilding = 0;
+		long generationTime = System.currentTimeMillis();
+		
 		for( Building b : buildings){
 			int idRoom = 0;
 			for( Room room : b.getRooms()){
@@ -131,6 +159,8 @@ public class City {
 		}
 		
 		playState.distributeInfection();
+		
+	    System.out.println( "Population generate in " + (int)(System.currentTimeMillis() - generationTime) + "ms.");
 	}
 	
 	/***
@@ -367,6 +397,14 @@ public class City {
 	 */
 	public ArrayList< Building> getBuildings() {
 		return buildings;
+	}
+	
+	/***
+	 * Return the Apartment list
+	 * @return Apartment list
+	 */
+	public ArrayList< Apartment> getApartments() {
+		return apartments;
 	}
 	
 	/***

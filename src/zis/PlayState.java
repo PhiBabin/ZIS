@@ -21,9 +21,11 @@ import org.newdawn.slick.state.BasicGameState;
 import org.newdawn.slick.state.StateBasedGame;
 
 import zis.NPC.State;
+import zis.map.Apartment;
 import zis.map.City;
 import zis.map.MiniMap;
 import zis.map.Road;
+import zis.map.Room;
 import zis.map.WorldMap;
 import zis.util.Vector2i;
 
@@ -82,6 +84,7 @@ public class PlayState extends BasicGameState {
 	public void newRandomMap() throws SlickException{
 		city.generateEmptyMap();
 	   	population.clear();
+	   	selectedId = -1;
 		
     	long generationTime = System.currentTimeMillis();
     	
@@ -96,12 +99,9 @@ public class PlayState extends BasicGameState {
 	}
 	
 	public void addHabitant( Vector2i p, int idRoom, int idBuilding){
-		long generationTime = System.currentTimeMillis();
-		
 		population.add( new NPC( resMan.player, p.x, p.y, idRoom, idBuilding));
-		
-	    System.out.println( "Habitant generate in " + (int)(System.currentTimeMillis() - generationTime) + "ms.");
 	}
+	
 	public void distributeInfection(){
 		int I = (int) ( population.size() * 0.1);
 		int Z = (int) ( population.size() * 0.1);
@@ -203,7 +203,7 @@ public class PlayState extends BasicGameState {
 		}
 		
 		if( debugSquare){
-			gr.drawRect( pSquare.x, pSquare.y, 10, 10);
+			gr.drawRect( pSquare.x, pSquare.y, 9, 9);
 			gr.drawString( "( " + Math.floor( ( pCursor.x) ) + "," +
 							" " + Math.floor( ( pCursor.y) ) + ")",
 							5, 420);
@@ -229,6 +229,17 @@ public class PlayState extends BasicGameState {
 					gr.rotate( r.getX() * 10 + r.getWidth() * 5, 
 							r.getY() * 10 + r.getHeight() * 5,
 							90);
+			}
+			gr.setColor( Color.cyan);
+			gr.setLineWidth(4);
+			for( Apartment apart : city.getApartments()){
+				for( Room room : apart.getRooms()){
+					Rectangle r = room.getRect();
+					gr.drawRect( 
+							r.getX() * 10,
+							r.getY() * 10, r.getWidth() * 10,
+							r.getHeight() * 10);
+				}
 			}
 			gr.setColor( Color.white);
 			gr.setLineWidth(1);
@@ -323,13 +334,13 @@ public class PlayState extends BasicGameState {
     		CONST.SYMMETRICROOM = false;
     	
     	/*** Control the speed of the game */
-    	if(input.isKeyDown(Input.KEY_MINUS) && gameSpeed>=0.1){
+    	if( input.isKeyDown(Input.KEY_MINUS) && gameSpeed >= 0.1){
     		gameSpeed -= 0.1;
     	}
-    	if(input.isKeyDown(Input.KEY_EQUALS) && gameSpeed<20.0){
+    	if( input.isKeyDown(Input.KEY_EQUALS) && gameSpeed < 100.0){
     		gameSpeed += 0.1;
     	}
-    	if(input.isKeyDown(Input.KEY_P)){
+    	if( input.isKeyDown(Input.KEY_P)){
     		gameSpeed = 0;
     	}
     	
@@ -349,7 +360,7 @@ public class PlayState extends BasicGameState {
     	
     	/*** We infect the NPC */
 		for(NPC popu : population){
-			if( popu.getState() == State.INFECTED){
+			if( popu.getState() == State.INFECTED ||  popu.getState() == State.ZOMBIE){
 				for(NPC aroundPop : population){
 					if( aroundPop.getState() == State.NORMAL){
 						if( popu.getX() == aroundPop.getX() &&  popu.getY() == aroundPop.getY()){

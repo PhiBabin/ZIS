@@ -38,7 +38,23 @@ public class Building {
 
 	/*** Name of the building */
 	private String name = "Test&RD Inc.";
-	
+
+	/***
+	 * Constructor of a office building
+	 * @param city Reference to the City
+	 * @param seed Seed of the building
+	 * @param r Rectangle of the building
+	 */
+	public Building( City city, int seed, Rectangle r){
+		this.city = city;
+		this.x = (int) r.getX();
+		this.y = (int) r.getY();
+		this.W = (int) r.getWidth();
+		this.H = (int) r.getHeight();
+		rand = new Rand( seed);
+		
+		generateBuilding();
+	}
 	/***
 	 * Constructor of a office building
 	 * @param city Reference to the City

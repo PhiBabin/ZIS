@@ -47,7 +47,7 @@ public class NPC extends Sprite {
 	}
 	
 	public static enum Job {
-		SCIENTIST, OFFICE_MANAGER, SOLDIER, TECHNICIAN
+		SCIENTIST, OFFICE_MANAGER, POLICE, TECHNICIAN
 	}
 	
 	private final static String[] maleFirstName = new String[]{
@@ -57,7 +57,7 @@ public class NPC extends Sprite {
 		"Emma", "Olivia", "Mya", "Maya", "Emily", "Sarah", "Isabella", "Chloe", "Alexis", "Sophia", "Lily", "Léa", "Juliette", "Alice", "Madison", "Mia", "Gabrielle", "Kayla", "Fiona", "Ashley", "Mary", "Amelia", "Jessica"
 	};
 	private final static String[] lastName = new String[]{
-		"Smith", "Johnson", "Williams", "Brown", "Davis", "Miller", "Wilson", "Moore", "Taylor", "Anderson", "Thomas", "Jackson", "White", "Harris", "Martin", "Thompson", "Garcia", "Martinez", "Jones", "Campbell", "Patel", "Wong", "Hall", "Lee", "Brown"
+		"Smith", "Johnson", "Williams", "Brown", "Davis", "Miller", "Wilson", "Moore", "Taylor", "Anderson", "Thomas", "Jackson", "White", "Harris", "Martin", "Thompson", "Garcia", "Martinez", "Jones", "Campbell", "Patel", "Wong", "Hall", "Lee", "Brown", "Connor"
 	};
 	
 	public NPC(Animation pSprite, int nX, int nY, int idRoom, int idBuilding) {
