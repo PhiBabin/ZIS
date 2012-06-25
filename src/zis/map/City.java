@@ -68,6 +68,7 @@ public class City {
 		buildings.clear();
 		apartments.clear();
 		roads.clear();
+		constructionSpot.clear();
 		ArrayList<Rectangle> spot = new ArrayList<Rectangle>();
 		spot.clear();
 		
@@ -129,14 +130,18 @@ public class City {
 			spot.remove( id);
 		}
 		
-		int nbrApartment = (int) ( spot.size() * 0.4);
+		int nbrApartment = (int) ( constructionSpot.size() * 0.4);
+		
+		int testpop = 0;
 		
 		for( int i = 0; i < nbrApartment; i++){
 			int id = rand.nextInt( spot.size());
 			apartments.add( new Apartment( this, seed * i, spot.get( id)));
-
+			testpop += 2 * apartments.get( i).getRooms().size()/7;
 			spot.remove( id);
 		}
+		
+		System.out.println( "pop: " + testpop);
 		
 		/*** Add population */
 		Vector2i pHabitant = new Vector2i( 0, 0);

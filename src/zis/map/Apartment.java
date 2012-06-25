@@ -4,7 +4,9 @@ import java.util.ArrayList;
 
 import org.newdawn.slick.geom.Rectangle;
 
+import zis.CONST;
 import zis.util.Rand;
+import zis.util.Vector2i;
 
 /***
  * Randomly generate an Apartment
@@ -83,35 +85,37 @@ public class Apartment {
 		buildRegion.clear();
 		rooms.clear();
 
-		temRegion.add( new Rectangle( x, y, W, H));
-		city.drawOutline( temRegion.get( 0), 57);
+		//temRegion.add( new Rectangle( x, y, W, H));
+		//city.drawOutline( temRegion.get( 0), 57);
 		
-		int APART_W = 14,  APART_H = 12;
+		int offsetX = (int) ( W % (2 * CONST.APARTMENT_WIDTH + 3)* 0.5);
+		int offsetY = (int) ( H % (CONST.APARTMENT_HEIGHT + 1) * 0.5);
 		
-		int offsetX = (int) ( W % APART_W * 0.5);
-		int offsetY = (int) ( H % APART_H * 0.5);
-		
-		int nbrApartWidth = (W - 2 * offsetX) / APART_W;
-		int nbrApartHeight = (H - 2 * offsetY) / APART_H;
+		int nbrApartWidth = (W - 2 * offsetX) / ( 2 * CONST.APARTMENT_WIDTH + 3);
+		int nbrApartHeight = (H - 2 * offsetY) / CONST.APARTMENT_HEIGHT;
 		Rectangle newChamber;
 		for( int g = 0; g < nbrApartWidth; g++){
 			for( int v = 0; v < nbrApartHeight; v++){
 				newChamber = new Rectangle(
-						x + offsetX + g * (APART_W),
-						y + offsetY + v * (APART_H),
-						APART_W + 1, APART_H + 1);
-				generateChamber( newChamber, g != 0, v != 0, g != 0 && g != nbrApartWidth - 1);
-				//buildRegion.add( newChamber);
+						x + offsetX + g * (2 * CONST.APARTMENT_WIDTH  + 3),
+						y + offsetY + v * CONST.APARTMENT_HEIGHT,
+						CONST.APARTMENT_WIDTH + 1, 
+						CONST.APARTMENT_HEIGHT + 1);
+				generateChamber( newChamber, false, v == nbrApartWidth, v != 0 && v != nbrApartHeight - 1);
+			//	buildRegion.add( newChamber);
+				newChamber = new Rectangle(
+						x + offsetX + g * (2 * CONST.APARTMENT_WIDTH  + 3) + CONST.APARTMENT_WIDTH,
+						y + offsetY + v * CONST.APARTMENT_HEIGHT,
+						CONST.APARTMENT_WIDTH + 1, 
+						CONST.APARTMENT_HEIGHT + 1);
+				generateChamber( newChamber, true, v == nbrApartWidth, v != 0 && v != nbrApartHeight - 1);
 			}
 			
 		}
-		System.out.println( "off : " + offsetX );
-		
 		
 		/** Add the outline of then room */
 		int j = 0;
 		for(Rectangle r : buildRegion){
-			city.drawOutline( r, 57);
 			rooms.add( new Room( r));
 			
 			j++;
@@ -120,66 +124,94 @@ public class Apartment {
 	
 	public void generateChamber( Rectangle r, boolean miroirX, boolean miroirY, boolean center){
 		ArrayList<Rectangle> newRooms = new ArrayList<Rectangle>();
+		ArrayList<Vector2i> newDoors = new ArrayList<Vector2i>();
 		
 		if( center){
-			newRooms.add( new Rectangle( 0, 4, 7, 7));
-			newRooms.add( new Rectangle( 6, 0, 5, 6));
+			newRooms.add( new Rectangle( 4, 0, 7, 7));
 			newRooms.add( new Rectangle( 0, 0, 5, 5));
-			newRooms.add( new Rectangle( 8, 7, 4, 4));
-			newRooms.add( new Rectangle( 10, 1, 5, 7));
-			newRooms.add( new Rectangle( 8, 7, 4, 4));
-			newRooms.add( new Rectangle( 11, 7, 4, 4));
+			newDoors.add( new Vector2i( 4, 2));
 		}
 		else{
-			newRooms.add( new Rectangle( 0, 2, 7, 7));
-			newRooms.add( new Rectangle( 6, 0, 5, 6));
-			newRooms.add( new Rectangle( 2, 8, 5, 5));
-			newRooms.add( new Rectangle( 8, 7, 4, 4));
-			newRooms.add( new Rectangle( 10, 1, 5, 7));
-			newRooms.add( new Rectangle( 8, 7, 4, 4));
-			newRooms.add( new Rectangle( 11, 7, 4, 4));
+			newRooms.add( new Rectangle( 2, 0, 7, 7));
+			newRooms.add( new Rectangle( 8, 2, 5, 5));
+			newDoors.add( new Vector2i( 8, 4));
 		}
 		
-		Rectangle theRoom;
+		newDoors.add( new Vector2i( 6, 6));
+		newDoors.add( new Vector2i( 10, 7));
+		newDoors.add( new Vector2i( 8, 8));
+		newDoors.add( new Vector2i( 5, 8));
+		newDoors.add( new Vector2i( 6, 10));
+		newDoors.add( new Vector2i( 7, 13));
 		
+		newRooms.add( new Rectangle( 0, 6, 6, 5));
+		newRooms.add( new Rectangle( 7, 8, 4, 4));
+		newRooms.add( new Rectangle( 1, 10, 7, 5));
+		newRooms.add( new Rectangle( 7, 8, 4, 4));
+		newRooms.add( new Rectangle( 7, 11, 4, 4));
+		
+		
+		Rectangle theRoom;
+
+		boolean ver = false;
 		if( !miroirX && !miroirY){
-			for(Rectangle ro : newRooms){
+			for( Rectangle ro : newRooms){
 				theRoom = new Rectangle( 
 						ro.getX() + r.getX(),
 						ro.getY() + r.getY(),
 						ro.getWidth(),
 						ro.getHeight());
 				buildRegion.add( theRoom);
+				city.drawOutline( theRoom, 57);
+			}
+			for( Vector2i d : newDoors){
+				city.addDoor( new Vector2i( r.getX() + d.x, r.getY() + d.y), ver);
+				ver = !ver;
 			}
 		}
 		if( miroirX && !miroirY){
-			for(Rectangle ro : newRooms){
+			for( Rectangle ro : newRooms){
 				theRoom = new Rectangle( 
 						r.getX() - ro.getX() + r.getWidth() - ro.getWidth(),
 						ro.getY() + r.getY(),
 						ro.getWidth(),
 						ro.getHeight());
 				buildRegion.add( theRoom);
+				city.drawOutline( theRoom, 57);
+			}
+			for( Vector2i d : newDoors){
+				city.addDoor( new Vector2i( r.getX() + r.getWidth() - d.x - 1, r.getY() + d.y), ver);
+				ver = !ver;
 			}
 		}
 		if( !miroirX && miroirY){
-			for(Rectangle ro : newRooms){
+			for( Rectangle ro : newRooms){
 				theRoom = new Rectangle( 
 						ro.getX() + r.getX(),
 						r.getY() - ro.getY() + r.getHeight() - ro.getHeight(),
 						ro.getWidth(),
 						ro.getHeight());
 				buildRegion.add( theRoom);
+				city.drawOutline( theRoom, 57);
+			}
+			for( Vector2i d : newDoors){
+				city.addDoor( new Vector2i( r.getX() + d.x, r.getY() + r.getHeight() - d.y - 1), ver);
+				ver = !ver;
 			}
 		}
 		if( miroirX && miroirY){
-			for(Rectangle ro : newRooms){
+			for( Rectangle ro : newRooms){
 				theRoom = new Rectangle( 
 						r.getX() - ro.getX() + r.getWidth() - ro.getWidth(),
 						r.getY() - ro.getY() + r.getHeight() - ro.getHeight(),
 						ro.getWidth(),
 						ro.getHeight());
 				buildRegion.add( theRoom);
+				city.drawOutline( theRoom, 57);
+			}
+			for( Vector2i d : newDoors){
+				city.addDoor( new Vector2i( r.getX() + r.getWidth() - d.x - 1, r.getY() + r.getHeight() - d.y - 1), ver);
+				ver = !ver;
 			}
 		}
 	}
