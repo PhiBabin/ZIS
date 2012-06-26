@@ -171,7 +171,7 @@ public class Building {
 		/** Add the outline of then room */
 		int j = 0;
 		for(Rectangle r : buildRegion){
-			city.drawOutline( r, 57);
+			city.drawOutline( r, 3);
 			rooms.add( new Room( r));
 			
 			j++;

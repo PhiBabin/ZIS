@@ -86,7 +86,7 @@ public class Apartment {
 		rooms.clear();
 
 		//temRegion.add( new Rectangle( x, y, W, H));
-		//city.drawOutline( temRegion.get( 0), 57);
+		//city.drawOutline( temRegion.get( 0), 3);
 		
 		int offsetX = (int) ( W % (2 * CONST.APARTMENT_WIDTH + 3)* 0.5);
 		int offsetY = (int) ( H % (CONST.APARTMENT_HEIGHT + 1) * 0.5);
@@ -150,7 +150,6 @@ public class Apartment {
 		newRooms.add( new Rectangle( 7, 8, 4, 4));
 		newRooms.add( new Rectangle( 7, 11, 4, 4));
 		
-		
 		Rectangle theRoom;
 
 		boolean ver = false;
@@ -162,7 +161,7 @@ public class Apartment {
 						ro.getWidth(),
 						ro.getHeight());
 				buildRegion.add( theRoom);
-				city.drawOutline( theRoom, 57);
+				city.drawOutline( theRoom, 3);
 			}
 			for( Vector2i d : newDoors){
 				city.addDoor( new Vector2i( r.getX() + d.x, r.getY() + d.y), ver);
@@ -177,7 +176,7 @@ public class Apartment {
 						ro.getWidth(),
 						ro.getHeight());
 				buildRegion.add( theRoom);
-				city.drawOutline( theRoom, 57);
+				city.drawOutline( theRoom, 3);
 			}
 			for( Vector2i d : newDoors){
 				city.addDoor( new Vector2i( r.getX() + r.getWidth() - d.x - 1, r.getY() + d.y), ver);
@@ -192,7 +191,7 @@ public class Apartment {
 						ro.getWidth(),
 						ro.getHeight());
 				buildRegion.add( theRoom);
-				city.drawOutline( theRoom, 57);
+				city.drawOutline( theRoom, 3);
 			}
 			for( Vector2i d : newDoors){
 				city.addDoor( new Vector2i( r.getX() + d.x, r.getY() + r.getHeight() - d.y - 1), ver);
@@ -207,7 +206,7 @@ public class Apartment {
 						ro.getWidth(),
 						ro.getHeight());
 				buildRegion.add( theRoom);
-				city.drawOutline( theRoom, 57);
+				city.drawOutline( theRoom, 3);
 			}
 			for( Vector2i d : newDoors){
 				city.addDoor( new Vector2i( r.getX() + r.getWidth() - d.x - 1, r.getY() + r.getHeight() - d.y - 1), ver);

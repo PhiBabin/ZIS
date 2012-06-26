@@ -78,23 +78,23 @@ public class City {
 		
 		/*** Avenue generation */
 		int avePosition = 0;
-		int a = 1;
+		int a = 0;
 		while( avePosition + CONST.AVENUE_WIDTH <= CONST.MAP_WIDTH) {
-			roads.add( new Road( avePosition, 0, map.getHeightInTiles(), CONST.AVENUE, a));
+			roads.add( new Road( avePosition, 0, map.getHeightInTiles(), CONST.AVENUE, a + 1));
 			avePosition += CONST.AVENUE_WIDTH + rand.nextInt( CONST.BLOCK_WIDTH_MIN, CONST.BLOCK_WIDTH_MAX);
 			a++;
 		}
-		a--;
 
 		/*** Street generation */
 		int strPosition = 0;
-		int s = 1;
+		int s = 0;
 		while( strPosition + CONST.STREET_WIDTH <= CONST.MAP_HEIGHT) {
-			roads.add( new Road( 0, strPosition, map.getWidthInTiles(), CONST.STREET, s));
+			roads.add( new Road( 0, strPosition, map.getWidthInTiles(), CONST.STREET, s + 1));
 			strPosition += CONST.STREET_WIDTH + rand.nextInt( CONST.BLOCK_HEIGHT_MIN, CONST.BLOCK_HEIGHT_MAX);
 			s++;
 		}
-		s--;
+		
+		drawRoads();
 		
 		/*** Generate buildings **/
 		for(int h = 0; h < s - 1; h++){
@@ -121,7 +121,7 @@ public class City {
 		}
 		
 		
-		int nbrBuilding = (int) ( spot.size() * 0.6);
+		int nbrBuilding = (int) ( spot.size() * 0.4);
 		
 		for( int i = 0; i < nbrBuilding; i++){
 			int id = rand.nextInt( spot.size());
@@ -130,18 +130,21 @@ public class City {
 			spot.remove( id);
 		}
 		
-		int nbrApartment = (int) ( constructionSpot.size() * 0.4);
+//		int nbrApartment = (int) ( constructionSpot.size() * 0.4);
+		int nbrApartment = spot.size();
 		
 		int testpop = 0;
 		
 		for( int i = 0; i < nbrApartment; i++){
 			int id = rand.nextInt( spot.size());
 			apartments.add( new Apartment( this, seed * i, spot.get( id)));
-			testpop += 2 * apartments.get( i).getRooms().size()/7;
 			spot.remove( id);
+			
+			testpop += 2 * apartments.get( i).getRooms().size()/7;
 		}
 		
 		System.out.println( "pop: " + testpop);
+		
 		
 		/*** Add population */
 		Vector2i pHabitant = new Vector2i( 0, 0);
@@ -216,21 +219,89 @@ public class City {
 	 * @param ver Direction of the door
 	 */
 	public void addDoor( Vector2i p, boolean ver){
-		if( map.getTileId( (int)p.x, (int)p.y - 1, 0) != 57 
-				&& map.getTileId( (int)p.x, (int)p.y + 1, 0) != 57 
+		if( map.getTileId( (int)p.x, (int)p.y - 1, 0) != 3 
+				&& map.getTileId( (int)p.x, (int)p.y + 1, 0) != 3 
 				&& ver){
-			map.setTileId( (int)p.x, (int)p.y, 0, 157);
+			map.setTileId( (int)p.x, (int)p.y, 0, 8);
 		}
-		if( map.getTileId( (int)p.x - 1, (int)p.y , 0) != 57 
-				&& map.getTileId( (int)p.x + 1, (int)p.y, 0) != 57 
+		if( map.getTileId( (int)p.x - 1, (int)p.y , 0) != 3 
+				&& map.getTileId( (int)p.x + 1, (int)p.y, 0) != 3 
 				&& !ver){
-			map.setTileId( (int)p.x, (int)p.y, 0, 158);
+			map.setTileId( (int)p.x, (int)p.y, 0, 9);
 		}
 		
 	}
 	
 	public void drawRoads(){
+		Rectangle r;
+		int tileId;
+		for( Road rd : roads){
+			int k = 1;
+			r = rd.getRect();
+			if( rd.isAvenue() == CONST.AVENUE){
+				for( int y = 0; y < r.getHeight(); y++){
+					for( int x = 0; x < r.getWidth(); x++){
+						tileId = 11;
+						
+						if( x == 0)
+							tileId = 10;
+						else if( x == r.getWidth() - 1)
+							tileId = 13;
+						else if( x == (int)(r.getWidth() / 2)){
+							if( k == 1)
+								tileId = 12;
+							else if( k == 2)
+								tileId = 32;
+							else
+								k = 0;
+							k++;
+						}
+						
+						map.setTileId( x + (int)r.getX(), y + (int)r.getY(), 0, tileId);
+					}
+				}
+			}
+			else{
+				for( int x = 0; x < r.getWidth(); x++){
+					for( int y = 0; y < r.getHeight(); y++){
+						tileId = 11;
+						
+						if( y == 0)
+							tileId = 31;
+						else if( y == r.getHeight() - 1)
+							tileId = 30;
+						else if( y == (int)(r.getHeight() / 2)){
+							if( k == 1)
+								tileId = 33;
+							else if( k == 2)
+								tileId = 34;
+							else
+								k = 0;
+							k++;
+						}
+						
+						map.setTileId( x + (int)r.getX(), y + (int)r.getY(), 0, tileId);
+					}
+				}
+				
+			}
+				
+		}
 		
+		/*** We add the intersection */
+		for( Road ave : roads){
+			if( ave.isAvenue() == CONST.AVENUE){
+				for( Road st : roads){
+					if( st.isAvenue() == CONST.STREET){
+						fillRect( 
+								(int)ave.getRect().getX(),
+								(int)st.getRect().getY(),
+								CONST.AVENUE_WIDTH + 1,
+								CONST.STREET_WIDTH + 1, 11);
+					}
+				}
+			}
+		}
 	}
 	
 	/***
@@ -243,7 +314,7 @@ public class City {
 	public void generateLabyrinth( int x, int y, int W, int H){
 		ArrayList<Vector2i> C = new ArrayList<Vector2i>();
 		
-		fillRect( x, y, W, H, 57);
+		fillRect( x, y, W, H, 3);
 		
 		C.add(new Vector2i( 
 			1 + x + (float)Math.floor( Math.random() * ( W /2)) * 2 , 
@@ -264,10 +335,10 @@ public class City {
 			
 			cX = (int)C.get(id ).x;
 			cY = (int)C.get(id ).y;
-			n = ( (cY - 2)> y && map.getTileId( cX, cY - 2, 0) == 57);
-			s = ( (cY + 2)< y + H && map.getTileId( cX, cY + 2, 0) == 57);
-			w = ( (cX - 2)> x && map.getTileId( cX - 2, cY, 0) == 57);
-			e = ( (cX + 2)< x + W && map.getTileId( cX + 2, cY, 0) == 57);
+			n = ( (cY - 2)> y && map.getTileId( cX, cY - 2, 0) == 3);
+			s = ( (cY + 2)< y + H && map.getTileId( cX, cY + 2, 0) == 3);
+			w = ( (cX - 2)> x && map.getTileId( cX - 2, cY, 0) == 3);
+			e = ( (cX + 2)< x + W && map.getTileId( cX + 2, cY, 0) == 3);
 			
 			if( n || s || w || e){
 
@@ -317,69 +388,69 @@ public class City {
 		int H = map.getHeightInTiles(), W = map.getWidthInTiles();
 		for(int x=0; x < W; x++){
 			for(int y=0; y < H; y++){
-				if(map.getTileId( x, y, 0) == 57){
+				if(map.getTileId( x, y, 0) == 3){
 					n = ((y - 1) < 0 
 							|| map.getTileId( x, y - 1, 0) == 1 
-							|| map.getTileId( x, y - 1, 0) == 157 
-							|| map.getTileId( x, y - 1, 0) == 158);
+							|| map.getTileId( x, y - 1, 0) == 8 
+							|| map.getTileId( x, y - 1, 0) == 9);
 					s = ((y + 1) > H 
 							|| map.getTileId( x, y + 1, 0) == 1 
-							|| map.getTileId( x, y + 1, 0) == 157 
-							|| map.getTileId( x, y + 1, 0) == 158);
+							|| map.getTileId( x, y + 1, 0) == 8 
+							|| map.getTileId( x, y + 1, 0) == 9);
 					w = ((x - 1) < 0 
 							|| map.getTileId( x - 1, y, 0) == 1 
-							|| map.getTileId( x - 1, y, 0) == 157 
-							|| map.getTileId( x - 1, y, 0) == 158);
+							|| map.getTileId( x - 1, y, 0) == 8 
+							|| map.getTileId( x - 1, y, 0) == 9);
 					e = ((x + 1) > W 
 							|| map.getTileId( x + 1, y, 0) == 1 
-							|| map.getTileId( x + 1, y, 0) == 157 
-							|| map.getTileId( x + 1, y, 0) == 158);
+							|| map.getTileId( x + 1, y, 0) == 8 
+							|| map.getTileId( x + 1, y, 0) == 9);
 					if( n && s && e && w){
 					}
 					else if( !n && !s && e && w){
-						map.setTileId(  x, y, 0, 73);
+						map.setTileId(  x, y, 0, 42);
 					}
 					else if( n && s && !e && !w){
-						map.setTileId(  x, y, 0, 54);
+						map.setTileId(  x, y, 0, 23);
 					}
 					else if( n && s && !e && w){
-						map.setTileId(  x, y, 0, 52);
+						map.setTileId(  x, y, 0, 21);
 					}
 					else if( n && s && e && !w){
-						map.setTileId(  x, y, 0, 55);
+						map.setTileId(  x, y, 0, 24);
 					}
 					else if( n && !s && e && w){
-						map.setTileId(  x, y, 0, 33);
+						map.setTileId(  x, y, 0, 2);
 					}
 					else if( !n && s && e && w){
-						map.setTileId(  x, y, 0, 93);
+						map.setTileId(  x, y, 0, 62);
 					}
 					else if( n && !s && !e && w){
-						map.setTileId(  x, y, 0, 95);
+						map.setTileId(  x, y, 0, 43);
 					}
 					else if( n && !s && e && !w){
-						map.setTileId(  x, y, 0, 96);
+						map.setTileId(  x, y, 0, 44);
 					}
 					else if( !n && s && !e && w){
-						map.setTileId(  x, y, 0, 115);
+						map.setTileId(  x, y, 0, 63);
 					}
 					else if( !n && s && e && !w){
-						map.setTileId(  x, y, 0, 116);
+						map.setTileId(  x, y, 0, 64);
 					}
 					else if( !n && !s && !e && !w){
-						map.setTileId(  x, y, 0, 53);
+						map.setTileId(  x, y, 0, 22);
 					}
 					else if( n && !s && !e && !w){
-						map.setTileId(  x, y, 0, 149);
+						map.setTileId(  x, y, 0, 4);
 					}
 					else if( !n && s && !e && !w){
-						map.setTileId(  x, y, 0, 151);
+						map.setTileId(  x, y, 0, 5);
 					}
 					else if( !n && !s && e && !w){
-						map.setTileId(  x, y, 0, 153);
+						map.setTileId(  x, y, 0, 6);
 					}
 					else if( !n && !s && !e && w){
-						map.setTileId(  x, y, 0, 155);
+						map.setTileId(  x, y, 0, 7);
 					}
 				}
 			}

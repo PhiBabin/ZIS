@@ -46,7 +46,8 @@ public class WorldMap implements TileBasedMap {
     	return map.get(z)[x][y];
     } 
     public void setTileId( int x, int y, int z, int idTile){
-    	map.get(z)[x][y] = (short)idTile;
+		if( x >= 0 && y >= 0 && z >= 0 && x < getWidthInTiles() && y < getHeightInTiles() && z < map.size())
+    		map.get(z)[x][y] = (short)idTile;
     }
     
     public void clear(){
