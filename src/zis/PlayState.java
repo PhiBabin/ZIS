@@ -82,14 +82,13 @@ public class PlayState extends BasicGameState {
 	}
 	
 	public void newRandomMap() throws SlickException{
-		city.generateEmptyMap();
 	   	population.clear();
 	   	selectedId = -1;
 		
     	long generationTime = System.currentTimeMillis();
     	
 //    	city.generateCity( 311312313);
-    	city.generateCity( (int)System.currentTimeMillis());
+    	city.create( (int)System.currentTimeMillis());
     	city.tileCorrection();
     	
     	miniMap.updateMiniMap( city.getMap());

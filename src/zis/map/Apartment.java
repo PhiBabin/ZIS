@@ -22,9 +22,6 @@ public class Apartment {
 	/*** City that contain the Apartment */
 	private City city;
 
-	/*** Stack of possible rooms */
-	private ArrayList<Rectangle> temRegion = new ArrayList<Rectangle>();
-
 	/*** Stack of generated rooms */
 	private ArrayList<Rectangle> buildRegion = new ArrayList<Rectangle>();
 
@@ -81,7 +78,6 @@ public class Apartment {
 	 * Procedurally generate a floor
 	 */
 	public void generateFloor(){
-		temRegion.clear();
 		buildRegion.clear();
 		rooms.clear();
 
@@ -102,7 +98,7 @@ public class Apartment {
 						CONST.APARTMENT_WIDTH + 1, 
 						CONST.APARTMENT_HEIGHT + 1);
 				generateChamber( newChamber, false, v == nbrApartWidth, v != 0 && v != nbrApartHeight - 1);
-			//	buildRegion.add( newChamber);
+
 				newChamber = new Rectangle(
 						x + offsetX + g * (2 * CONST.APARTMENT_WIDTH  + 3) + CONST.APARTMENT_WIDTH,
 						y + offsetY + v * CONST.APARTMENT_HEIGHT,
@@ -116,7 +112,7 @@ public class Apartment {
 		/** Add the outline of then room */
 		int j = 0;
 		for(Rectangle r : buildRegion){
-			rooms.add( new Room( r));
+		//	rooms.add( new Room( r));
 			
 			j++;
 		}
@@ -145,7 +141,6 @@ public class Apartment {
 		newDoors.add( new Vector2i( 7, 13));
 		
 		newRooms.add( new Rectangle( 0, 6, 6, 5));
-		newRooms.add( new Rectangle( 7, 8, 4, 4));
 		newRooms.add( new Rectangle( 1, 10, 7, 5));
 		newRooms.add( new Rectangle( 7, 8, 4, 4));
 		newRooms.add( new Rectangle( 7, 11, 4, 4));
@@ -213,6 +208,9 @@ public class Apartment {
 				ver = !ver;
 			}
 		}
+		
+		rooms.add( new Room( buildRegion.get( buildRegion.size() - 3)));
+		rooms.add( new Room( buildRegion.get( buildRegion.size() - 5)));
 	}
 	
 	/***

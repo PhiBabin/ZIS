@@ -50,31 +50,31 @@ public class City {
 	public City( WorldMap map, PlayState playState) throws SlickException {
 		this.map = map;
 		this.playState = playState;
-		generateEmptyMap();
+		clearMap();
 	}
 	
 	/***
 	 * Clear the current map
 	 * @throws SlickException
 	 */
-	public void generateEmptyMap() throws SlickException {
+	public void clearMap() throws SlickException {
 		map.clear();
 	}
 		
 	/***
 	 * Generate the city
 	 */
-	public void generateCity( int seed){
+	public void create( int seed){
+		map.clear();
 		buildings.clear();
 		apartments.clear();
 		roads.clear();
 		constructionSpot.clear();
-		ArrayList<Rectangle> spot = new ArrayList<Rectangle>();
-		spot.clear();
-		
+
 		rand = new Rand( seed);
 		
-		//buildings.add( new Building( this, seed * 5, 2, 2, rand.nextInt( 20, 290), rand.nextInt( 20, 290)));
+		ArrayList<Rectangle> spot = new ArrayList<Rectangle>();
+		spot.clear();
 		
 		/*** Avenue generation */
 		int avePosition = 0;
@@ -133,17 +133,11 @@ public class City {
 //		int nbrApartment = (int) ( constructionSpot.size() * 0.4);
 		int nbrApartment = spot.size();
 		
-		int testpop = 0;
-		
 		for( int i = 0; i < nbrApartment; i++){
 			int id = rand.nextInt( spot.size());
 			apartments.add( new Apartment( this, seed * i, spot.get( id)));
 			spot.remove( id);
-			
-			testpop += 2 * apartments.get( i).getRooms().size()/7;
 		}
-		
-		System.out.println( "pop: " + testpop);
 		
 		
 		/*** Add population */

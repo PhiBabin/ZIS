@@ -53,7 +53,7 @@ public class Building {
 		this.H = (int) r.getHeight() - 2;
 		rand = new Rand( seed);
 		
-		generateBuilding();
+		create();
 	}
 	/***
 	 * Constructor of a office building
@@ -72,20 +72,20 @@ public class Building {
 		this.H = H - 2;
 		rand = new Rand( seed);
 		
-		generateBuilding();
+		create();
 	}
 	
 	/***
 	 * Procedurally generate a building in the target region
 	 */
-	public void generateBuilding(){
-		generateFloor();
+	public void create(){
+		addFloor();
 	}
 	
 	/***
 	 * Procedurally generate a floor
 	 */
-	public void generateFloor(){
+	public void addFloor(){
 		temRegion.clear();
 		buildRegion.clear();
 		hallway.clear();
