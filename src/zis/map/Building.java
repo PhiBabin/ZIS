@@ -539,4 +539,18 @@ public class Building {
 	public ArrayList< Room> getRooms() {
 		return rooms;
 	}
+
+	/***
+	 * Return the number of office Rooms of the building
+	 * @return the number of office Rooms of the building
+	 */
+	public int getNbrOffice(){
+		int nbrOffice = 0;
+		for( Room r : rooms){
+			if( r.getSurface() <= CONST.MAX_OFFICE_ROOM_DOMAIN)
+				nbrOffice++;
+		}
+			
+		return nbrOffice;
+	}
 }

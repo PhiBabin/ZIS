@@ -97,8 +97,8 @@ public class PlayState extends BasicGameState {
 		
 	}
 	
-	public void addHabitant( Vector2i p, int idRoom, int idBuilding){
-		population.add( new NPC( resMan.player, p.x, p.y, idRoom, idBuilding));
+	public void addHabitant( Vector2i p, int idRoom, int idBuilding, int idApart, int idApartRoom){
+		population.add( new NPC( resMan.player, p.x, p.y, idRoom, idBuilding, idApart, idApartRoom));
 	}
 	
 	public void distributeInfection(){

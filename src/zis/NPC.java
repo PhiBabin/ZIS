@@ -29,6 +29,12 @@ public class NPC extends Sprite {
 	/** Id of the NPC's office */
 	private int idRoom = -1;
 	
+	/** Id of the NPC's Apartment */
+	private int idApart = -1;
+
+	/** Id of the NPC's Apartment Room */
+	private int idApartRoom = -1;
+	
 	/** Name of the NPC */
 	private String name = new String();
 	 
@@ -60,12 +66,14 @@ public class NPC extends Sprite {
 		"Smith", "Johnson", "Williams", "Brown", "Davis", "Miller", "Wilson", "Moore", "Taylor", "Anderson", "Thomas", "Jackson", "White", "Harris", "Martin", "Thompson", "Garcia", "Martinez", "Jones", "Campbell", "Patel", "Wong", "Hall", "Lee", "Brown", "Connor"
 	};
 	
-	public NPC(Animation pSprite, int nX, int nY, int idRoom, int idBuilding) {
+	public NPC(Animation pSprite, int nX, int nY, int idRoom, int idBuilding, int idApart, int idApartRoom) {
 		super(pSprite, nX, nY);
 		
 		newPath.clear();
 
 		this.idRoom = idRoom;
+		this.idApart = idApart;
+		this.idApartRoom = idApartRoom;
 		this.idBuilding = idBuilding;
 		this.state = State.NORMAL;
 		this.job = Job.SCIENTIST;
@@ -187,8 +195,7 @@ public class NPC extends Sprite {
 			out = getName() + " (F)";
 		else
 			out = getName() + " (M)";
-		out += "\nRoom: " + getIdRoom();
-		out += "\nBuilding: " + getIdBuilding();
+		out += "\nWork: " + getIdBuilding() + "-" + getIdRoom() + " Live: " + getIdApart() + "-" + getIdApartRoom();
 		out += "\nState: " + getState();
 		return out;
 	}
@@ -215,6 +222,14 @@ public class NPC extends Sprite {
 
 	public int getIdRoom() {
 		return idRoom;
+	}
+	
+	public int getIdApart() {
+		return idApart;
+	}
+
+	public int getIdApartRoom() {
+		return idApartRoom;
 	}
 
 	public void setJob(Job job) {

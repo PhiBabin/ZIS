@@ -97,14 +97,14 @@ public class Apartment {
 						y + offsetY + v * CONST.APARTMENT_HEIGHT,
 						CONST.APARTMENT_WIDTH + 1, 
 						CONST.APARTMENT_HEIGHT + 1);
-				generateChamber( newChamber, false, v == nbrApartWidth, v != 0 && v != nbrApartHeight - 1);
+				generateChamber( newChamber, false, v == nbrApartHeight - 1, v != 0 && v != nbrApartHeight - 1);
 
 				newChamber = new Rectangle(
 						x + offsetX + g * (2 * CONST.APARTMENT_WIDTH  + 3) + CONST.APARTMENT_WIDTH,
 						y + offsetY + v * CONST.APARTMENT_HEIGHT,
 						CONST.APARTMENT_WIDTH + 1, 
 						CONST.APARTMENT_HEIGHT + 1);
-				generateChamber( newChamber, true, v == nbrApartWidth, v != 0 && v != nbrApartHeight - 1);
+				generateChamber( newChamber, true, v == nbrApartHeight - 1, v != 0 && v != nbrApartHeight - 1);
 			}
 			
 		}

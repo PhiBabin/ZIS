@@ -74,4 +74,12 @@ public class Room {
 	public Rectangle getRect(){
 		return r;
 	}
+
+	/***
+	 * Get room's surface
+	 * @return room's surface
+	 */
+	public int getSurface(){
+		return (int) ( r.getWidth() * r.getHeight());
+	}
 }

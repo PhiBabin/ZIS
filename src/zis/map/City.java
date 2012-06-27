@@ -96,7 +96,7 @@ public class City {
 		
 		drawRoads();
 		
-		/*** Generate buildings **/
+		/*** Generate construction spots **/
 		for(int h = 0; h < s - 1; h++){
 			for(int w = 0; w < a - 1; w++){
 				Rectangle rSpot = new Rectangle( 0, 0, 1, 1);
@@ -120,40 +120,65 @@ public class City {
 			
 		}
 		
-		
+
+		/*** Generate buildings **/
 		int nbrBuilding = (int) ( spot.size() * 0.4);
+		int nbrOfficeRoom = 0;
 		
 		for( int i = 0; i < nbrBuilding; i++){
 			int id = rand.nextInt( spot.size());
 			buildings.add( new Building( this, seed * i, spot.get( id)));
-
+			
+			nbrOfficeRoom += buildings.get( i).getNbrOffice();
 			spot.remove( id);
 		}
 		
+		/*** Generate Apartment **/
 //		int nbrApartment = (int) ( constructionSpot.size() * 0.4);
 		int nbrApartment = spot.size();
-		
-		for( int i = 0; i < nbrApartment; i++){
+		int nbrRoom = 0;
+
+		System.out.println( " " + nbrOfficeRoom);
+		for( int i = 0; i < nbrApartment && nbrOfficeRoom > 0; i++){
 			int id = rand.nextInt( spot.size());
 			apartments.add( new Apartment( this, seed * i, spot.get( id)));
+			
+			nbrOfficeRoom -= apartments.get( i).getRooms().size();
 			spot.remove( id);
+			
+			nbrRoom += apartments.get( i).getRooms().size();
 		}
-		
-		
+		System.out.println("Place dispo: " + nbrRoom);
+
 		/*** Add population */
 		Vector2i pHabitant = new Vector2i( 0, 0);
 		Rectangle r;
 		int idBuilding = 0;
+		int idApart = 0;
+		int idApartRoom = 0;
 		long generationTime = System.currentTimeMillis();
 		
 		for( Building b : buildings){
 			int idRoom = 0;
 			for( Room room : b.getRooms()){
 				r = room.getRect();
-				if( r.getWidth() * r.getHeight() <= CONST.MAX_OFFICE_ROOM_DOMAIN){
-					pHabitant.x = (int) ( r.getX() + rand.nextInt( 1, (int) ( r.getWidth() - 2)));
-					pHabitant.y = (int) ( r.getY() + rand.nextInt( 1, (int) ( r.getHeight() - 2)));
-					playState.addHabitant( pHabitant, idRoom, idBuilding);
+				if( room.getSurface() <= CONST.MAX_OFFICE_ROOM_DOMAIN){
+					if( rand.nextBoolean()){
+						pHabitant.x = (int) ( r.getX() + rand.nextInt( 1, (int) ( r.getWidth() - 2)));
+						pHabitant.y = (int) ( r.getY() + rand.nextInt( 1, (int) ( r.getHeight() - 2)));
+					}
+					else{
+						r = apartments.get( idApart).getRooms().get( idApartRoom).getRect();
+						pHabitant.x = (int) ( r.getX() + rand.nextInt( 1, (int) ( r.getWidth() - 2)));
+						pHabitant.y = (int) ( r.getY() + rand.nextInt( 1, (int) ( r.getHeight() - 2)));
+					}
+					playState.addHabitant( pHabitant, idRoom, idBuilding, idApart, idApartRoom);
+					
+					idApartRoom++;
+					if( idApartRoom == apartments.get( idApart).getRooms().size()){
+						idApartRoom = 0;
+						idApart++;
+					}
 				}
 				idRoom++;
 			}
@@ -162,7 +187,9 @@ public class City {
 		
 		playState.distributeInfection();
 		
-	    System.out.println( "Population generate in " + (int)(System.currentTimeMillis() - generationTime) + "ms.");
+		System.out.println( "Population generate in " + (int)(System.currentTimeMillis() - generationTime) + "ms.");
+		
+		
 	}
 	
 	/***
