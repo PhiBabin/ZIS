@@ -21,7 +21,7 @@ public class RessourceManager {
 			}
 			else {
 				imgPlayer = new SpriteSheet( new Image("img/player.png", false), 10, 10);
-				tilesetImg = new SpriteSheet( new Image("img/buildingTileSet.png", false), 10, 10);
+				tilesetImg = new SpriteSheet( new Image("img/buildingTileSet.png", false), CONST.TILE_WIDTH, CONST.TILE_HEIGHT);
 			}
 			
 			player = new Animation( imgPlayer, 100000);

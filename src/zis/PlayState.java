@@ -157,7 +157,7 @@ public class PlayState extends BasicGameState {
     	gr.setBackground( new Color( 13, 37, 47));
     	city.map.render(gc, sbg, gr, cam);
 		
-    	Rectangle camera = new Rectangle( cam.x - 10, cam.y - 10, CONST.SCREEN_WIDTH, CONST.SCREEN_HEIGHT);
+    	Rectangle camera = new Rectangle( cam.x - CONST.TILE_WIDTH, cam.y - CONST.TILE_HEIGHT, CONST.SCREEN_WIDTH, CONST.SCREEN_HEIGHT);
     	
     	int Z = 0;
     	int I = 0;
@@ -169,7 +169,7 @@ public class PlayState extends BasicGameState {
 				I++;
 			if( popu.getState() == State.ZOMBIE)
 				Z++;
-			if( camera.contains( popu.getPosition().x * 10, popu.getPosition().y * 10)){
+			if( camera.contains( popu.getPosition().x * CONST.TILE_WIDTH, popu.getPosition().y * CONST.TILE_HEIGHT)){
 				popu.render(gc, sbg, gr, cam);
 			}
 		}
@@ -194,8 +194,8 @@ public class PlayState extends BasicGameState {
 			gr.setLineWidth( 2);
 			gr.setColor( Color.yellow);
 			gr.drawRect( 
-					population.get( selectedId).getX() * 10 - 1 - cam.x,
-					population.get( selectedId).getY() * 10 - 2 - cam.y,
+					population.get( selectedId).getX() * CONST.TILE_WIDTH - 1 - cam.x,
+					population.get( selectedId).getY() * CONST.TILE_HEIGHT - 2 - cam.y,
 					12, 12);
 			
 			gr.setLineWidth( 1);
@@ -215,19 +215,19 @@ public class PlayState extends BasicGameState {
 			for( Road road : city.getRoads()){
 				Rectangle r = road.getRect();
 				gr.drawRect( 
-						r.getX() * 10,
-						r.getY() * 10, r.getWidth() * 10,
-						r.getHeight() * 10);
+						r.getX() * CONST.TILE_WIDTH,
+						r.getY() * CONST.TILE_HEIGHT, r.getWidth() * CONST.TILE_WIDTH,
+						r.getHeight() * CONST.TILE_HEIGHT);
 				if ( road.isAvenue())
-					gr.rotate( r.getX() * 10 + r.getWidth() * 5, 
-						r.getY() * 10 + r.getHeight() * 5,
+					gr.rotate( r.getX() * CONST.TILE_WIDTH + r.getWidth() * 5, 
+						r.getY() * CONST.TILE_HEIGHT + r.getHeight() * 5,
 						-90);
 				gr.drawString( road.getName(),
-						r.getX() * 10 + r.getWidth() * 5,
-						r.getY() * 10 + r.getHeight() * 5 + r.getWidth() * 3);
+						r.getX() * CONST.TILE_WIDTH + r.getWidth() * 5,
+						r.getY() * CONST.TILE_HEIGHT + r.getHeight() * 5 + r.getWidth() * 3);
 				if ( road.isAvenue())
-					gr.rotate( r.getX() * 10 + r.getWidth() * 5, 
-							r.getY() * 10 + r.getHeight() * 5,
+					gr.rotate( r.getX() * CONST.TILE_WIDTH + r.getWidth() * 5, 
+							r.getY() * CONST.TILE_HEIGHT + r.getHeight() * 5,
 							90);
 			}
 			gr.setColor( Color.cyan);
@@ -259,8 +259,8 @@ public class PlayState extends BasicGameState {
     public void update(GameContainer gc, StateBasedGame sbg, int delta) throws SlickException {
     	Input input = gc.getInput();
     	
-    	pCursor.x = (int)Math.floor( ( input.getMouseX() + cam.x) * 0.1);
-    	pCursor.y = (int)Math.floor( ( input.getMouseY() + cam.y) * 0.1);
+    	pCursor.x = (int)Math.floor( ( input.getMouseX() + cam.x) / CONST.TILE_WIDTH);
+    	pCursor.y = (int)Math.floor( ( input.getMouseY() + cam.y) / CONST.TILE_HEIGHT);
     	
     	/*** Move the camera */
     	if(input.isKeyDown(Input.KEY_RIGHT) && !input.isKeyDown(Input.KEY_LEFT)){
@@ -386,7 +386,7 @@ public class PlayState extends BasicGameState {
 
     	if( city.map.isSolid( (int)pCursor.x, (int)pCursor.y)){
     		debugSquare = true;
-    		pSquare = new Vector2f( pCursor.x * 10 - cam.x, pCursor.y * 10 - cam.y);
+    		pSquare = new Vector2f( pCursor.x * CONST.TILE_WIDTH - cam.x, pCursor.y * CONST.TILE_HEIGHT - cam.y);
     	}
     	else
     		debugSquare = false;

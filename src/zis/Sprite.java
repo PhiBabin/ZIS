@@ -59,7 +59,7 @@ public class Sprite {
 	 * @param gr Graphics
 	 */
 	public void render(GameContainer gc, StateBasedGame sb, Graphics gr, Vector2f cam){
-		aniSprite.draw( p.x * 10 - cam.x, p.y * 10 - cam.y);
+		aniSprite.draw( p.x * CONST.TILE_WIDTH - cam.x, p.y * CONST.TILE_HEIGHT - cam.y);
 	}
 	
 	/**

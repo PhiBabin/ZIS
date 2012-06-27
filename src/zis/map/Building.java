@@ -47,10 +47,10 @@ public class Building {
 	 */
 	public Building( City city, int seed, Rectangle r){
 		this.city = city;
-		this.x = (int) r.getX();
-		this.y = (int) r.getY();
-		this.W = (int) r.getWidth();
-		this.H = (int) r.getHeight();
+		this.x = (int) r.getX() + 1;
+		this.y = (int) r.getY() + 1;
+		this.W = (int) r.getWidth() - 2;
+		this.H = (int) r.getHeight() - 2;
 		rand = new Rand( seed);
 		
 		generateBuilding();
@@ -66,10 +66,10 @@ public class Building {
 	 */
 	public Building( City city, int seed, int x, int y, int W, int H){
 		this.city = city;
-		this.x = x;
-		this.y = y;
-		this.W = W;
-		this.H = H;
+		this.x = x + 1;
+		this.y = y + 1;
+		this.W = W - 2;
+		this.H = H - 2;
 		rand = new Rand( seed);
 		
 		generateBuilding();

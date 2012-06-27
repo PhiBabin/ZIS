@@ -99,7 +99,7 @@ public class WorldMap implements TileBasedMap {
     	//return !blockers.contains( new String( x+"-"+y));
 
 		if( x >= 0 && y >= 0 && y < getHeightInTiles() && x < getWidthInTiles())
-			return map.get( 0)[x][y] != 1 && map.get( 0)[x][y] != 157 && map.get( 0)[x][y] != 158;
+			return map.get( 0)[x][y] != 1 && map.get( 0)[x][y] != 8 && map.get( 0)[x][y] != 9;
 		else 
 			return true;
     }
@@ -108,12 +108,12 @@ public class WorldMap implements TileBasedMap {
     public void render( GameContainer gc, StateBasedGame sb, Graphics gr, Vector2f cam){
     	int tileId;
     	Vector2i pScreen = new Vector2i(
-    			(int)Math.floor( cam.x * 0.1),
-    			(int)Math.floor( cam.y * 0.1));
+    			(int)Math.floor( cam.x / CONST.TILE_WIDTH),
+    			(int)Math.floor( cam.y / CONST.TILE_HEIGHT));
     	
 		for(int x = pScreen.x; x <= pScreen.x + CONST.SCREEN_WIDTH / CONST.TILE_WIDTH; x++){
 	    	for(int y = pScreen.y; y <= pScreen.y + CONST.SCREEN_HEIGHT / CONST.TILE_HEIGHT; y++){
-	    		if( x > 0 && y > 0 && y < getHeightInTiles() && x < getWidthInTiles()){
+	    		if( x >= 0 && y >= 0 && y < getHeightInTiles() && x < getWidthInTiles()){
 	    			tileId = map.get( 0)[x][y];
 	    		
 	        		if ( tileId != 1)
