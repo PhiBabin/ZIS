@@ -97,22 +97,32 @@ public class Building {
 		
 		if( rand.nextBoolean()){
 			
-			if( W >= 50 && H >=30){
+			if( W >= 50 && H >= 30){
 				addHallway( 0, position, true);
 				if( position >= 50){
 					addLoopHallway( 0);
-					addHallway( temRegion.size() - 1, 33, false);
+					if( temRegion.get( temRegion.size() - 1).getWidth() > 30)
+						addHallway( temRegion.size() - 1, 33, false);
 					addHallway( temRegion.size() - 1, 50, false);
+					
 				}
 				if( position == 50 && H >= 40){
 					addLoopHallway( 0);
-					addHallway( temRegion.size() - 2, 33, false);
-					addHallway( temRegion.size() - 1, 50, false);
+					if( temRegion.get( temRegion.size() - 2).getWidth() > 30){
+						addHallway( temRegion.size() - 2, 33, false);
+						addHallway( temRegion.size() - 1, 50, false);
+					}
+					else
+						addHallway( temRegion.size() - 1, 33, false);
 				}
 				else if( position == 25){
 					addLoopHallway( 1);
-					addHallway( temRegion.size() - 2, 33, false);
-					addHallway( temRegion.size() - 1, 50, false);
+					if( temRegion.get( temRegion.size() - 2).getWidth() > 30){
+						addHallway( temRegion.size() - 2, 33, false);
+						addHallway( temRegion.size() - 1, 50, false);
+					}
+					else
+						addHallway( temRegion.size() - 2, 50, false);
 				}
 			}
 			else if(W >= 25 && H >=25){
@@ -131,14 +141,14 @@ public class Building {
 			}
 		}
 		else{
-			if( H >= 50 && W >=30){
+			if( H >= 55 && W >= 30){
 				addHallway( 0, position, false);
 				if( position >= 50){
 					addLoopHallway( 0);
 					addHallway( temRegion.size() - 4, 50, true);
 				}
 				if( position == 50 && W >= 40 && H >= 70){
-					addLoopHallway ( 0);
+					addLoopHallway( 0);
 					addHallway( temRegion.size() - 5, 50, true);
 				}
 				else if( position == 25){
