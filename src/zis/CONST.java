@@ -26,8 +26,8 @@ public class CONST {
 	/** Map parameter */
 	public static final int MAP_WIDTH = 600;
 	public static final int MAP_HEIGHT = 300;
-	public static final int TILE_WIDTH = 10;
-	public static final int TILE_HEIGHT = 10;
+	public static final int TILE_WIDTH = 16;
+	public static final int TILE_HEIGHT = 16;
 
 	/** Pathfinder parameter */
 	public static final int MAX_PATH_LENGTH = 10000;

@@ -422,55 +422,47 @@ public class City {
 			for(int y=0; y < H; y++){
 				if(map.getTileId( x, y, 0) == 3){
 					n = ((y - 1) < 0 
-							|| map.getTileId( x, y - 1, 0) == 1 
-							|| map.getTileId( x, y - 1, 0) == 8 
-							|| map.getTileId( x, y - 1, 0) == 9);
+							|| map.getTileId( x, y - 1, 0) == 1 );
 					s = ((y + 1) > H 
-							|| map.getTileId( x, y + 1, 0) == 1 
-							|| map.getTileId( x, y + 1, 0) == 8 
-							|| map.getTileId( x, y + 1, 0) == 9);
+							|| map.getTileId( x, y + 1, 0) == 1 );
 					w = ((x - 1) < 0 
-							|| map.getTileId( x - 1, y, 0) == 1 
-							|| map.getTileId( x - 1, y, 0) == 8 
-							|| map.getTileId( x - 1, y, 0) == 9);
+							|| map.getTileId( x - 1, y, 0) == 1 );
 					e = ((x + 1) > W 
-							|| map.getTileId( x + 1, y, 0) == 1 
-							|| map.getTileId( x + 1, y, 0) == 8 
-							|| map.getTileId( x + 1, y, 0) == 9);
+							|| map.getTileId( x + 1, y, 0) == 1 );
 					if( n && s && e && w){
 					}
 					else if( !n && !s && e && w){
-						map.setTileId(  x, y, 0, 42);
+						map.setTileId(  x, y, 0, 34);
 					}
 					else if( n && s && !e && !w){
-						map.setTileId(  x, y, 0, 23);
+						map.setTileId(  x, y, 0, 19);
 					}
 					else if( n && s && !e && w){
-						map.setTileId(  x, y, 0, 21);
+						map.setTileId(  x, y, 0, 17);
 					}
 					else if( n && s && e && !w){
-						map.setTileId(  x, y, 0, 24);
+						map.setTileId(  x, y, 0, 20);
 					}
 					else if( n && !s && e && w){
 						map.setTileId(  x, y, 0, 2);
 					}
 					else if( !n && s && e && w){
-						map.setTileId(  x, y, 0, 62);
+						map.setTileId(  x, y, 0, 50);
 					}
 					else if( n && !s && !e && w){
-						map.setTileId(  x, y, 0, 43);
+						map.setTileId(  x, y, 0, 35);
 					}
 					else if( n && !s && e && !w){
-						map.setTileId(  x, y, 0, 44);
+						map.setTileId(  x, y, 0, 36);
 					}
 					else if( !n && s && !e && w){
-						map.setTileId(  x, y, 0, 63);
+						map.setTileId(  x, y, 0, 51);
 					}
 					else if( !n && s && e && !w){
-						map.setTileId(  x, y, 0, 64);
+						map.setTileId(  x, y, 0, 52);
 					}
 					else if( !n && !s && !e && !w){
-						map.setTileId(  x, y, 0, 22);
+						map.setTileId(  x, y, 0, 18);
 					}
 					else if( n && !s && !e && !w){
 						map.setTileId(  x, y, 0, 4);

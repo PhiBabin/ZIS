@@ -211,14 +211,21 @@ public class PlayState extends BasicGameState {
 			gr.setLineWidth( 1);
 			gr.setColor( Color.white);
 		}
+
+    	
 		
-		if( debugSquare){
-			gr.drawRect( pSquare.x, pSquare.y, 9, 9);
+		if( debugMod){
+			/*** Show rectangle on the tile that the cursor touch **/
+			if( city.map.isSolid( (int)pCursor.x, (int)pCursor.y))
+	    		gr.setColor( Color.yellow);
+			
+			gr.drawRect( pCursor.x * CONST.TILE_WIDTH - cam.x, pCursor.y * CONST.TILE_HEIGHT - cam.y, CONST.TILE_WIDTH - 1, CONST.TILE_HEIGHT - 1);
+			gr.setColor( Color.white);
 			gr.drawString( "( " + Math.floor( ( pCursor.x) ) + "," +
 							" " + Math.floor( ( pCursor.y) ) + ")",
 							5, 420);
-		}
-		if( debugMod){
+			
+			/*** Show graphical help to debugging **/
 			gr.translate( -cam.x, -cam.y);
 			gr.setColor( Color.orange);
 			gr.setLineWidth(4);
@@ -239,17 +246,6 @@ public class PlayState extends BasicGameState {
 					gr.rotate( r.getX() * CONST.TILE_WIDTH + r.getWidth() * 5, 
 							r.getY() * CONST.TILE_HEIGHT + r.getHeight() * 5,
 							90);
-			}
-			gr.setColor( Color.cyan);
-			gr.setLineWidth(4);
-			for( Apartment apart : city.getApartments()){
-				for( Room room : apart.getRooms()){
-					Rectangle r = room.getRect();
-					gr.drawRect( 
-							r.getX() * 10,
-							r.getY() * 10, r.getWidth() * 10,
-							r.getHeight() * 10);
-				}
 			}
 			gr.setColor( Color.white);
 			gr.setLineWidth(1);
@@ -392,14 +388,6 @@ public class PlayState extends BasicGameState {
 				}
 			}
 		}
-
-
-    	if( city.map.isSolid( (int)pCursor.x, (int)pCursor.y)){
-    		debugSquare = true;
-    		pSquare = new Vector2f( pCursor.x * CONST.TILE_WIDTH - cam.x, pCursor.y * CONST.TILE_HEIGHT - cam.y);
-    	}
-    	else
-    		debugSquare = false;
     }
     
 	@Override

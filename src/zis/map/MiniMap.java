@@ -55,8 +55,8 @@ public class MiniMap {
 	public Vector2f onClick( Vector2f cursor, Vector2f cam){
 		Vector2f newCam = new Vector2f();
 		if( cursor.x >= p.x && cursor.y >= p.y && cursor.x <= p.x + miniMap.getWidth() && cursor.y <= p.y + miniMap.getHeight()){
-			newCam.x = 20 * (cursor.x - p.x) - CONST.SCREEN_WIDTH / 2;
-			newCam.y = 20 * (cursor.y - p.y) - CONST.SCREEN_HEIGHT / 2;
+			newCam.x = 2 * CONST.TILE_WIDTH * (cursor.x - p.x) - CONST.SCREEN_WIDTH / 2;
+			newCam.y = 2 * CONST.TILE_HEIGHT * (cursor.y - p.y) - CONST.SCREEN_HEIGHT / 2;
 		}
 		else{
 			newCam = cam;
@@ -66,8 +66,16 @@ public class MiniMap {
 	
 	public void render(GameContainer gc, StateBasedGame sb, Graphics gr, Vector2f cam){
 
-		Rectangle background =  new Rectangle ( p.x - 4, p.y - 4, CONST.MAP_WIDTH / 2 + 8, CONST.MAP_HEIGHT / 2 + 8);
-		Rectangle camRect =  new Rectangle ( p.x + cam.x / 20, p.y + cam.y / 20, CONST.SCREEN_WIDTH / 20, CONST.SCREEN_HEIGHT / 20);
+		Rectangle background =  new Rectangle( 
+				p.x - 4,
+				p.y - 4,
+				CONST.MAP_WIDTH / 2 + 8,
+				CONST.MAP_HEIGHT / 2 + 8);
+		Rectangle camRect =  new Rectangle( 
+				p.x + cam.x / (2 * CONST.TILE_WIDTH),
+				p.y + cam.y / (2 * CONST.TILE_HEIGHT),
+				CONST.SCREEN_WIDTH / (2 * CONST.TILE_WIDTH),
+				CONST.SCREEN_HEIGHT / (2 * CONST.TILE_HEIGHT));
 		
 		gr.setColor( new Color( 4, 23, 3, 200));
 		gr.fill( background);
