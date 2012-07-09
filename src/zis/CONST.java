@@ -34,6 +34,7 @@ public class CONST {
 	
 	/** Building generator parameter */
 	public static final int MAX_OFFICE_ROOM_DOMAIN = 70;
+	public static final int HALLWAY_WIDTH = 4;
 	public static boolean SYMMETRICROOM = true;
 	public static final boolean AVENUE = true;
 	public static final boolean STREET = false;

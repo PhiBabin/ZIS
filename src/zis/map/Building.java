@@ -280,32 +280,32 @@ public class Building {
 	public void addLoopHallway(int id){
 		Rectangle r = temRegion.get( id);
 		int c = (int) (r.getWidth() * 0.2 + rand.nextInt((int) Math.abs(r.getWidth() * 0.05))) ;
-		int p = (int) (r.getWidth() * 0.5 - 5 - c);
+		int p = (int) (r.getWidth() * 0.5 - CONST.HALLWAY_WIDTH - c);
 
 //		int cy = (int) (c * 1.618);
 		int cy = (int) (r.getHeight() * 0.2);
-		int py = (int) (r.getHeight() * 0.5 - cy - 5);
+		int py = (int) (r.getHeight() * 0.5 - cy - CONST.HALLWAY_WIDTH);
 		
 		hallway.add(
 				new Rectangle( r.getX() + p,
 						r.getY() + py,
-						10 + 2 * c,
-						5));
+						2 * (CONST.HALLWAY_WIDTH + c),
+						CONST.HALLWAY_WIDTH));
 		hallway.add(
 				new Rectangle( r.getX() + p,
-						r.getY() + py + 2*cy + 5 ,
-						10 + 2 * c,
-						5));
+						r.getY() + py + 2 * cy + CONST.HALLWAY_WIDTH,
+						2 * (CONST.HALLWAY_WIDTH + c),
+						CONST.HALLWAY_WIDTH));
 		hallway.add(
 				new Rectangle( r.getX() + p,
 						r.getY() + py,
-						5,
-						10 + 2 * cy));
+						CONST.HALLWAY_WIDTH,
+						2 * (CONST.HALLWAY_WIDTH + cy)));
 		hallway.add(
-				new Rectangle( r.getX() + p + 2*c + 5,
+				new Rectangle( r.getX() + p + 2 * c + CONST.HALLWAY_WIDTH,
 						r.getY() + py,
-						5,
-						10 + 2 * cy));
+						CONST.HALLWAY_WIDTH,
+						2 * (CONST.HALLWAY_WIDTH + cy)));
 
 		/*** North and South side*/
 		temRegion.add(
@@ -315,14 +315,14 @@ public class Building {
 				py + 1));
 		temRegion.add(
 				new Rectangle( r.getX(),
-				r.getY() + r.getHeight() - py - 1,
+				r.getY() + py + 2 * CONST.HALLWAY_WIDTH + 2 * cy - 1,
 				r.getWidth(),
-				py + 1));
+				py + 2));
 
 		/*** Center region*/
 		temRegion.add(
-				new Rectangle( r.getX() + p + 4,
-				r.getY() + py + 4,
+				new Rectangle( r.getX() + p + CONST.HALLWAY_WIDTH - 1,
+				r.getY() + py + CONST.HALLWAY_WIDTH - 1,
 				2 * c + 2,
 				2 * cy + 2));
 		
@@ -331,12 +331,12 @@ public class Building {
 				new Rectangle( r.getX(),
 				r.getY() + py,
 				p + 1,
-				r.getHeight() - 2 * py));
+				2 * (cy + CONST.HALLWAY_WIDTH)));
 		temRegion.add(
-				new Rectangle( r.getX() + p + 9 + 2 * c,
+				new Rectangle( r.getX() + p + 2 * (c + CONST.HALLWAY_WIDTH) - 1,
 				r.getY() + py,
-				r.getWidth() - p - 2*c - 9,
-				r.getHeight() - 2 * py));
+				r.getWidth() - p - 2 * (c + CONST.HALLWAY_WIDTH) + 1,
+				2 * (cy + CONST.HALLWAY_WIDTH)));
 
 		
 		temRegion.remove(id);
@@ -363,12 +363,12 @@ public class Building {
 		int line;
 		
 		if( ver){
-			line = (int)r.getWidth() * position / 100;
+			line = (int)(r.getWidth() * position / 100);
 			
 			hallway.add(
 					new Rectangle( r.getX() + line - 1,
 							r.getY(),
-							5,
+							CONST.HALLWAY_WIDTH,
 							r.getHeight()));
 			
 			temRegion.add(
@@ -377,19 +377,19 @@ public class Building {
 					line,
 					r.getHeight()));
 			temRegion.add(
-					new Rectangle( r.getX() + line + 3,
+					new Rectangle( r.getX() + line + CONST.HALLWAY_WIDTH - 2,
 					r.getY(),
-					r.getWidth() - line - 3,
+					r.getWidth() - line - CONST.HALLWAY_WIDTH + 2,
 					r.getHeight()));
 		}
 		else{
-			line = (int)r.getHeight() * position / 100;
+			line = (int)(r.getHeight() * position / 100);
 			
 			hallway.add(
 					new Rectangle( r.getX(),
 							r.getY() + line - 1,
 							r.getWidth(),
-							5));
+							CONST.HALLWAY_WIDTH));
 			
 			temRegion.add(
 					new Rectangle( r.getX(),
@@ -398,9 +398,9 @@ public class Building {
 					line));
 			temRegion.add(
 					new Rectangle( r.getX(),
-					r.getY() + line + 3,
+					r.getY() + line + CONST.HALLWAY_WIDTH - 2,
 					r.getWidth(),
-					r.getHeight() - line - 3));
+					r.getHeight() - line - CONST.HALLWAY_WIDTH + 2));
 		}
 		
 		temRegion.remove(id);
@@ -559,6 +559,14 @@ public class Building {
 	 */
 	public ArrayList< Room> getRooms() {
 		return rooms;
+	}
+
+	/***
+	 * Return the Hallways of the building
+	 * @return building's Rooms
+	 */
+	public ArrayList< Rectangle> getHallways() {
+		return hallway;
 	}
 
 	/***

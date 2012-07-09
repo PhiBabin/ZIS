@@ -33,6 +33,7 @@ import org.newdawn.slick.state.StateBasedGame;
 
 import zis.NPC.State;
 import zis.map.Apartment;
+import zis.map.Building;
 import zis.map.City;
 import zis.map.MiniMap;
 import zis.map.Road;
@@ -246,6 +247,13 @@ public class PlayState extends BasicGameState {
 					gr.rotate( r.getX() * CONST.TILE_WIDTH + r.getWidth() * 5, 
 							r.getY() * CONST.TILE_HEIGHT + r.getHeight() * 5,
 							90);
+			}
+			gr.setColor( Color.magenta);
+			gr.setLineWidth(4);
+			for( Building b : city.getBuildings()){
+				for( Rectangle r : b.getHallways()){
+					gr.drawRect( r.getX() * CONST.TILE_WIDTH, r.getY() * CONST.TILE_HEIGHT, r.getWidth() * CONST.TILE_WIDTH, r.getHeight() * CONST.TILE_HEIGHT);
+				}
 			}
 			gr.setColor( Color.white);
 			gr.setLineWidth(1);
