@@ -21,7 +21,7 @@ import zis.util.Rand;
 import zis.util.Vector2i;
 
 /***
- * Randomly generate a office building
+ * Randomly generate an office building
  * 
  * @author Philippe Babin
  */
@@ -204,16 +204,17 @@ public class Building {
 	}
 	
 	/***
-	 * Slice in two temporary region a temporary rectangle
+	 * Recursive function that slice a temporary region in half 
+	 * until they are small enough to become a room
 	 * @param id Id of the temporary rectangle 
-	 * @param interator Interator of the recursion
+	 * @param interator Iterator of the recursion
 	 */
-	public void sliceInHalf(int id, int interator){
+	public void sliceInHalf(int id, int iterator){
 		Rectangle r = temRegion.get( id);
 		int line;
 		if(  r.getHeight() > r.getWidth()){
 			if( r.getHeight() > 10 && 
-					( rand.nextInt( interator) <= 2 ||
+					( rand.nextInt( iterator) <= 2 ||
 					r.getHeight() * r.getWidth() >= 196)){
 				
 				if( CONST.SYMMETRICROOM)
@@ -234,8 +235,8 @@ public class Building {
 						r.getWidth(),
 						r.getHeight() - line + 1));
 				
-				sliceInHalf( newId, interator + 1);
-				sliceInHalf( newId + 1, interator + 1);
+				sliceInHalf( newId, iterator + 1);
+				sliceInHalf( newId + 1, iterator + 1);
 			}
 			else{
 				buildRegion.add( r);
@@ -243,7 +244,7 @@ public class Building {
 		}
 		else{
 			if( r.getWidth() > 10 &&
-					(rand.nextInt( interator) <= 2 ||
+					(rand.nextInt( iterator) <= 2 ||
 					r.getHeight() * r.getWidth() >= 196)){
 
 				if( CONST.SYMMETRICROOM)
@@ -264,8 +265,8 @@ public class Building {
 						r.getWidth() - line + 1,
 						r.getHeight()));
 						
-				sliceInHalf( newId, interator + 1);
-				sliceInHalf( newId + 1, interator + 1);
+				sliceInHalf( newId, iterator + 1);
+				sliceInHalf( newId + 1, iterator + 1);
 			}
 			else{
 				buildRegion.add( r);
