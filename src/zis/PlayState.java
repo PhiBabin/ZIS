@@ -43,17 +43,6 @@ import zis.util.Vector2i;
 
 public class PlayState extends BasicGameState {
 	
-	private boolean debugSquare = false;
-	
-	private Vector2f pSquare = new Vector2f( 0, 0);
-	private Vector2i pCursor = new Vector2i( 0, 0);
-	
-	private boolean debugMod = false;
-	
-	
-	
-//	private WorldMap cityMap;
-	
 	private int turn = 0;
 	
 	private int gameTime = 0;
@@ -72,12 +61,14 @@ public class PlayState extends BasicGameState {
 	
 	private int selectedId = -1;
 	
-//	private enum STATES {
-//        START_GAME_STATE, NEW_PIECE_STATE, MOVING_PIECE_STATE, LINE_DESTRUCTION_STATE,
-//        PAUSE_GAME_STATE, HIGHSCORE_STATE, GAME_OVER_STATE, GO_WORK, WORK, GO_EAT, EAT, GO_WORK2, WORK2, GO_BED 
-//    }
-	
 	int stateID = -1;
+	
+	private Vector2f pSquare = new Vector2f( 0, 0);
+	private Vector2i pCursor = new Vector2i( 0, 0);
+	
+	private boolean debugMod = false;
+	private boolean debugSquare = false;
+	private boolean debStr = false, debBdg = false, debRom = false, debHall = false, debCur = true;
 
 	/**
 	 * Construct our PlayState
@@ -217,10 +208,16 @@ public class PlayState extends BasicGameState {
 		
 		if( debugMod){
 			/*** Show rectangle on the tile that the cursor touch **/
-			if( city.map.isSolid( (int)pCursor.x, (int)pCursor.y))
-	    		gr.setColor( Color.yellow);
-			
-			gr.drawRect( pCursor.x * CONST.TILE_WIDTH - cam.x, pCursor.y * CONST.TILE_HEIGHT - cam.y, CONST.TILE_WIDTH - 1, CONST.TILE_HEIGHT - 1);
+    		gr.setColor( Color.yellow);
+			if( debCur){
+				gr.drawString( "(C)", 5, 80);
+				
+				if( !city.map.isSolid( (int)pCursor.x, (int)pCursor.y))
+		    		gr.setColor( Color.white);
+				gr.drawRect( pCursor.x * CONST.TILE_WIDTH - cam.x, pCursor.y * CONST.TILE_HEIGHT - cam.y, CONST.TILE_WIDTH - 1, CONST.TILE_HEIGHT - 1);	
+			}
+			else
+				gr.drawString( " C", 5, 80);
 			gr.setColor( Color.white);
 			gr.drawString( "( " + Math.floor( ( pCursor.x) ) + "," +
 							" " + Math.floor( ( pCursor.y) ) + ")",
@@ -228,33 +225,70 @@ public class PlayState extends BasicGameState {
 			
 			/*** Show graphical help to debugging **/
 			gr.translate( -cam.x, -cam.y);
-			gr.setColor( Color.orange);
 			gr.setLineWidth(4);
-			for( Road road : city.getRoads()){
-				Rectangle r = road.getRect();
-				gr.drawRect( 
-						r.getX() * CONST.TILE_WIDTH,
-						r.getY() * CONST.TILE_HEIGHT, r.getWidth() * CONST.TILE_WIDTH,
-						r.getHeight() * CONST.TILE_HEIGHT);
-				if ( road.isAvenue())
-					gr.rotate( r.getX() * CONST.TILE_WIDTH + r.getWidth() * 5, 
-						r.getY() * CONST.TILE_HEIGHT + r.getHeight() * 5,
-						-90);
-				gr.drawString( road.getName(),
-						r.getX() * CONST.TILE_WIDTH + r.getWidth() * 5,
-						r.getY() * CONST.TILE_HEIGHT + r.getHeight() * 5 + r.getWidth() * 3);
-				if ( road.isAvenue())
-					gr.rotate( r.getX() * CONST.TILE_WIDTH + r.getWidth() * 5, 
+			/*** Streets **/
+			gr.setColor( Color.orange);
+			if( debStr){
+				gr.drawString( "(S)", 5 + cam.x, 100 + cam.y);
+				for( Road road : city.getRoads()){
+					Rectangle r = road.getRect();
+					gr.drawRect( r.getX() * CONST.TILE_WIDTH, r.getY() * CONST.TILE_HEIGHT, r.getWidth() * CONST.TILE_WIDTH, r.getHeight() * CONST.TILE_HEIGHT);
+					if ( road.isAvenue()){
+						gr.rotate( r.getX() * CONST.TILE_WIDTH + r.getWidth() * 5, 
+							r.getY() * CONST.TILE_HEIGHT + r.getHeight() * 5,
+							-90);
+						gr.drawString( road.getName(),
+							r.getX() * CONST.TILE_WIDTH + r.getWidth() * 5,
+							r.getY() * CONST.TILE_HEIGHT + r.getHeight() * 5 + r.getWidth() * 3);
+						gr.rotate( r.getX() * CONST.TILE_WIDTH + r.getWidth() * 5, 
 							r.getY() * CONST.TILE_HEIGHT + r.getHeight() * 5,
 							90);
-			}
-			gr.setColor( Color.magenta);
-			gr.setLineWidth(4);
-			for( Building b : city.getBuildings()){
-				for( Rectangle r : b.getHallways()){
-					gr.drawRect( r.getX() * CONST.TILE_WIDTH, r.getY() * CONST.TILE_HEIGHT, r.getWidth() * CONST.TILE_WIDTH, r.getHeight() * CONST.TILE_HEIGHT);
+					}
+					else
+						gr.drawString( road.getName(),
+							r.getX() * CONST.TILE_WIDTH + r.getWidth() * 5,
+							r.getY() * CONST.TILE_HEIGHT + r.getHeight() * 5);
 				}
 			}
+			else
+				gr.drawString( " S", 5 + cam.x, 100 + cam.y);
+			/*** Buildings **/
+			gr.setColor( Color.cyan);
+			if( debBdg){
+				gr.drawString( "(B)", 5 + cam.x, 120 + cam.y);
+				for( Building b : city.getBuildings()){
+					Rectangle r = b.getRect();
+					gr.drawRect( r.getX() * CONST.TILE_WIDTH, r.getY() * CONST.TILE_HEIGHT, r.getWidth() * CONST.TILE_WIDTH, r.getHeight() * CONST.TILE_HEIGHT);
+					
+				}
+			}
+			else
+				gr.drawString( " B", 5 + cam.x, 120 + cam.y);
+			/*** Hallways **/
+			gr.setColor( Color.magenta);
+			if( debHall){
+				gr.drawString( "(H)", 5 + cam.x, 140 + cam.y);
+				for( Building b : city.getBuildings()){
+					for( Rectangle r : b.getHallways()){
+						gr.drawRect( r.getX() * CONST.TILE_WIDTH, r.getY() * CONST.TILE_HEIGHT, r.getWidth() * CONST.TILE_WIDTH, r.getHeight() * CONST.TILE_HEIGHT);
+					}
+				}
+			}
+			else
+				gr.drawString( " H", 5 + cam.x, 140 + cam.y);
+			/*** Rooms **/
+			gr.setColor( Color.lightGray);
+			if( debRom){
+				gr.drawString( "(R)", 5 + cam.x, 160 + cam.y);
+				for( Building b : city.getBuildings()){
+					for( Room rom : b.getRooms()){
+						Rectangle r = rom.getRect();
+						gr.drawRect( r.getX() * CONST.TILE_WIDTH, r.getY() * CONST.TILE_HEIGHT, r.getWidth() * CONST.TILE_WIDTH, r.getHeight() * CONST.TILE_HEIGHT);
+					}
+				}
+			}
+			else
+				gr.drawString( " R", 5 + cam.x, 160 + cam.y);
 			gr.setColor( Color.white);
 			gr.setLineWidth(1);
 			gr.translate( cam.x, cam.y);
@@ -340,6 +374,27 @@ public class PlayState extends BasicGameState {
     		debugMod = true;
     	else if(debugMod && input.isKeyPressed(Input.KEY_D))
     		debugMod = false;
+    	if(!debStr && input.isKeyPressed(Input.KEY_S))
+    		debStr = true;
+    	else if(debStr && input.isKeyPressed(Input.KEY_S))
+    		debStr = false;
+    	if(!debBdg && input.isKeyPressed(Input.KEY_B))
+    		debBdg = true;
+    	else if(debBdg && input.isKeyPressed(Input.KEY_B))
+    		debBdg = false;
+    	if(!debCur && input.isKeyPressed(Input.KEY_C))
+    		debCur = true;
+    	else if(debCur && input.isKeyPressed(Input.KEY_C))
+    		debCur = false;
+    	if(!debRom && input.isKeyPressed(Input.KEY_R))
+    		debRom = true;
+    	else if(debRom && input.isKeyPressed(Input.KEY_R))
+    		debRom = false;
+    	if(!debHall && input.isKeyPressed(Input.KEY_H))
+    		debHall = true;
+    	else if(debHall && input.isKeyPressed(Input.KEY_H))
+    		debHall = false;
+    	
     	
     	/** Symmetric Room */
     	if(!(CONST.SYMMETRICROOM) && input.isKeyPressed(Input.KEY_S))
@@ -360,7 +415,7 @@ public class PlayState extends BasicGameState {
     	
     	gameTime += delta * gameSpeed;
     	
-    	/*** We pass to the next turn */
+    	/*** Next turn */
     	int elapseTurn = (int) (gameTime * 0.001) - turn;
 
     	/*** We move each NPC */

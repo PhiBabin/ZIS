@@ -583,4 +583,12 @@ public class Building {
 			
 		return nbrOffice;
 	}
+
+	/***
+	 * Return the Rectangle of the building
+	 * @return the Rectangle of the building
+	 */
+	public Rectangle getRect(){
+		return new Rectangle( x, y, W, H);
+	}
 }
