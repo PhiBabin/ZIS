@@ -184,7 +184,7 @@ public class NPC extends Sprite {
 		if( state == State.ZOMBIE)
 			aniSprite.setCurrentFrame( 2);
 		
-		aniSprite.draw( p.x * CONST.TILE_WIDTH - cam.x, p.y * CONST.TILE_HEIGHT - cam.y);
+		aniSprite.draw( p.x * CONST.TILE_WIDTH - cam.x + 2, p.y * CONST.TILE_HEIGHT - cam.y + 2);
 	}
 
 	public void generateName() {

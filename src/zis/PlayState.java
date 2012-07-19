@@ -196,8 +196,8 @@ public class PlayState extends BasicGameState {
 			gr.setLineWidth( 2);
 			gr.setColor( Color.yellow);
 			gr.drawRect( 
-					population.get( selectedId).getX() * CONST.TILE_WIDTH - 1 - cam.x,
-					population.get( selectedId).getY() * CONST.TILE_HEIGHT - 2 - cam.y,
+					population.get( selectedId).getX() * CONST.TILE_WIDTH + 1 - cam.x,
+					population.get( selectedId).getY() * CONST.TILE_HEIGHT - cam.y,
 					12, 12);
 			
 			gr.setLineWidth( 1);

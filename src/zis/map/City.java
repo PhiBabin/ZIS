@@ -174,21 +174,28 @@ public class City {
 			for( Room room : b.getRooms()){
 				r = room.getRect();
 				if( room.getSurface() <= CONST.MAX_OFFICE_ROOM_DOMAIN){
-					if( rand.nextBoolean()){
-						pHabitant.x = (int) ( r.getX() + rand.nextInt( 1, (int) ( r.getWidth() - 2)));
-						pHabitant.y = (int) ( r.getY() + rand.nextInt( 1, (int) ( r.getHeight() - 2)));
+					if( idApart < apartments.size()){
+						if( rand.nextBoolean()){
+							pHabitant.x = (int) ( r.getX() + rand.nextInt( 1, (int) ( r.getWidth() - 2)));
+							pHabitant.y = (int) ( r.getY() + rand.nextInt( 1, (int) ( r.getHeight() - 2)));
+						}
+						else{
+							r = apartments.get( idApart).getRooms().get( idApartRoom).getRect();
+							pHabitant.x = (int) ( r.getX() + rand.nextInt( 1, (int) ( r.getWidth() - 2)));
+							pHabitant.y = (int) ( r.getY() + rand.nextInt( 1, (int) ( r.getHeight() - 2)));
+						}
+						playState.addHabitant( pHabitant, idRoom, idBuilding, idApart, idApartRoom);
+						
+						idApartRoom++;
+						if( idApartRoom == apartments.get( idApart).getRooms().size()){
+							idApartRoom = 0;
+							idApart++;
+						}
 					}
 					else{
-						r = apartments.get( idApart).getRooms().get( idApartRoom).getRect();
 						pHabitant.x = (int) ( r.getX() + rand.nextInt( 1, (int) ( r.getWidth() - 2)));
 						pHabitant.y = (int) ( r.getY() + rand.nextInt( 1, (int) ( r.getHeight() - 2)));
-					}
-					playState.addHabitant( pHabitant, idRoom, idBuilding, idApart, idApartRoom);
-					
-					idApartRoom++;
-					if( idApartRoom == apartments.get( idApart).getRooms().size()){
-						idApartRoom = 0;
-						idApart++;
+						playState.addHabitant( pHabitant, idRoom, idBuilding, -1, -1);
 					}
 				}
 				idRoom++;
@@ -283,7 +290,7 @@ public class City {
 							if( k == 1)
 								tileId = 12;
 							else if( k == 2)
-								tileId = 32;
+								tileId = 28;
 							else
 								k = 0;
 							k++;
@@ -299,14 +306,14 @@ public class City {
 						tileId = 11;
 						
 						if( y == 0)
-							tileId = 31;
+							tileId = 27;
 						else if( y == r.getHeight() - 1)
-							tileId = 30;
+							tileId = 26;
 						else if( y == (int)(r.getHeight() / 2)){
 							if( k == 1)
-								tileId = 33;
+								tileId = 29;
 							else if( k == 2)
-								tileId = 34;
+								tileId = 30;
 							else
 								k = 0;
 							k++;

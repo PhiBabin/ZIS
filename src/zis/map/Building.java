@@ -214,8 +214,8 @@ public class Building {
 		int line;
 		if(  r.getHeight() > r.getWidth()){
 			if( r.getHeight() > 10 && 
-					( rand.nextInt( iterator) <= 2 ||
-					r.getHeight() * r.getWidth() >= 196)){
+					( rand.nextInt( iterator) <= 3 ||
+					r.getHeight() * r.getWidth() >= CONST.MAX_BUILDING_ROOM_DOMAIN)){
 				
 				if( CONST.SYMMETRICROOM)
 					line = (int)r.getHeight()/2;
@@ -244,8 +244,8 @@ public class Building {
 		}
 		else{
 			if( r.getWidth() > 10 &&
-					(rand.nextInt( iterator) <= 2 ||
-					r.getHeight() * r.getWidth() >= 196)){
+					(rand.nextInt( iterator) <= 3 ||
+					r.getHeight() * r.getWidth() >= CONST.MAX_BUILDING_ROOM_DOMAIN)){
 
 				if( CONST.SYMMETRICROOM)
 					line = (int)r.getWidth()/2;
@@ -318,7 +318,7 @@ public class Building {
 				new Rectangle( r.getX(),
 				r.getY() + py + 2 * CONST.HALLWAY_WIDTH + 2 * cy - 1,
 				r.getWidth(),
-				py + 2));
+				py + 1));
 
 		/*** Center region*/
 		temRegion.add(
